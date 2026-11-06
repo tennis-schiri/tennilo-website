@@ -36,7 +36,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in public/founders.php public/founders-admin.php public/index.html public/impressum.html public/datenschutz.html public/robots.txt public/sitemap.xml public/google8cf6756d83169a32.html public/founders.php public/founders-admin.php public/assets/styles.css public/assets/tennilo-logo.png public/assets/tennilo-icon.png public/favicon.png; do
+          for file in public/founders.php public/founders-admin.php public/founders-setup.php public/index.html public/impressum.html public/datenschutz.html public/robots.txt public/sitemap.xml public/google8cf6756d83169a32.html public/assets/styles.css public/assets/tennilo-logo.png public/assets/tennilo-icon.png public/favicon.png; do
             test -f "$file" || { echo "::error::Fehlende Datei: $file"; exit 1; }
           done
 
@@ -44,6 +44,7 @@ jobs:
         run: |
           php -l public/founders.php
           php -l public/founders-admin.php
+          php -l public/founders-setup.php
 
       - name: Ausschließlich Website-Dateien per FTPS übertragen
         shell: bash
