@@ -1,30 +1,37 @@
-# TENNILO Founders – technische Inbetriebnahme (Stand: 06.11.2026)
+# TENNILO Founders – Browser-Einrichtung (06.11.2026)
 
-**Implementierung in GitHub, NICHT produktiv getestet.** Die Inhalte von `public/` werden vom bestehenden manuellen Website-Workflow auf `tennilo.de` übertragen.
+Die Codebasis ist in GitHub vorbereitet, aber der Live-Betrieb **nicht verifiziert**. Die Website wird nur über den manuellen FTPS-Workflow aktualisiert.
 
-## Vor dem Start – Pflicht
-1. Prüfen: PHP 8.1+, PDO SQLite, Datenbank-Schreibrechte, HTTPS und `mail()` mit Absender `founders@tennilo.de` auf ALL-INKL.
-2. Privates Verzeichnis **außerhalb des öffentlichen Website-Verzeichnisses** anlegen. Darin Datenbankdatei und ggf. Backups speichern. Auf keinen Fall in `public/`, `/tennilo-website/` oder irgendein per HTTP erreichbares Verzeichnis legen.
-3. `founders-config.example.php` als `tennilo-founders-config.php` **eine Ebene oberhalb des öffentlichen Website-Verzeichnisses** ablegen. Das ist der Pfad, den die PHP-Dateien auf dem Server suchen. Niemals ins Repo committen.
-4. `database` auf eine absolute Dateipfadangabe im privaten Verzeichnis setzen, `key` mit kryptografisch sicherem zufälligem Schlüssel versehen (z. B. `bin2hex(random_bytes(32))`), `admin_password_hash` durch einen Hash aus `password_hash('langes-einmaliges-passwort', PASSWORD_DEFAULT)` ersetzen. Klartextpasswörter und Secrets niemals im Chat/GitHub teilen.
-5. `enabled => false` belassen. Zuerst Mailzustellung serverseitig mit sicherer Testumgebung prüfen. Dann bewusst auf `true` stellen.
-6. Vor echtem Launch Registrierung, abgelaufene Links, Bestätigung, Duplikate, Abmeldung, Admin-Login, CSV-Export, Speicherrechte, Spam-Schutz und Datenschutz auf echtem Hosting durchtesten. Prüfen, dass öffentliche Requests weder Config noch Datenbank laden können.
-7. E-Mail-System zunächst mit PHP `mail()` über den lokalen Server-Mailtransport. Das neue Postfach ist keine SMTP-Konfiguration. Falls `mail()` auf Hosting scheitert oder die Zustellbarkeit schlecht ist, auf authentifiziertes SMTP mit geprüfter Bibliothek umstellen, bevor die Anmeldung öffentlich beworben wird.
-8. In **jeder späteren Informationsmail** einen individuellen Abmeldelink `https://tennilo.de/founders.php?action=unsubscribe&token=<original-token>` ausgeben. Achtung: Der Original-Abmeldetoken wird aktuell nur als Hash gespeichert und nicht exportiert. Deshalb ist **noch kein Newsletter-Versandtool** implementiert; für künftige Aussendungen muss ein gesicherter Link-/Token-Erneuerungs- und Versandprozess ergänzt werden. Bis dahin nur Bestätigungs-E-Mails, keine Massenmails.
-9. Prüfen, dass Rechts- und Datenschutzhinweise den tatsächlichen Betrieb und die tatsächliche Auftragsverarbeitung abbilden.
+## Einmalige Einrichtung – ohne manuelles Bearbeiten von PHP
 
-## Funktionen
-- `public/index.html`: Wartelistenformular mit Themenauswahl und Einwilligung.
-- `public/founders.php`: Aufnahme, temporärer Missbrauchsschutz, E-Mail-Double-Opt-in und zweistufige Abmeldung.
-- `public/founders-admin.php`: passwortgeschützte Übersicht, Status und CSV-Export.
-- `public/datenschutz.html`: Informationen zur Warteliste.
-- Keine externen Formulardienste, keine Online-Zahlung, kein eigenständiger SMTP-Client.
+**Bereits erledigt laut Projektverlauf:**
+- ALL-INKL-Postfach `founders@tennilo.de` angelegt
+- Verzeichnis `tennilo-founders-data/` **neben** `tennilo-website/` angelegt
+- `tennilo-founders-config.php` aus `founders-config.example.php` **neben** `tennilo-website/` hochgeladen (noch mit `enabled => false`)
 
-## Release
-Direkter manueller Workflow:
-https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml
+**Schritte:**
+1. Den vorhandenen [manuellen Website-Workflow](https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml) auf `main` starten. Er prüft PHP-Syntax und lädt `founders.php`, `founders-admin.php` und `founders-setup.php` samt Website hoch. **Wichtig:** Nach diesem Upload ist das Formular sichtbar, aber ohne abgeschlossene Installation nicht benutzbar (503). Deshalb Installation unmittelbar abschließen, bevor der Link beworben wird.
+2. Im Browser `https://tennilo.de/founders-setup.php` öffnen.
+3. Auf „Einrichtungs-E-Mail anfordern“ klicken. Das System schickt den einmaligen Bestätigungslink ausschließlich an `founders@tennilo.de`; 30 Minuten gültig. Neue Anforderung höchstens alle 15 Minuten. Der Host muss für `mail()` tatsächlich ausliefern können.
+4. Link aus der E-Mail öffnen und ein neues Admin-Passwort von mindestens 16 Zeichen festlegen. **Nichts davon in GitHub oder Chat posten.**
+5. Der Installer erzeugt automatisch `tennilo-founders.sqlite` im privaten Datenverzeichnis, einen zufälligen Sicherheitsschlüssel und einen Passwort-Hash. Danach ist die Einrichtungsseite gesperrt.
+6. Mit einer eigenen Test-E-Mail anmelden, Bestätigungslink öffnen, Status auf `https://tennilo.de/founders-admin.php` prüfen und Abmeldung kontrollieren. Erst danach aktiv für Nutzer bewerben.
 
-**Nicht starten, bevor der private Speicher und die serverseitige Konfiguration vorbereitet sind.** Ein Deploy ohne Config zeigt bei Formularabsendung 503 statt Daten zu sammeln.
+## Wichtig bei Fehlern
 
-## Roadmap
-https://github.com/tennis-schiri/tennis-schiri-app/actions/workflows/roadmap-sync.yml
+- Meldung **„private Datei nicht beschreibbar“**: PHP-Dateirechte/Benutzer bei ALL-INKL prüfen. Nicht pauschal `777` setzen; bestehende Config kann per FTPS mit geeigneten Rechten aktualisiert werden.
+- Meldung **„Mailversand fehlgeschlagen“** oder kein E-Mail-Eingang: PHP `mail()` bzw. lokale Mailtransport-Konfiguration bei ALL-INKL prüfen; noch kein SMTP-Client integriert. Das bloße Vorhandensein des Postfachs beweist keine Zustellbarkeit.
+- Meldung **„SQLite fehlt“**: PDO SQLite im Hosting prüfen.
+- Falls die Konfigurationsdatei nicht per atomarem Rename ersetzt werden kann, muss die Verzeichnisberechtigung für PHP korrigiert werden; keine Secrets veröffentlichen.
+- Der Installer prüft E-Mail-Postfachkontrolle, aber **keine weitere zweite Authentifizierung**. Die Einrichtungsseite darf erst dann aufgerufen werden, wenn das Postfach sicher eingerichtet ist. Nach Abschluss weist sie alle weiteren Einrichtungsversuche ab.
+- Datenbank und Konfiguration müssen **außerhalb sämtlicher öffentlich erreichbarer Webroots** liegen.
+- Admin-Übersicht ist ein erster interner Stand und braucht vor größerer öffentlicher Nutzung noch einen separaten Sicherheitstest.
+- Spätere Rundmails sind **noch nicht implementiert**; die aktuelle Bestätigung verwendet PHP `mail()`, keinen externen Dienst. Abmeldelinks für spätere Massenmails sind erst nach sicherer Token-/Versandimplementierung nutzbar.
+- Datenschutzinformationen vor Werbung und externen Anmeldungen mit tatsächlichem Hosting-/Versandverfahren abgleichen.
+
+## Links
+
+- [Website-Update – direkter Workflow](https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml)
+- [Einmaliger Browser-Installer](https://tennilo.de/founders-setup.php) – erst nach Upload
+- [Admin-Dashboard](https://tennilo.de/founders-admin.php) – erst nach Einrichtung
+- [Roadmap-Update – direkter Workflow](https://github.com/tennis-schiri/tennis-schiri-app/actions/workflows/roadmap-sync.yml)
