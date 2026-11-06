@@ -36,7 +36,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in public/index.html public/impressum.html public/datenschutz.html public/robots.txt public/sitemap.xml public/google8cf6756d83169a32.html public/assets/styles.css public/assets/tennilo-logo.png public/assets/tennilo-icon.png public/favicon.png; do
+          for file in public/founders.php public/founders-admin.php public/index.html public/impressum.html public/datenschutz.html public/robots.txt public/sitemap.xml public/google8cf6756d83169a32.html public/founders.php public/founders-admin.php public/assets/styles.css public/assets/tennilo-logo.png public/assets/tennilo-icon.png public/favicon.png; do
             test -f "$file" || { echo "::error::Fehlende Datei: $file"; exit 1; }
           done
 
@@ -58,4 +58,4 @@ jobs:
             echo "Übertrage $remote …"
             curl --fail --silent --show-error --ssl-reqd --ftp-pasv --ftp-create-dirs               --user "${FTP_USER}:${FTP_PASSWORD}"               --upload-file "$file"               "ftp://${FTP_HOST}:21/$remote"
           done
-          echo 'Alle zehn Website-Dateien wurden übertragen.'
+          echo 'Website-Dateien einschließlich Founders-Endpunkte wurden übertragen.'
