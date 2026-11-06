@@ -40,6 +40,11 @@ jobs:
             test -f "$file" || { echo "::error::Fehlende Datei: $file"; exit 1; }
           done
 
+      - name: PHP-Syntax für Founders prüfen
+        run: |
+          php -l public/founders.php
+          php -l public/founders-admin.php
+
       - name: Ausschließlich Website-Dateien per FTPS übertragen
         shell: bash
         env:
