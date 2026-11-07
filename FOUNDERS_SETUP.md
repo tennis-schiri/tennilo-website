@@ -87,3 +87,9 @@ Der bestehende Installer bleibt durch `setup_complete` und `enabled` serverseiti
 ### Zusätzliche Absicherung
 
 Der bestehende Admin-Login wurde für die Mailverwaltung erweitert: höchstens acht fehlgeschlagene Passwortversuche je pseudonymisierter IP-Adresse innerhalb von 15 Minuten; Admin-Sitzungen laufen nach acht Stunden ab. Da der Sitzungscookie nun für beide Adminseiten gilt, ist nach dem Deployment eine erneute Anmeldung nötig. Die Loginversuche werden in der privaten SQLite-Datei gespeichert und nach einer Stunde bereinigt.
+
+## Admin-Login – Cookie-Kollision behoben (07.11.2026)
+
+Nach dem ersten Mail-Admin-Update meldete der Nutzer einen Login ohne sichtbaren Fortschritt. Ursache vermutlich zwei gleichnamige, aber verschieden gepfadete Sitzungscookies: ursprünglich `tennilo_founders_admin` mit Pfad `/founders-admin.php`, später derselbe Name mit Pfad `/`. Beide Adminseiten nutzen nun gemeinsam `tennilo_founders_portal_v2` (Pfad `/`), wodurch alte Cookies ignoriert werden. Nach gültigem Passwort führt der Login zu `?login=ok`; falls die Sitzung dann nicht besteht, zeigt die Seite eine klare Diagnose statt eines scheinbar unveränderten Loginformulars. Noch nicht auf dem Server getestet.
+
+Zur Inbetriebnahme erneut den [Website-Workflow](https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml) ausführen. Bei acht fehlgeschlagenen Passworteingaben innerhalb von 15 Minuten kann die Anmeldung vorübergehend gesperrt sein; dann nicht wiederholt klicken.
