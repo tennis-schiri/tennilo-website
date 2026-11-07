@@ -142,6 +142,17 @@ if($method==='POST'){
   }catch(Throwable $e){if($db->inTransaction())$db->rollBack();error_log('Founders approve failed: '.$e->getMessage());finish('Freigabe fehlgeschlagen.',$id);}
   finish('Versand freigegeben für '.count($people).' passende bestätigte Kontakte. Noch keine E-Mails verschickt.',$id);
  }
+ if($action==='stop'){
+  if(!in_array($campaign['state'],['ready','sending'],true)||($_POST['stop_confirmation']??'')!=='STOPP')
+   finish('Versand wurde nicht gestoppt.',$id);
+  $db->prepare("UPDATE founders_campaigns SET state='stopped',updated_at=? WHERE id=? AND state IN ('ready','sending')")->execute([$now,$id]);
+  finish('Kampagne gestoppt. Ausstehende Empfänger werden nicht mehr angeschrieben.',$id);
+ }
+ if($action==='duplicate'){
+  $q=$db->prepare("INSERT INTO founders_campaigns(subject,body,topic,state,created_at,updated_at) VALUES(?,?,?,'draft',?,?)");
+  $q->execute([$campaign['subject'].' (Kopie)',$campaign['body'],$campaign['topic'],$now,$now]);
+  finish('Kampagne als neuer Entwurf kopiert.',(int)$db->lastInsertId());
+ }
  if($action==='send'){
   if(!in_array($campaign['state'],['ready','sending'],true))finish('Versand nicht freigegeben.',$id);
   $sent=0;$failed=0;$skipped=0;
@@ -196,7 +207,9 @@ if($id){
   foreach($labels as $key=>$label)$body.='<div class="metric"><strong>'.(int)($counts[$key]??0).'</strong><span>'.h($label).'</span></div>';
   $body.='</div><p class="kpi-caption">Verarbeitete Einträge: '.$processed.' von '.$total.' ('.$percent.' %). Die Quote enthält auch abgelehnte und übersprungene Nachrichten.</p><div class="track"><div style="width:'.$percent.'%"></div></div><p class="muted"><strong>Wichtig:</strong> „Vom Mailserver angenommen“ ist keine bestätigte Zustellung. Öffnungen und Klicks werden aus Datenschutzgründen nicht erfasst. Einträge mit unklarem Status werden nicht automatisch erneut verschickt, um versehentliche Doppelversendungen zu vermeiden.</p>';
   if(in_array($state,['ready','sending'],true))$body.='<form method="post">'.csrf().'<input type="hidden" name="action" value="send"><input type="hidden" name="campaign" value="'.$id.'"><button type="submit">Nächste maximal 5 E-Mails versenden</button></form>';
+  if(in_array($state,['ready','sending'],true))$body.='<form method="post">'.csrf().'<input type="hidden" name="action" value="stop"><input type="hidden" name="campaign" value="'.$id.'"><label>Versand abbrechen: STOPP eingeben</label><input type="text" name="stop_confirmation" placeholder="STOPP" autocomplete="off" required><button type="submit">Kampagne stoppen</button></form>';
  }
+ $body.='<form method="post">'.csrf().'<input type="hidden" name="action" value="duplicate"><input type="hidden" name="campaign" value="'.$id.'"><button type="submit">Als neuen Entwurf kopieren</button></form>';
  $body.='</section><section class="panel"><h2>E-Mail-Vorschau</h2><p class="muted">Vorschau ohne persönliche Empfängerdaten; der tatsächliche Abmeldelink wird erst beim Versand erzeugt.</p><div class="preview">'.tennilo_email_inner((string)$c['subject'],(string)$c['body']).'</div></section>';
  page($body);
 }
