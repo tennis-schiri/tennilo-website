@@ -1,5 +1,7 @@
 # TENNILO – Allgemeiner Newsletter (Stand: 07.11.2026)
 
+**Neues gemeinsames Backoffice:** [https://tennilo.de/admin/](https://tennilo.de/admin/) – nutzt dieselbe geschützte Founders-Sitzung, SQLite-Datenbank, Themen-/Newsletter-Einwilligungen und das bestehende Kampagnensystem. Code und Bedienhinweise: [BACKOFFICE.md](BACKOFFICE.md). Änderungen bleiben bis zum manuellen FTPS-Deployment nur in GitHub.
+
 **In GitHub vorbereitet, NOCH NICHT auf ALL-INKL bestätigt oder produktiv getestet.**
 
 ## Ziel und Adressen
