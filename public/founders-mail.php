@@ -35,14 +35,58 @@ try {
  $db->exec("CREATE TABLE IF NOT EXISTS subscriber_consents (
   subscriber_id INTEGER NOT NULL, topic TEXT NOT NULL, consented_at INTEGER NOT NULL,
   consent_version TEXT NOT NULL, PRIMARY KEY(subscriber_id,topic))");
+ $fields = array_column($db->query("PRAGMA table_info(founders_campaigns)")->fetchAll(), 'name');
+ $newFields = [
+  'headline' => "TEXT NOT NULL DEFAULT ''",
+  'preheader' => "TEXT NOT NULL DEFAULT ''",
+  'button_label' => "TEXT NOT NULL DEFAULT ''",
+  'button_url' => "TEXT NOT NULL DEFAULT ''",
+  'layout' => "TEXT NOT NULL DEFAULT 'standard'"
+ ];
+ foreach($newFields as $field=>$definition) {
+  if(!in_array($field,$fields,true)) $db->exec("ALTER TABLE founders_campaigns ADD COLUMN ".$field." ".$definition);
+ }
 } catch(Throwable $e) { error_log('Founders campaigns setup failed: '.$e->getMessage()); http_response_code(503); exit('Datenbank vorübergehend nicht verfügbar.'); }
 function h(mixed $value): string { return htmlspecialchars((string)$value,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8'); }
+function campaignExtraFields(array $c=[]): string {
+ $out='<div class="editor-extra"><h3>Gestaltung &amp; Vorschautext</h3>';
+ $out.='<label>Überschrift in der E-Mail (optional)</label><input type="text" name="headline" maxlength="160" value="'.h($c['headline']??'').'" placeholder="Falls leer, verwenden wir den Betreff">';
+ $out.='<label>Vorschautext im Posteingang (optional)</label><input type="text" name="preheader" maxlength="200" value="'.h($c['preheader']??'').'" placeholder="Ein kurzer Teaser vor dem Öffnen">';
+ $out.='<label>Gestaltungsvorlage</label><select name="layout">';
+ foreach(['standard'=>'Standard · Petrol & Türkis','spotlight'=>'Highlight · Koralle & Lime','compact'=>'Kompakt · Klar & reduziert'] as $value=>$label) {
+  $out.='<option value="'.h($value).'"'.(($c['layout']??'standard')===$value?' selected':'').'>'.h($label).'</option>';
+ }
+ $out.='</select><div class="editor-two">';
+ $out.='<div><label>Button-Beschriftung (optional)</label><input type="text" name="button_label" maxlength="80" value="'.h($c['button_label']??'').'" placeholder="Mehr erfahren"></div>';
+ $out.='<div><label>Button-Link (HTTPS)</label><input type="url" name="button_url" maxlength="2048" value="'.h($c['button_url']??'').'" placeholder="https://tennilo.de/"></div></div>';
+ $out.='<p class="muted">Button-Beschriftung und HTTPS-Link gehören zusammen. Kein HTML-Code nötig. Der persönliche Abmeldelink bleibt immer enthalten.</p></div>';
+ return $out;
+}
+function campaignMetaFromPost(): ?array {
+ $fields=[];
+ foreach(['headline'=>160,'preheader'=>200,'button_label'=>80,'button_url'=>2048] as $name=>$max) {
+  $v=$_POST[$name]??'';
+  if(!is_string($v))return null;
+  $v=trim($v);
+  if(mbAvailableAndTooLong($v,$max)||preg_match('/[\x00-\x1f\x7f]/',$v))return null;
+  $fields[$name]=$v;
+ }
+ $layout=$_POST['layout']??'standard';
+ if(!is_string($layout)||!in_array($layout,['standard','spotlight','compact'],true))return null;
+ $fields['layout']=$layout;
+ if(($fields['button_label']==='')!==($fields['button_url']===''))return null;
+ if($fields['button_url']!==''&&!tennilo_email_button_url($fields['button_url']))return null;
+ return $fields;
+}
+function mbAvailableAndTooLong(string $v,int $max): bool {
+ return strlen($v)>$max*4 || (function_exists('mb_strlen') ? mb_strlen($v,'UTF-8')>$max : strlen($v)>$max);
+}
 function finish(string $message,int $id=0): never {
  header('Location: /founders-mail.php?'.($id>0?'campaign='.$id.'&':'').'info='.rawurlencode($message),true,303); exit;
 }
 function page(string $contents): never {
  echo '<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>TENNILO Founders · E-Mail-Verwaltung</title><style>
- :root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#eef3ef;color:#092b36;font:15px/1.55 system-ui}main{max-width:1050px;margin:36px auto;padding:0 17px}.panel{background:white;border:1px solid #d9e5df;border-radius:14px;padding:24px;margin-bottom:17px}h1{font-size:29px}h2{font-size:21px;margin:0 0 15px}p{margin:8px 0 16px}a{color:#007b7c}label{display:block;font-weight:700;margin:13px 0 6px}input[type=text],textarea,select{font:inherit;border:1px solid #b5c9c3;border-radius:8px;padding:11px;width:100%;background:white;color:#092b36}textarea{min-height:180px}button{background:#092b36;color:#fff;border:0;border-radius:8px;padding:11px 16px;font:inherit;cursor:pointer;margin:8px 8px 8px 0}button:hover{background:#19505b}.muted,small{color:#526e70}.warning{border-left:4px solid #eb8959;padding:10px 15px;background:#fff8f2}.success{background:#e8f5e7;padding:12px;border-radius:8px}.row{display:flex;gap:16px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.topic{font-weight:700}table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid #d9e5df;padding:10px;text-align:left}code{font-size:12px} .danger{color:#9c482b}.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin:12px 0 20px}.metric{border:1px solid #d9e5df;border-radius:12px;padding:15px;background:#f6faf7}.metric strong{font-size:25px;color:#092b36;display:block}.metric span{font-size:12px;color:#526e70}.pills{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}.pill{display:inline-block;background:#edf5f0;border:1px solid #c8ddd0;padding:7px 12px;border-radius:18px;color:#08666a;text-decoration:none;font-weight:700;font-size:13px}.pill:hover{background:#dbecdf}.preview{border:1px solid #d9e5df;border-radius:12px;overflow:hidden;margin:12px 0}.kpi-caption{font-size:13px;color:#526e70}.track{height:9px;background:#e2ece7;border-radius:15px;overflow:hidden;margin:12px 0}.track div{height:100%;background:#007f80} @media(max-width:640px){.panel{padding:17px}table{font-size:12px}}
+ :root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#eef3ef;color:#092b36;font:15px/1.55 system-ui}main{max-width:1050px;margin:36px auto;padding:0 17px}.panel{background:white;border:1px solid #d9e5df;border-radius:14px;padding:24px;margin-bottom:17px}h1{font-size:29px}h2{font-size:21px;margin:0 0 15px}p{margin:8px 0 16px}a{color:#007b7c}label{display:block;font-weight:700;margin:13px 0 6px}input[type=text],input[type=url],textarea,select{font:inherit;border:1px solid #b5c9c3;border-radius:8px;padding:11px;width:100%;background:white;color:#092b36}textarea{min-height:180px}button{background:#092b36;color:#fff;border:0;border-radius:8px;padding:11px 16px;font:inherit;cursor:pointer;margin:8px 8px 8px 0}button:hover{background:#19505b}.muted,small{color:#526e70}.warning{border-left:4px solid #eb8959;padding:10px 15px;background:#fff8f2}.success{background:#e8f5e7;padding:12px;border-radius:8px}.row{display:flex;gap:16px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.topic{font-weight:700}table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid #d9e5df;padding:10px;text-align:left}code{font-size:12px} .danger{color:#9c482b}.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin:12px 0 20px}.metric{border:1px solid #d9e5df;border-radius:12px;padding:15px;background:#f6faf7}.metric strong{font-size:25px;color:#092b36;display:block}.metric span{font-size:12px;color:#526e70}.pills{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}.pill{display:inline-block;background:#edf5f0;border:1px solid #c8ddd0;padding:7px 12px;border-radius:18px;color:#08666a;text-decoration:none;font-weight:700;font-size:13px}.pill:hover{background:#dbecdf}.preview{border:1px solid #d9e5df;border-radius:12px;overflow:hidden;margin:12px 0}.editor-extra{border:1px solid #cee2df;background:#f4f9f7;padding:17px 19px;border-radius:12px;margin:22px 0}.editor-extra h3{margin:0;color:#092b36}.editor-extra .muted{font-size:12px}.editor-two{display:grid;grid-template-columns:1fr 1fr;gap:15px}@media(max-width:640px){.editor-two{grid-template-columns:1fr}}.kpi-caption{font-size:13px;color:#526e70}.track{height:9px;background:#e2ece7;border-radius:15px;overflow:hidden;margin:12px 0}.track div{height:100%;background:#007f80} @media(max-width:640px){.panel{padding:17px}table{font-size:12px}}
  </style><main><p><a href="/admin/">← TENNILO Backoffice</a> · <a href="/founders-admin.php">Empfängerverwaltung</a></p><h1>TENNILO · Newsletter &amp; E-Mail-Verwaltung</h1>'.$contents.'</main></html>'; exit;
 }
 function csrf(): string { return '<input type="hidden" name="csrf" value="'.h($_SESSION['csrf']).'">'; }
