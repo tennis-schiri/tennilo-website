@@ -68,7 +68,25 @@ if($action==='confirm' && $method==='GET'){
  $q=$db->prepare('SELECT id,email,unsubscribe_hash FROM subscribers WHERE confirm_hash=? AND confirmed_at IS NULL AND expires_at>=?');$q->execute([hashed($t),$now]);$r=$q->fetch();
  if(!$r)page('Link abgelaufen','<p>Dieser Link ist ungültig oder bereits verwendet.</p>',400);
  $db->prepare('UPDATE subscribers SET confirmed_at=?,confirm_hash=NULL,expires_at=? WHERE id=?')->execute([$now,2147483647,$r['id']]);
+ $notification="Neue bestätigte Anmeldung auf der TENNILO Founders-Warteliste.\n\nE-Mail: ".$r['email']."\n\nÖffne die Founders-Verwaltung: https://tennilo.de/founders-admin.php\n\nDiese Benachrichtigung wird erst nach erfolgreichem Double-Opt-in versendet.";
+ if(!mailLink($cfg,'founders@tennilo.de','TENNILO Founders: Neue bestaetigte Anmeldung',$notification)) {
+  error_log('TENNILO Founders: admin signup notification not accepted by mail()');
+ }
  page('Anmeldung bestätigt','<p>Du stehst jetzt auf der TENNILO Founders-Warteliste. Du erhältst nur Informationen zu den ausgewählten Interessen.</p><p>Du kannst dich jederzeit <a href="/founders.php?action=unsubscribe-request">online abmelden</a> oder eine E-Mail an founders@tennilo.de schreiben.</p>');
+}
+if($action==='unsubscribe-signed' && ($method==='GET'||$method==='POST')){
+ $id=filter_var(($method==='POST'?$_POST['id']:$_GET['id'])??null,FILTER_VALIDATE_INT,['options'=>['min_range'=>1]])?:0;
+ $sig=(string)(($method==='POST'?$_POST['sig']:$_GET['sig'])??'');
+ if(!$id||!preg_match('/^[a-f0-9]{64}$/D',$sig))page('Link ungültig','<p>Dieser Abmeldelink ist ungültig.</p>',400);
+ $q=$db->prepare('SELECT id,email FROM subscribers WHERE id=? AND confirmed_at IS NOT NULL');
+ $q->execute([$id]);$subscriber=$q->fetch();
+ if(!$subscriber || !hash_equals(hash_hmac('sha256',$id.'|'.$subscriber['email'],$cfg['key']),$sig))
+  page('Link ungültig','<p>Der Abmeldelink ist ungültig oder nicht mehr aktuell.</p>',400);
+ if($method==='GET'){
+  page('Von der Warteliste abmelden','<p>Du kannst deine TENNILO Founders-Anmeldung hier vollständig löschen.</p><form method="post" action="/founders.php"><input type="hidden" name="action" value="unsubscribe-signed"><input type="hidden" name="id" value="'.$id.'"><input type="hidden" name="sig" value="'.htmlspecialchars($sig,ENT_QUOTES).'"><button type="submit">Anmeldung endgültig löschen</button></form>');
+ }
+ $db->prepare('DELETE FROM subscribers WHERE id=? AND email=?')->execute([$id,$subscriber['email']]);
+ page('Abgemeldet','<p>Deine Anmeldung wurde gelöscht. Du erhältst keine weiteren Founders-Rundmails.</p>');
 }
 if($action==='unsubscribe-request' && $method==='GET'){
  page('Abmeldung anfordern','<p>Trage deine E-Mail-Adresse ein. Falls sie auf der Warteliste steht, senden wir dir einen geschützten Abmeldelink.</p><form method="post" action="/founders.php"><input type="hidden" name="action" value="unsubscribe-request"><label>E-Mail-Adresse <input type="email" name="email" autocomplete="email" maxlength="254" required style="display:block;box-sizing:border-box;width:100%;padding:12px;margin:10px 0 18px"></label><button type="submit">Abmeldelink anfordern</button></form>');
