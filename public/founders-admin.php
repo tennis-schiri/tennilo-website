@@ -10,8 +10,27 @@ function render(string $body): never {
  header('Content-Type: text/html; charset=UTF-8');
  echo '<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>TENNILO Founders · Verwaltung</title><style>body{font:15px/1.6 system-ui;background:#f6f8f4;color:#092b36;margin:0}.wrap{max-width:1000px;margin:6vh auto;background:#fff;padding:32px;border-radius:16px}table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #dce7e1;padding:10px;text-align:left}input,button{padding:10px;border-radius:6px}button{background:#092b36;color:white;border:0;cursor:pointer}a{color:#087a82}small{color:#567}</style><main class="wrap"><h1>TENNILO Founders</h1>'.$body.'</main></html>';exit;
 }
+if (!empty($_SESSION['authenticated']) && (int)($_SESSION['auth_at']??0)<time()-8*3600) {
+ $_SESSION=[];session_regenerate_id(true);
+}
 if(($_POST['action']??'')==='login'){
- if(password_verify((string)($_POST['password']??''),(string)$cfg['admin_password_hash'])){session_regenerate_id(true);$_SESSION['authenticated']=true;$_SESSION['csrf']=bin2hex(random_bytes(24));header('Location: /founders-admin.php',true,303);exit;}
+ try {
+  $rateDb=new PDO('sqlite:'.$cfg['database'],null,null,[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
+  $rateDb->exec('PRAGMA busy_timeout=5000');
+  $rateDb->exec('CREATE TABLE IF NOT EXISTS founders_admin_login_attempts (ip_hash TEXT NOT NULL, attempted_at INTEGER NOT NULL)');
+  $rateDb->prepare('DELETE FROM founders_admin_login_attempts WHERE attempted_at<?')->execute([time()-3600]);
+  $ipHash=hash_hmac('sha256',(string)($_SERVER['REMOTE_ADDR']??'unknown'),(string)($cfg['key']??''));
+  $q=$rateDb->prepare('SELECT COUNT(*) FROM founders_admin_login_attempts WHERE ip_hash=? AND attempted_at>?');
+  $q->execute([$ipHash,time()-900]);
+  if((int)$q->fetchColumn()>=8){http_response_code(429);render('<p>Zu viele Anmeldeversuche. Bitte in 15 Minuten erneut versuchen.</p>');}
+  if(password_verify((string)($_POST['password']??''),(string)$cfg['admin_password_hash'])){
+   $rateDb->prepare('DELETE FROM founders_admin_login_attempts WHERE ip_hash=?')->execute([$ipHash]);
+   session_regenerate_id(true);$_SESSION['authenticated']=true;$_SESSION['auth_at']=time();
+   $_SESSION['csrf']=bin2hex(random_bytes(24));
+   header('Location: /founders-admin.php',true,303);exit;
+  }
+  $rateDb->prepare('INSERT INTO founders_admin_login_attempts(ip_hash,attempted_at) VALUES(?,?)')->execute([$ipHash,time()]);
+ }catch(Throwable $e){error_log('Founders admin login rate limit: '.$e->getMessage());http_response_code(503);render('<p>Anmeldung momentan nicht verfügbar.</p>');}
  usleep(400000);render('<p>Anmeldung fehlgeschlagen.</p><a href="/founders-admin.php">Zurück</a>');
 }
 if(empty($_SESSION['authenticated']))render('<form method="post"><input type="hidden" name="action" value="login"><label>Admin-Passwort <input type="password" name="password" required autocomplete="current-password"></label> <button>Einloggen</button></form>');
