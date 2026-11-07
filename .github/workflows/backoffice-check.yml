@@ -1,0 +1,42 @@
+name: TENNILO Newsletter-Backoffice prüfen
+
+on:
+  push:
+    paths:
+      - 'public/admin/**'
+      - 'public/founders-admin.php'
+      - 'public/founders-mail.php'
+      - 'public/founders-email-template.php'
+      - 'public/newsletter.php'
+      - 'deploy-files.txt'
+      - '.github/workflows/backoffice-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  syntax-and-deploy-allowlist:
+    name: PHP-Syntax und FTPS-Freigabe
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Website auschecken
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: PHP-Syntax prüfen
+        shell: bash
+        run: |
+          set -euo pipefail
+          php -v
+          for file in public/admin/index.php public/founders-admin.php public/founders-mail.php public/founders-email-template.php public/newsletter.php; do
+            php -l "$file"
+          done
+      - name: Sichere FTPS-Freigabeliste prüfen
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fxq 'public/admin/index.php' deploy-files.txt
+          ! grep -Eiq '(\.sqlite|tennilo-founders-config\.php|private|\.env)' deploy-files.txt
+          grep -Fq 'php -l public/admin/index.php' .github/workflows/deploy.yml
+          echo 'Backoffice bereit für den manuellen Deployment-Workflow (kein Upload).'
