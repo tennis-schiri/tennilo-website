@@ -42,3 +42,9 @@
 
 ## Roadmap
 [Direkter Roadmap-Update-Link](https://github.com/tennis-schiri/tennis-schiri-app/actions/workflows/roadmap-sync.yml).
+
+## Fehlerbehebung: „Ungültige Anfrage“ in den E-Mail-Einstellungen (07.11.2026)
+
+Der Nutzer konnte beim Schritt „E-Mail-Themen verwalten“ den Einstellungslink nicht anfordern. Ursache war die zu strikte Prüfung des Browser-`Origin`-Headers beim `manage-request`-POST in `public/newsletter.php`. Im GitHub-Code korrigiert: Für die **Anforderung** eines Einstellungslinks ist kein starrer `Origin`-Wert mehr erforderlich. Dieser Schritt ändert weder Einwilligungen noch Daten, sondern sendet bei einer bestätigten Adresse nur einen **einmaligen, 60 Minuten gültigen Link an genau dieses Postfach**. Bestehende IP-/Adress-Ratenbegrenzungen bleiben aktiv. Für die ursprüngliche Newsletter-Neuanmeldung bleibt die Prüfung des HTTPS-Hosts bestehen, berücksichtigt aber auch den regulären Port 443. Der Präferenzformular-POST zeigt jetzt ausdrücklich auf `/newsletter.php`.
+
+**Nach Deployment erneut prüfen:** `https://tennilo.de/newsletter.php?action=manage` öffnen, eigene bestätigte E-Mail eintragen, Link anfordern, Empfang kontrollieren und über den Link getrennte Themenwahl speichern. Vor dem erneuten Upload ist der Fehler auf der Live-Seite erwartbar weiterhin vorhanden.
