@@ -78,6 +78,7 @@ function campaignMetaFromPost(): ?array {
  if($fields['button_url']!==''&&!tennilo_email_button_url($fields['button_url']))return null;
  return $fields;
 }
+function mb_substr_safe(string $text,int $length): string { return function_exists('mb_substr')?mb_substr($text,0,$length,'UTF-8'):substr($text,0,$length); }
 function mbAvailableAndTooLong(string $v,int $max): bool {
  return strlen($v)>$max*4 || (function_exists('mb_strlen') ? mb_strlen($v,'UTF-8')>$max : strlen($v)>$max);
 }
@@ -95,7 +96,7 @@ function subjectHeader(string $subject): string {
  if (function_exists('mb_encode_mimeheader')) return mb_encode_mimeheader($subject,'UTF-8','B',"\r\n");
  return '=?UTF-8?B?'.base64_encode($subject).'?=';
 }
-function sendMail(string $to,string $subject,string $message,?string $unsubscribeUrl=null,string $topic='founders'): bool {
+function sendMail(string $to,string $subject,string $message,?string $unsubscribeUrl=null,string $topic='founders',array $options=[]): bool {
  if (!safeEmail($to)) return false;
  $sender=$topic==='newsletter'?'news@tennilo.de':'founders@tennilo.de';
  $senderName=$topic==='newsletter'?'TENNILO Newsletter':'TENNILO Founders';
@@ -105,6 +106,11 @@ function sendMail(string $to,string $subject,string $message,?string $unsubscrib
   'MIME-Version: 1.0'
  ];
  $plain=rtrim($message);
+ $heading=trim((string)($options['headline']??''));
+ if($heading!==''&&$heading!==$subject) $plain=$heading."\n\n".$plain;
+ $buttonLabel=trim((string)($options['button_label']??''));
+ $buttonUrl=trim((string)($options['button_url']??''));
+ if($buttonLabel!==''&&tennilo_email_button_url($buttonUrl)) $plain.="\n\n".$buttonLabel.": ".$buttonUrl;
  if ($unsubscribeUrl!==null) {
   $plain.="\n\n---\nTENNILO · Ein Projekt von Tennis-Schiri\n";
   $plain.="Du erhaeltst diese Nachricht, weil du Informationen zu diesem Thema angefordert hast.\n";
@@ -118,7 +124,7 @@ function sendMail(string $to,string $subject,string $message,?string $unsubscrib
  $logo=is_file($logoFile)&&filesize($logoFile)<300000?@file_get_contents($logoFile):false;
  $hasLogo=is_string($logo)&&$logo!=='';
  $cid='tennilo-logo@tennilo.de';
- $html=tennilo_email_html($subject,$message,$unsubscribeUrl,$hasLogo?'cid:'.$cid:null,$topic);
+ $html=tennilo_email_html($subject,$message,$unsubscribeUrl,$hasLogo?'cid:'.$cid:null,$topic,$options);
  $alternative='tennilo_alt_'.bin2hex(random_bytes(12));
  $textPart='--'.$alternative."\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n".quoted_printable_encode($plain)."\r\n";
  $htmlPart='--'.$alternative."\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n".quoted_printable_encode($html)."\r\n";
@@ -172,15 +178,17 @@ if($method==='POST'){
   $subject=trim((string)($_POST['subject']??''));
   $body=trim((string)($_POST['body']??''));
   $topic=(string)($_POST['topic']??'');
+  $meta=campaignMetaFromPost();
+  if($meta===null)page('<section class="panel warning">Überschrift, Vorschautext, Layout oder Button prüfen. Ein Button benötigt eine Beschriftung und einen gültigen HTTPS-Link.</section>');
   if($subject===''||strlen($subject)>160||preg_match('/[\r\n]/',$subject)||$body===''||strlen($body)>10000||!array_key_exists($topic,$topics))
    page('<section class="panel warning">Bitte Betreff (maximal 160 Zeichen), Text (maximal 10.000 Zeichen) und gültiges Thema prüfen.</section>');
   if($action==='create'){
-   $q=$db->prepare("INSERT INTO founders_campaigns(subject,body,topic,state,created_at,updated_at) VALUES(?,?,?,'draft',?,?)");
-   $q->execute([$subject,$body,$topic,$now,$now]);
+   $q=$db->prepare("INSERT INTO founders_campaigns(subject,body,topic,headline,preheader,button_label,button_url,layout,state,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,'draft',?,?)");
+   $q->execute([$subject,$body,$topic,$meta['headline'],$meta['preheader'],$meta['button_label'],$meta['button_url'],$meta['layout'],$now,$now]);
    finish('Entwurf gespeichert.',(int)$db->lastInsertId());
   }
-  $q=$db->prepare("UPDATE founders_campaigns SET subject=?,body=?,topic=?,updated_at=? WHERE id=? AND state='draft'");
-  $q->execute([$subject,$body,$topic,$now,$id]);
+  $q=$db->prepare("UPDATE founders_campaigns SET subject=?,body=?,topic=?,headline=?,preheader=?,button_label=?,button_url=?,layout=?,updated_at=? WHERE id=? AND state='draft'");
+  $q->execute([$subject,$body,$topic,$meta['headline'],$meta['preheader'],$meta['button_label'],$meta['button_url'],$meta['layout'],$now,$id]);
   finish($q->rowCount()?'Änderungen gespeichert.':'Nur unveröffentlichte Entwürfe können bearbeitet werden.',$id);
  }
  if(!$id)finish('Ungültige Kampagne.');
@@ -190,7 +198,7 @@ if($method==='POST'){
   if($campaign['state']!=='draft')finish('Testsendung nur vor Freigabe möglich.',$id);
   $sample=$campaign['body']."\n\n---\nTESTNACHRICHT – noch keine Aussendung an Wartelistenkontakte.\nIm echten Versand wird automatisch ein persönlicher Abmeldelink angehängt.";
   $testTarget=$campaign['topic']==='newsletter'?'news@tennilo.de':'founders@tennilo.de';
-  $ok=sendMail($testTarget,'[TEST] '.$campaign['subject'],$sample,null,$campaign['topic']);
+  $ok=sendMail($testTarget,'[TEST] '.$campaign['subject'],$sample,null,$campaign['topic'],$campaign);
   finish($ok?'Testmail an '.$testTarget.' vom Server angenommen.':'Testmail wurde vom Server abgelehnt.',$id);
  }
  if($action==='test-one'){
@@ -202,7 +210,7 @@ if($method==='POST'){
   if(!$recipient||!opted((string)$recipient['interests'],(string)$campaign['topic'])||!topicConsent($db,(int)$recipient['id'],(string)$campaign['topic']))
    finish('Kein bestätigter Founders-Eintrag mit Einwilligung zum gewählten Thema für diese Adresse vorhanden.',$id);
   [$message,$url]=footer($campaign['body'],(int)$recipient['id'],(string)$recipient['email'],(string)$cfg['key'],(string)$campaign['topic']);
-  $ok=sendMail((string)$recipient['email'],'[EINZELTEST] '.$campaign['subject'],$message,$url,(string)$campaign['topic']);
+  $ok=sendMail((string)$recipient['email'],'[EINZELTEST] '.$campaign['subject'],$message,$url,(string)$campaign['topic'],$campaign);
   finish($ok?'Einzeltest an die ausgewählte Testadresse vom Mailserver angenommen (Zustellung prüfen).':'Einzeltest wurde vom Mailserver abgelehnt.',$id);
  }
  if($action==='approve'){
@@ -225,8 +233,8 @@ if($method==='POST'){
   finish('Kampagne gestoppt. Ausstehende Empfänger werden nicht mehr angeschrieben.',$id);
  }
  if($action==='duplicate'){
-  $q=$db->prepare("INSERT INTO founders_campaigns(subject,body,topic,state,created_at,updated_at) VALUES(?,?,?,'draft',?,?)");
-  $q->execute([$campaign['subject'].' (Kopie)',$campaign['body'],$campaign['topic'],$now,$now]);
+  $q=$db->prepare("INSERT INTO founders_campaigns(subject,body,topic,headline,preheader,button_label,button_url,layout,state,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,'draft',?,?)");
+  $q->execute([mb_substr_safe((string)$campaign['subject'],150).' (Kopie)',$campaign['body'],$campaign['topic'],$campaign['headline'],$campaign['preheader'],$campaign['button_label'],$campaign['button_url'],$campaign['layout'],$now,$now]);
   finish('Kampagne als neuer Entwurf kopiert.',(int)$db->lastInsertId());
  }
  if($action==='send'){
@@ -248,7 +256,7 @@ if($method==='POST'){
     $skipped++;continue;
    }
    [$message,$url]=footer($campaign['body'],(int)$r['subscriber_id'],$r['email'],$cfg['key'],(string)$campaign['topic']);
-   $ok=sendMail($r['email'],$campaign['subject'],$message,$url,(string)$campaign['topic']);
+   $ok=sendMail($r['email'],$campaign['subject'],$message,$url,(string)$campaign['topic'],$campaign);
    $db->prepare("UPDATE founders_deliveries SET state=? WHERE campaign_id=? AND subscriber_id=? AND state='sending'")->execute([$ok?'accepted':'failed',$id,(int)$r['subscriber_id']]);
    if($ok)$sent++;else $failed++;
   }
@@ -272,7 +280,7 @@ if($id){
  if($state==='draft'){
   $body.='<form method="post">'.csrf().'<input type="hidden" name="action" value="save"><input type="hidden" name="campaign" value="'.$id.'"><label>Betreff</label><input type="text" maxlength="160" name="subject" value="'.h($c['subject']).'" required><label>Thema / Empfängerkreis</label><select name="topic">';
   foreach($topics as $key=>$name)$body.='<option value="'.h($key).'"'.($c['topic']===$key?' selected':'').'>'.h($name).'</option>';
-  $body.='</select><label>Nachricht (Nur Text)</label><textarea name="body" maxlength="10000" required>'.h($c['body']).'</textarea><small>Persönliche Abmeldelinks und Absenderangaben werden beim Versand automatisch ergänzt.</small><p><button type="submit">Entwurf speichern</button></p></form><form method="post">'.csrf().'<input type="hidden" name="action" value="test"><input type="hidden" name="campaign" value="'.$id.'"><button type="submit">Testmail nur an '.($c['topic']==='newsletter'?'news@tennilo.de':'founders@tennilo.de').'</button></form>';
+  $body.='</select>'.campaignExtraFields($c).'<label>Nachricht (Nur Text)</label><textarea name="body" maxlength="10000" required>'.h($c['body']).'</textarea><small>Persönliche Abmeldelinks und Absenderangaben werden beim Versand automatisch ergänzt.</small><p><button type="submit">Entwurf speichern</button></p></form><form method="post">'.csrf().'<input type="hidden" name="action" value="test"><input type="hidden" name="campaign" value="'.$id.'"><button type="submit">Testmail nur an '.($c['topic']==='newsletter'?'news@tennilo.de':'founders@tennilo.de').'</button></form>';
   $body.='<div class="warning"><strong>Sicherer Einzeltest:</strong> Nur an die unten eingetragene Adresse. Diese muss sich bereits auf der Warteliste bestätigt und dem ausgewählten Thema zugestimmt haben. Kein Versand an andere Personen, keine Kampagnenfreigabe. Entwurf vor dem Test speichern.</div><form method="post">'.csrf().'<input type="hidden" name="action" value="test-one"><input type="hidden" name="campaign" value="'.$id.'"><label>Bestätigte eigene Testadresse</label><input type="text" name="test_email" maxlength="254" placeholder="Eigene bestätigte Adresse" autocomplete="off" required><label>Zur Bestätigung EINZELTEST eintippen</label><input type="text" name="test_confirmation" autocomplete="off" required><p><button type="submit">Echte Nachricht mit Abmeldelink nur an diese Adresse senden</button></p></form>';
   $body.='<div class="warning"><strong>Versandfreigabe:</strong> Erst eine Testmail prüfen. Bei Freigabe wird eine feste Empfängerliste der zu diesem Zeitpunkt bestätigten Interessenten erstellt. Eine spätere Abmeldung wird vor jedem Sendeversuch erneut berücksichtigt.</div><form method="post">'.csrf().'<input type="hidden" name="action" value="approve"><input type="hidden" name="campaign" value="'.$id.'"><label>Zum Freigeben SENDEN eintippen</label><input type="text" name="confirmation" autocomplete="off" placeholder="SENDEN" required><button type="submit">Empfängerliste freigeben – noch nicht verschicken</button></form>';
  }else{
@@ -286,7 +294,7 @@ if($id){
   if(in_array($state,['ready','sending'],true))$body.='<form method="post">'.csrf().'<input type="hidden" name="action" value="stop"><input type="hidden" name="campaign" value="'.$id.'"><label>Versand abbrechen: STOPP eingeben</label><input type="text" name="stop_confirmation" placeholder="STOPP" autocomplete="off" required><button type="submit">Kampagne stoppen</button></form>';
  }
  $body.='<form method="post">'.csrf().'<input type="hidden" name="action" value="duplicate"><input type="hidden" name="campaign" value="'.$id.'"><button type="submit">Als neuen Entwurf kopieren</button></form>';
- $body.='</section><section class="panel"><h2>E-Mail-Vorschau</h2><p class="muted">Vorschau ohne persönliche Empfängerdaten; der tatsächliche Abmeldelink wird erst beim Versand erzeugt.</p><div class="preview">'.tennilo_email_inner((string)$c['subject'],(string)$c['body'],null,null,(string)$c['topic']).'</div></section>';
+ $body.='</section><section class="panel"><h2>E-Mail-Vorschau</h2><p class="muted">Vorschau ohne persönliche Empfängerdaten; der tatsächliche Abmeldelink wird erst beim Versand erzeugt.</p><div class="preview">'.tennilo_email_inner((string)$c['subject'],(string)$c['body'],null,null,(string)$c['topic'],$c).'</div></section>';
  page($body);
 }
 $all=$db->query('SELECT id,subject,topic,state,created_at FROM founders_campaigns ORDER BY id DESC LIMIT 50')->fetchAll();
@@ -313,7 +321,7 @@ $body='<section class="panel"><h2>Versandübersicht</h2>'.$notice.'<div class="m
  .'</div><p class="kpi-caption">Die Anzahl bestätigter Kontakte ist nicht gleich der Empfängerzahl einer Kampagne: Die jeweilige Themen-Einwilligung entscheidet. „Angenommen“ ist keine Zustellungsbestätigung.</p></section>';
 $body.='<section class="panel"><h2>Neuen E-Mail-Entwurf anlegen</h2><p>Starte mit einer vorbereiteten Vorlage oder schreibe deine Nachricht selbst. Platzhalter in Vorlagen müssen vor dem Senden ersetzt werden.</p><div class="pills"><a class="pill" href="?template=newsletter">Allgemeines Update</a><a class="pill" href="?template=beta">Betatest-Einladung</a><a class="pill" href="?template=founders">Founders-Update</a><a class="pill" href="?template=crowdfunding">Crowdfunding-Info</a></div><p>Nur Personen mit bestätigter Anmeldung und ausdrücklichem Interesse am gewählten Thema erhalten später eine Nachricht. Der Versand startet niemals automatisch.</p><form method="post">'.csrf().'<input type="hidden" name="action" value="create"><label>Betreff</label><input type="text" name="subject" maxlength="160" value="'.h($template['subject']??'').'" required><label>Interessengebiet</label><select name="topic">';
 foreach($topics as $key=>$name)$body.='<option value="'.h($key).'"'.(($template['topic']??'')===$key?' selected':'').'>'.h($name).'</option>';
-$body.='</select><label>Text der Nachricht</label><textarea name="body" maxlength="10000" required>'.h($template['body']??'').'</textarea><p><button type="submit">Als Entwurf speichern</button></p></form></section>';
+$body.='</select>'.campaignExtraFields($template??[]).'<label>Text der Nachricht</label><textarea name="body" maxlength="10000" required>'.h($template['body']??'').'</textarea><p><button type="submit">Als Entwurf speichern</button></p></form></section>';
 $body.='<section class="panel"><h2>Letzte Kampagnen</h2><table><thead><tr><th>Betreff</th><th>Thema</th><th>Status</th></tr></thead><tbody>';
 foreach($all as $row)$body.='<tr><td><a href="?campaign='.(int)$row['id'].'">'.h($row['subject']).'</a></td><td>'.h($topics[$row['topic']]??$row['topic']).'</td><td>'.h($row['state']).'</td></tr>';
 $body.='</tbody></table></section>';
