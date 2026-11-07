@@ -28,7 +28,7 @@ try {
   id INTEGER PRIMARY KEY AUTOINCREMENT, subject TEXT NOT NULL, body TEXT NOT NULL,
   topic TEXT NOT NULL, state TEXT NOT NULL DEFAULT 'draft', created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL)");
  $db->exec("CREATE TABLE IF NOT EXISTS founders_deliveries (
-  campaign_id INTEGER NOT NULL, subscriber_id INTEGER NOT NULL,
+  campaign_id INTEGER NOT NULL, subscriber_id INTEGER NOT NULL, recipient_key TEXT NOT NULL,
   state TEXT NOT NULL DEFAULT 'pending', attempted_at INTEGER,
   PRIMARY KEY (campaign_id,subscriber_id))");
 } catch(Throwable $e) { error_log('Founders campaigns setup failed: '.$e->getMessage()); http_response_code(503); exit('Datenbank vorübergehend nicht verfügbar.'); }
@@ -109,8 +109,8 @@ if($method==='POST'){
   if(count($people)===0)finish('Keine bestätigten Kontakte mit passendem Interesse.',$id);
   try {
    $db->exec('BEGIN IMMEDIATE');
-   $q=$db->prepare("INSERT OR IGNORE INTO founders_deliveries(campaign_id,subscriber_id,state) VALUES(?,?,'pending')");
-   foreach($people as $person)$q->execute([$id,(int)$person['id']]);
+   $q=$db->prepare("INSERT OR IGNORE INTO founders_deliveries(campaign_id,subscriber_id,recipient_key,state) VALUES(?,?,?,'pending')");
+   foreach($people as $person)$q->execute([$id,(int)$person['id'],hash_hmac('sha256',strtolower((string)$person['email']),$cfg['key'])]);
    $db->prepare("UPDATE founders_campaigns SET state='ready',updated_at=? WHERE id=? AND state='draft'")->execute([$now,$id]);
    $db->commit();
   }catch(Throwable $e){if($db->inTransaction())$db->rollBack();error_log('Founders approve failed: '.$e->getMessage());finish('Freigabe fehlgeschlagen.',$id);}
@@ -122,14 +122,14 @@ if($method==='POST'){
   for($i=0;$i<5;$i++){
    try {
     $db->exec('BEGIN IMMEDIATE');
-    $q=$db->prepare("SELECT d.subscriber_id,s.email,s.interests,s.confirmed_at FROM founders_deliveries d LEFT JOIN subscribers s ON s.id=d.subscriber_id WHERE d.campaign_id=? AND d.state='pending' ORDER BY d.subscriber_id LIMIT 1");
+    $q=$db->prepare("SELECT d.subscriber_id,d.recipient_key,s.email,s.interests,s.confirmed_at FROM founders_deliveries d LEFT JOIN subscribers s ON s.id=d.subscriber_id WHERE d.campaign_id=? AND d.state='pending' ORDER BY d.subscriber_id LIMIT 1");
     $q->execute([$id]);$r=$q->fetch();
     if(!$r){$db->commit();break;}
     $db->prepare("UPDATE founders_deliveries SET state='sending',attempted_at=? WHERE campaign_id=? AND subscriber_id=? AND state='pending'")->execute([time(),$id,(int)$r['subscriber_id']]);
     $db->prepare("UPDATE founders_campaigns SET state='sending',updated_at=? WHERE id=?")->execute([time(),$id]);
     $db->commit();
    }catch(Throwable $e){if($db->inTransaction())$db->rollBack();error_log('Founders queue claim failed: '.$e->getMessage());finish('Warteschlange konnte nicht verarbeitet werden.',$id);}
-   $valid=$r['confirmed_at']!==null&&is_string($r['email'])&&safeEmail($r['email'])&&opted((string)$r['interests'],$campaign['topic']);
+   $valid=$r['confirmed_at']!==null&&is_string($r['email'])&&safeEmail($r['email'])&&hash_equals((string)$r['recipient_key'],hash_hmac('sha256',strtolower($r['email']),$cfg['key']))&&opted((string)$r['interests'],$campaign['topic']);
    if(!$valid){
     $db->prepare("UPDATE founders_deliveries SET state='skipped' WHERE campaign_id=? AND subscriber_id=?")->execute([$id,(int)$r['subscriber_id']]);
     $skipped++;continue;
