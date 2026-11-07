@@ -5,7 +5,7 @@ $path=dirname(__DIR__).'/tennilo-founders-config.php';
 if(!is_file($path)){http_response_code(503);exit('Founders-Verwaltung noch nicht eingerichtet.');}
 $cfg=require $path;
 if(!is_array($cfg)||($cfg['enabled']??false)!==true||empty($cfg['admin_password_hash'])||empty($cfg['database'])){http_response_code(503);exit('Verwaltung nicht freigeschaltet.');}
-session_name('tennilo_founders_admin');session_set_cookie_params(['httponly'=>true,'secure'=>true,'samesite'=>'Strict','path'=>'/']);session_start();
+session_name('tennilo_founders_portal_v2');session_set_cookie_params(['httponly'=>true,'secure'=>true,'samesite'=>'Strict','path'=>'/']);session_start();
 function render(string $body): never {
  header('Content-Type: text/html; charset=UTF-8');
  echo '<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>TENNILO Founders · Verwaltung</title><style>body{font:15px/1.6 system-ui;background:#f6f8f4;color:#092b36;margin:0}.wrap{max-width:1000px;margin:6vh auto;background:#fff;padding:32px;border-radius:16px}table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #dce7e1;padding:10px;text-align:left}input,button{padding:10px;border-radius:6px}button{background:#092b36;color:white;border:0;cursor:pointer}a{color:#087a82}small{color:#567}</style><main class="wrap"><h1>TENNILO Founders</h1>'.$body.'</main></html>';exit;
@@ -27,11 +27,15 @@ if(($_POST['action']??'')==='login'){
    $rateDb->prepare('DELETE FROM founders_admin_login_attempts WHERE ip_hash=?')->execute([$ipHash]);
    session_regenerate_id(true);$_SESSION['authenticated']=true;$_SESSION['auth_at']=time();
    $_SESSION['csrf']=bin2hex(random_bytes(24));
-   header('Location: /founders-admin.php',true,303);exit;
+   header('Location: /founders-admin.php?login=ok',true,303);exit;
   }
   $rateDb->prepare('INSERT INTO founders_admin_login_attempts(ip_hash,attempted_at) VALUES(?,?)')->execute([$ipHash,time()]);
  }catch(Throwable $e){error_log('Founders admin login rate limit: '.$e->getMessage());http_response_code(503);render('<p>Anmeldung momentan nicht verfügbar.</p>');}
  usleep(400000);render('<p>Anmeldung fehlgeschlagen.</p><a href="/founders-admin.php">Zurück</a>');
+}
+if(empty($_SESSION['authenticated']) && ($_GET['login']??'')==='ok'){
+ http_response_code(503);
+ render('<p>Das Passwort wurde angenommen, aber die Sitzung konnte vom Browser nicht wiederhergestellt werden.</p><p>Bitte Cookies für tennilo.de erlauben und bei Bedarf die Seite in einem privaten Browserfenster testen. Wenn das Problem bleibt, benötigen wir das PHP-Session-Fehlerprotokoll von ALL-INKL.</p><a href="/founders-admin.php">Erneut versuchen</a>');
 }
 if(empty($_SESSION['authenticated']))render('<form method="post"><input type="hidden" name="action" value="login"><label>Admin-Passwort <input type="password" name="password" required autocomplete="current-password"></label> <button>Einloggen</button></form>');
 if(($_POST['action']??'')==='logout'){
