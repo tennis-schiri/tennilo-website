@@ -1,0 +1,14 @@
+public/assets/styles.css
+public/assets/tennilo-logo.png
+public/assets/tennilo-icon.png
+public/favicon.png
+public/robots.txt
+public/sitemap.xml
+public/google8cf6756d83169a32.html
+public/impressum.html
+public/datenschutz.html
+public/founders-check.php
+public/founders-setup.php
+public/founders-admin.php
+public/founders.php
+public/index.html
