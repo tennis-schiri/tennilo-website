@@ -145,8 +145,9 @@ if($method==='POST'){
  if($action==='test'){
   if($campaign['state']!=='draft')finish('Testsendung nur vor Freigabe möglich.',$id);
   $sample=$campaign['body']."\n\n---\nTESTNACHRICHT – noch keine Aussendung an Wartelistenkontakte.\nIm echten Versand wird automatisch ein persönlicher Abmeldelink angehängt.";
-  $ok=sendMail('founders@tennilo.de','[TEST] '.$campaign['subject'],$sample,null,$campaign['topic']);
-  finish($ok?'Testmail an founders@tennilo.de vom Server angenommen.':'Testmail wurde vom Server abgelehnt.',$id);
+  $testTarget=$campaign['topic']==='newsletter'?'news@tennilo.de':'founders@tennilo.de';
+  $ok=sendMail($testTarget,'[TEST] '.$campaign['subject'],$sample,null,$campaign['topic']);
+  finish($ok?'Testmail an '.$testTarget.' vom Server angenommen.':'Testmail wurde vom Server abgelehnt.',$id);
  }
  if($action==='test-one'){
   if($campaign['state']!=='draft')finish('Einzeltest nur aus einem Entwurf möglich.',$id);
@@ -227,7 +228,7 @@ if($id){
  if($state==='draft'){
   $body.='<form method="post">'.csrf().'<input type="hidden" name="action" value="save"><input type="hidden" name="campaign" value="'.$id.'"><label>Betreff</label><input type="text" maxlength="160" name="subject" value="'.h($c['subject']).'" required><label>Thema / Empfängerkreis</label><select name="topic">';
   foreach($topics as $key=>$name)$body.='<option value="'.h($key).'"'.($c['topic']===$key?' selected':'').'>'.h($name).'</option>';
-  $body.='</select><label>Nachricht (Nur Text)</label><textarea name="body" maxlength="10000" required>'.h($c['body']).'</textarea><small>Persönliche Abmeldelinks und Absenderangaben werden beim Versand automatisch ergänzt.</small><p><button type="submit">Entwurf speichern</button></p></form><form method="post">'.csrf().'<input type="hidden" name="action" value="test"><input type="hidden" name="campaign" value="'.$id.'"><button type="submit">Testmail nur an founders@tennilo.de</button></form>';
+  $body.='</select><label>Nachricht (Nur Text)</label><textarea name="body" maxlength="10000" required>'.h($c['body']).'</textarea><small>Persönliche Abmeldelinks und Absenderangaben werden beim Versand automatisch ergänzt.</small><p><button type="submit">Entwurf speichern</button></p></form><form method="post">'.csrf().'<input type="hidden" name="action" value="test"><input type="hidden" name="campaign" value="'.$id.'"><button type="submit">Testmail nur an '.($c['topic']==='newsletter'?'news@tennilo.de':'founders@tennilo.de').'</button></form>';
   $body.='<div class="warning"><strong>Sicherer Einzeltest:</strong> Nur an die unten eingetragene Adresse. Diese muss sich bereits auf der Warteliste bestätigt und dem ausgewählten Thema zugestimmt haben. Kein Versand an andere Personen, keine Kampagnenfreigabe. Entwurf vor dem Test speichern.</div><form method="post">'.csrf().'<input type="hidden" name="action" value="test-one"><input type="hidden" name="campaign" value="'.$id.'"><label>Bestätigte eigene Testadresse</label><input type="text" name="test_email" maxlength="254" placeholder="Eigene bestätigte Adresse" autocomplete="off" required><label>Zur Bestätigung EINZELTEST eintippen</label><input type="text" name="test_confirmation" autocomplete="off" required><p><button type="submit">Echte Nachricht mit Abmeldelink nur an diese Adresse senden</button></p></form>';
   $body.='<div class="warning"><strong>Versandfreigabe:</strong> Erst eine Testmail prüfen. Bei Freigabe wird eine feste Empfängerliste der zu diesem Zeitpunkt bestätigten Interessenten erstellt. Eine spätere Abmeldung wird vor jedem Sendeversuch erneut berücksichtigt.</div><form method="post">'.csrf().'<input type="hidden" name="action" value="approve"><input type="hidden" name="campaign" value="'.$id.'"><label>Zum Freigeben SENDEN eintippen</label><input type="text" name="confirmation" autocomplete="off" placeholder="SENDEN" required><button type="submit">Empfängerliste freigeben – noch nicht verschicken</button></form>';
  }else{
