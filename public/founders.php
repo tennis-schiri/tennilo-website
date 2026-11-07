@@ -68,17 +68,38 @@ if($action==='confirm' && $method==='GET'){
  $q=$db->prepare('SELECT id,email,unsubscribe_hash FROM subscribers WHERE confirm_hash=? AND confirmed_at IS NULL AND expires_at>=?');$q->execute([hashed($t),$now]);$r=$q->fetch();
  if(!$r)page('Link abgelaufen','<p>Dieser Link ist ungültig oder bereits verwendet.</p>',400);
  $db->prepare('UPDATE subscribers SET confirmed_at=?,confirm_hash=NULL,expires_at=? WHERE id=?')->execute([$now,2147483647,$r['id']]);
- page('Anmeldung bestätigt','<p>Du stehst jetzt auf der TENNILO Founders-Warteliste. Du erhältst nur Informationen zu den ausgewählten Interessen.</p><p>Du kannst dich jederzeit über den Abmeldelink in unseren Nachrichten oder per E-Mail an founders@tennilo.de abmelden.</p>');
+ page('Anmeldung bestätigt','<p>Du stehst jetzt auf der TENNILO Founders-Warteliste. Du erhältst nur Informationen zu den ausgewählten Interessen.</p><p>Du kannst dich jederzeit <a href="/founders.php?action=unsubscribe-request">online abmelden</a> oder eine E-Mail an founders@tennilo.de schreiben.</p>');
+}
+if($action==='unsubscribe-request' && $method==='GET'){
+ page('Abmeldung anfordern','<p>Trage deine E-Mail-Adresse ein. Falls sie auf der Warteliste steht, senden wir dir einen geschützten Abmeldelink.</p><form method="post" action="/founders.php"><input type="hidden" name="action" value="unsubscribe-request"><label>E-Mail-Adresse <input type="email" name="email" autocomplete="email" maxlength="254" required style="display:block;box-sizing:border-box;width:100%;padding:12px;margin:10px 0 18px"></label><button type="submit">Abmeldelink anfordern</button></form>');
+}
+if($action==='unsubscribe-request' && $method==='POST'){
+ $email=strtolower(trim((string)($_POST['email']??'')));
+ if(!filter_var($email,FILTER_VALIDATE_EMAIL)||strlen($email)>254)page('Abmeldung','<p>Falls deine Adresse registriert ist, erhältst du eine E-Mail mit dem Abmeldelink.</p>');
+ $ip=hashed($cfg['key'].'|'.($_SERVER['REMOTE_ADDR']??'unknown'));
+ $q=$db->prepare('SELECT COUNT(*) FROM attempts WHERE ip_hash=? AND created_at>?');$q->execute([$ip,$now-3600]);
+ if((int)$q->fetchColumn()>=6)page('Zu viele Anfragen','<p>Bitte versuche es später erneut oder schreibe an founders@tennilo.de.</p>',429);
+ $db->prepare('INSERT INTO attempts(ip_hash,created_at) VALUES(?,?)')->execute([$ip,$now]);
+ $q=$db->prepare('SELECT id FROM subscribers WHERE email=? AND confirmed_at IS NOT NULL');$q->execute([$email]);
+ $r=$q->fetch();
+ if($r){
+  $t=token();
+  $db->prepare('UPDATE subscribers SET unsubscribe_hash=?, expires_at=? WHERE id=?')->execute([hashed($t),$now+2*86400,$r['id']]);
+  $link='https://tennilo.de/founders.php?action=unsubscribe&token='.$t;
+  $body="Hier kannst du deine TENNILO Founders-Wartelistenanmeldung loeschen:\n\n".$link."\n\nDieser Link ist 48 Stunden gueltig. Falls du die Abmeldung nicht angefordert hast, ignoriere diese Nachricht.\nKontakt: founders@tennilo.de";
+  if(!mailLink($cfg,$email,'TENNILO Founders: Abmeldung bestaetigen',$body))error_log('TENNILO Founders unsubscribe mail() failed');
+ }
+ page('E-Mail prüfen','<p>Falls deine Adresse registriert ist, erhältst du einen Abmeldelink per E-Mail. Prüfe gegebenenfalls auch den Spamordner.</p>');
 }
 if($action==='unsubscribe' && $method==='GET'){
  $t=(string)($_GET['token']??'');if(!preg_match('/^[a-f0-9]{64}$/',$t))page('Link ungültig','<p>Der Link ist ungültig.</p>',400);
- $q=$db->prepare('SELECT id FROM subscribers WHERE unsubscribe_hash=? AND confirmed_at IS NOT NULL');$q->execute([hashed($t)]);
+ $q=$db->prepare('SELECT id FROM subscribers WHERE unsubscribe_hash=? AND confirmed_at IS NOT NULL AND expires_at>=?');$q->execute([hashed($t),$now]);
  if(!$q->fetch())page('Link ungültig','<p>Dieser Abmeldelink ist nicht gültig.</p>',400);
  page('Von der Warteliste abmelden','<form method="post" action="/founders.php"><input type="hidden" name="action" value="unsubscribe"><input type="hidden" name="token" value="'.htmlspecialchars($t,ENT_QUOTES).'"><p>Möchtest du deine Anmeldung löschen?</p><button type="submit">Jetzt abmelden</button></form>');
 }
 if($action==='unsubscribe' && $method==='POST'){
  $t=(string)($_POST['token']??'');if(!preg_match('/^[a-f0-9]{64}$/',$t))page('Link ungültig','<p>Der Link ist ungültig.</p>',400);
- $db->prepare('DELETE FROM subscribers WHERE unsubscribe_hash=?')->execute([hashed($t)]);
+ $db->prepare('DELETE FROM subscribers WHERE unsubscribe_hash=? AND confirmed_at IS NOT NULL AND expires_at>=?')->execute([hashed($t),$now]);
  page('Abgemeldet','<p>Dein Wartelisteneintrag wurde gelöscht.</p>');
 }
 page('TENNILO Founders','<p>Bitte nutze das Anmeldeformular auf unserer Startseite.</p>',404);
