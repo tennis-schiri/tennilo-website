@@ -11,5 +11,6 @@ public/founders-check.php
 public/founders-setup.php
 public/founders-admin.php
 public/founders-mail.php
+public/founders-email-template.php
 public/founders.php
 public/index.html
