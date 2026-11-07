@@ -32,6 +32,9 @@ try {
   campaign_id INTEGER NOT NULL, subscriber_id INTEGER NOT NULL, recipient_key TEXT NOT NULL,
   state TEXT NOT NULL DEFAULT 'pending', attempted_at INTEGER,
   PRIMARY KEY (campaign_id,subscriber_id))");
+ $db->exec("CREATE TABLE IF NOT EXISTS subscriber_consents (
+  subscriber_id INTEGER NOT NULL, topic TEXT NOT NULL, consented_at INTEGER NOT NULL,
+  consent_version TEXT NOT NULL, PRIMARY KEY(subscriber_id,topic))");
 } catch(Throwable $e) { error_log('Founders campaigns setup failed: '.$e->getMessage()); http_response_code(503); exit('Datenbank vorübergehend nicht verfügbar.'); }
 function h(mixed $value): string { return htmlspecialchars((string)$value,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8'); }
 function finish(string $message,int $id=0): never {
@@ -48,28 +51,30 @@ function subjectHeader(string $subject): string {
  if (function_exists('mb_encode_mimeheader')) return mb_encode_mimeheader($subject,'UTF-8','B',"\r\n");
  return '=?UTF-8?B?'.base64_encode($subject).'?=';
 }
-function sendMail(string $to,string $subject,string $message,?string $unsubscribeUrl=null): bool {
+function sendMail(string $to,string $subject,string $message,?string $unsubscribeUrl=null,string $topic='founders'): bool {
  if (!safeEmail($to)) return false;
+ $sender=$topic==='newsletter'?'news@tennilo.de':'founders@tennilo.de';
+ $senderName=$topic==='newsletter'?'TENNILO Newsletter':'TENNILO Founders';
  $headers=[
-  'From: TENNILO Founders <founders@tennilo.de>',
-  'Reply-To: founders@tennilo.de',
+  'From: '.$senderName.' <'.$sender.'>',
+  'Reply-To: '.$sender,
   'MIME-Version: 1.0'
  ];
  $plain=rtrim($message);
  if ($unsubscribeUrl!==null) {
-  $plain.="\n\n---\nTENNILO Founders · Ein Projekt von Tennis-Schiri\n";
+  $plain.="\n\n---\nTENNILO · Ein Projekt von Tennis-Schiri\n";
   $plain.="Du erhaeltst diese Nachricht, weil du Informationen zu diesem Thema angefordert hast.\n";
-  $plain.="Abmelden: ".$unsubscribeUrl."\nKontakt: founders@tennilo.de";
+  $plain.="Abmelden: ".$unsubscribeUrl."\nE-Mail-Themen verwalten: https://tennilo.de/newsletter.php?action=manage\nKontakt: ".$sender;
   $headers[]='List-Unsubscribe: <'.$unsubscribeUrl.'>';
  } else {
   $plain.="\n\n---\nTENNILO Founders · Ein Projekt von Tennis-Schiri\n";
-  $plain.="Abmelden: https://tennilo.de/founders.php?action=unsubscribe-request\nKontakt: founders@tennilo.de";
+  $plain.="E-Mail-Themen verwalten: https://tennilo.de/newsletter.php?action=manage\nKontakt: ".$sender;
  }
  $logoFile=__DIR__.'/assets/tennilo-logo.png';
  $logo=is_file($logoFile)&&filesize($logoFile)<300000?@file_get_contents($logoFile):false;
  $hasLogo=is_string($logo)&&$logo!=='';
  $cid='tennilo-logo@tennilo.de';
- $html=tennilo_email_html($subject,$message,$unsubscribeUrl,$hasLogo?'cid:'.$cid:null);
+ $html=tennilo_email_html($subject,$message,$unsubscribeUrl,$hasLogo?'cid:'.$cid:null,$topic);
  $alternative='tennilo_alt_'.bin2hex(random_bytes(12));
  $textPart='--'.$alternative."\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n".quoted_printable_encode($plain)."\r\n";
  $htmlPart='--'.$alternative."\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n".quoted_printable_encode($html)."\r\n";
@@ -86,22 +91,33 @@ function sendMail(string $to,string $subject,string $message,?string $unsubscrib
   $mime=$alternatives;
   error_log('Founders mailing logo file missing or too large; linked website image used');
  }
- return mail($to,subjectHeader($subject),$mime,implode("\r\n",$headers),'-ffounders@tennilo.de');
+ return mail($to,subjectHeader($subject),$mime,implode("\r\n",$headers),'-f'.$sender);
 }
 function opted(string $encoded,string $topic): bool {
  $topics=json_decode($encoded,true);
  return is_array($topics) && in_array($topic,$topics,true);
 }
+function topicConsent(PDO $db,int $id,string $topic): bool {
+ if($topic!=='newsletter')return true;
+ $q=$db->prepare("SELECT 1 FROM subscriber_consents WHERE subscriber_id=? AND topic='newsletter'");
+ $q->execute([$id]);
+ return (bool)$q->fetchColumn();
+}
 function recipients(PDO $db,string $topic): array {
  $rows=$db->query('SELECT id,email,interests FROM subscribers WHERE confirmed_at IS NOT NULL ORDER BY id')->fetchAll();
- return array_values(array_filter($rows,static fn($r)=>opted((string)$r['interests'],$topic)&&safeEmail((string)$r['email'])));
+ return array_values(array_filter($rows,static fn($r)=>opted((string)$r['interests'],$topic)&&safeEmail((string)$r['email'])&&topicConsent($db,(int)$r['id'],$topic)));
 }
-function footer(string $body,int $id,string $email,string $key): array {
- $sig=hash_hmac('sha256',$id.'|'.$email,$key);
- $url='https://tennilo.de/founders.php?action=unsubscribe-signed&id='.$id.'&sig='.$sig;
+function footer(string $body,int $id,string $email,string $key,string $topic='founders'): array {
+ if($topic==='newsletter'){
+  $sig=hash_hmac('sha256',$id.'|'.$email.'|newsletter',$key);
+  $url='https://tennilo.de/founders.php?action=unsubscribe-topic-signed&id='.$id.'&topic=newsletter&sig='.$sig;
+ }else{
+  $sig=hash_hmac('sha256',$id.'|'.$email,$key);
+  $url='https://tennilo.de/founders.php?action=unsubscribe-signed&id='.$id.'&sig='.$sig;
+ }
  return [rtrim($body),$url];
 }
-$topics=['beta'=>'Betatests','founders'=>'Founders-Angebote','crowdfunding'=>'Startnext-Crowdfunding'];
+$topics=['newsletter'=>'Allgemeiner TENNILO Newsletter','beta'=>'Betatests','founders'=>'Founders-Angebote','crowdfunding'=>'Startnext-Crowdfunding'];
 $method=$_SERVER['REQUEST_METHOD']??'GET';
 if($method==='POST'){
  if(!hash_equals((string)$_SESSION['csrf'],(string)($_POST['csrf']??''))){http_response_code(403);page('<section class="panel">Sitzung abgelaufen oder Anfrage ungültig.</section>');}
@@ -129,7 +145,7 @@ if($method==='POST'){
  if($action==='test'){
   if($campaign['state']!=='draft')finish('Testsendung nur vor Freigabe möglich.',$id);
   $sample=$campaign['body']."\n\n---\nTESTNACHRICHT – noch keine Aussendung an Wartelistenkontakte.\nIm echten Versand wird automatisch ein persönlicher Abmeldelink angehängt.";
-  $ok=sendMail('founders@tennilo.de','[TEST] '.$campaign['subject'],$sample);
+  $ok=sendMail('founders@tennilo.de','[TEST] '.$campaign['subject'],$sample,null,$campaign['topic']);
   finish($ok?'Testmail an founders@tennilo.de vom Server angenommen.':'Testmail wurde vom Server abgelehnt.',$id);
  }
  if($action==='test-one'){
@@ -138,10 +154,10 @@ if($method==='POST'){
   if(!safeEmail($email)||($_POST['test_confirmation']??'')!=='EINZELTEST')finish('Bitte eine gültige Testadresse und EINZELTEST eingeben.',$id);
   $q=$db->prepare('SELECT id,email,interests,confirmed_at FROM subscribers WHERE email=? AND confirmed_at IS NOT NULL');
   $q->execute([$email]);$recipient=$q->fetch();
-  if(!$recipient||!opted((string)$recipient['interests'],(string)$campaign['topic']))
+  if(!$recipient||!opted((string)$recipient['interests'],(string)$campaign['topic'])||!topicConsent($db,(int)$recipient['id'],(string)$campaign['topic']))
    finish('Kein bestätigter Founders-Eintrag mit Einwilligung zum gewählten Thema für diese Adresse vorhanden.',$id);
-  [$message,$url]=footer($campaign['body'],(int)$recipient['id'],(string)$recipient['email'],(string)$cfg['key']);
-  $ok=sendMail((string)$recipient['email'],'[EINZELTEST] '.$campaign['subject'],$message,$url);
+  [$message,$url]=footer($campaign['body'],(int)$recipient['id'],(string)$recipient['email'],(string)$cfg['key'],(string)$campaign['topic']);
+  $ok=sendMail((string)$recipient['email'],'[EINZELTEST] '.$campaign['subject'],$message,$url,(string)$campaign['topic']);
   finish($ok?'Einzeltest an die ausgewählte Testadresse vom Mailserver angenommen (Zustellung prüfen).':'Einzeltest wurde vom Mailserver abgelehnt.',$id);
  }
  if($action==='approve'){
@@ -181,13 +197,13 @@ if($method==='POST'){
     $db->prepare("UPDATE founders_campaigns SET state='sending',updated_at=? WHERE id=?")->execute([time(),$id]);
     $db->commit();
    }catch(Throwable $e){if($db->inTransaction())$db->rollBack();error_log('Founders queue claim failed: '.$e->getMessage());finish('Warteschlange konnte nicht verarbeitet werden.',$id);}
-   $valid=$r['confirmed_at']!==null&&is_string($r['email'])&&safeEmail($r['email'])&&hash_equals((string)$r['recipient_key'],hash_hmac('sha256',strtolower($r['email']),$cfg['key']))&&opted((string)$r['interests'],$campaign['topic']);
+   $valid=$r['confirmed_at']!==null&&is_string($r['email'])&&safeEmail($r['email'])&&hash_equals((string)$r['recipient_key'],hash_hmac('sha256',strtolower($r['email']),$cfg['key']))&&opted((string)$r['interests'],$campaign['topic'])&&topicConsent($db,(int)$r['subscriber_id'],(string)$campaign['topic']);
    if(!$valid){
     $db->prepare("UPDATE founders_deliveries SET state='skipped' WHERE campaign_id=? AND subscriber_id=?")->execute([$id,(int)$r['subscriber_id']]);
     $skipped++;continue;
    }
-   [$message,$url]=footer($campaign['body'],(int)$r['subscriber_id'],$r['email'],$cfg['key']);
-   $ok=sendMail($r['email'],$campaign['subject'],$message,$url);
+   [$message,$url]=footer($campaign['body'],(int)$r['subscriber_id'],$r['email'],$cfg['key'],(string)$campaign['topic']);
+   $ok=sendMail($r['email'],$campaign['subject'],$message,$url,(string)$campaign['topic']);
    $db->prepare("UPDATE founders_deliveries SET state=? WHERE campaign_id=? AND subscriber_id=? AND state='sending'")->execute([$ok?'accepted':'failed',$id,(int)$r['subscriber_id']]);
    if($ok)$sent++;else $failed++;
   }
@@ -225,7 +241,7 @@ if($id){
   if(in_array($state,['ready','sending'],true))$body.='<form method="post">'.csrf().'<input type="hidden" name="action" value="stop"><input type="hidden" name="campaign" value="'.$id.'"><label>Versand abbrechen: STOPP eingeben</label><input type="text" name="stop_confirmation" placeholder="STOPP" autocomplete="off" required><button type="submit">Kampagne stoppen</button></form>';
  }
  $body.='<form method="post">'.csrf().'<input type="hidden" name="action" value="duplicate"><input type="hidden" name="campaign" value="'.$id.'"><button type="submit">Als neuen Entwurf kopieren</button></form>';
- $body.='</section><section class="panel"><h2>E-Mail-Vorschau</h2><p class="muted">Vorschau ohne persönliche Empfängerdaten; der tatsächliche Abmeldelink wird erst beim Versand erzeugt.</p><div class="preview">'.tennilo_email_inner((string)$c['subject'],(string)$c['body']).'</div></section>';
+ $body.='</section><section class="panel"><h2>E-Mail-Vorschau</h2><p class="muted">Vorschau ohne persönliche Empfängerdaten; der tatsächliche Abmeldelink wird erst beim Versand erzeugt.</p><div class="preview">'.tennilo_email_inner((string)$c['subject'],(string)$c['body'],null,null,(string)$c['topic']).'</div></section>';
  page($body);
 }
 $all=$db->query('SELECT id,subject,topic,state,created_at FROM founders_campaigns ORDER BY id DESC LIMIT 50')->fetchAll();
@@ -237,6 +253,7 @@ $summary=$db->query("SELECT
 $templates=[
  'beta'=>['subject'=>'TENNILO: Einladung zum Betatest','topic'=>'beta','body'=>"Hallo,\n\nwir entwickeln TENNILO für Turniere im Verein und möchten die Bedienung gemeinsam mit interessierten Vereinen und Organisatoren testen.\n\nWenn du beim Betatest mitmachen möchtest, antworte einfach auf diese E-Mail. Wir melden uns mit weiteren Informationen, sobald es konkrete Testmöglichkeiten gibt.\n\nViele Grüße\nDas TENNILO-Team"],
  'founders'=>['subject'=>'TENNILO Founders: Ein Update aus der Entwicklung','topic'=>'founders','body'=>"Hallo,\n\nhier kommt ein kurzer Einblick in die Entwicklung von TENNILO.\n\n[Hier eine tatsächlich fertige Funktion oder einen aktuellen Meilenstein beschreiben.]\n\n[Hier den nächsten geplanten Schritt oder eine konkrete Frage an die Interessenten ergänzen.]\n\nViele Grüße\nDas TENNILO-Team"],
+ 'newsletter'=>['subject'=>'TENNILO Update #01 – Einblicke in die Entwicklung','topic'=>'newsletter','body'=>"Hallo,\n\nmit unserem TENNILO-Newsletter halten wir dich über die Entwicklung der Turnier-App für Vereine auf dem Laufenden.\n\n[Hier einen konkreten, überprüften Entwicklungsfortschritt ergänzen.]\n\n[Hier einen Ausblick auf die nächsten Schritte ergänzen.]\n\nViele Grüße\nDas TENNILO-Team"],
  'crowdfunding'=>['subject'=>'TENNILO: Informationen zur möglichen Crowdfunding-Kampagne','topic'=>'crowdfunding','body'=>"Hallo,\n\nvielen Dank für dein Interesse an TENNILO.\n\nWir prüfen aktuell, wie eine Crowdfunding-Kampagne zur weiteren Entwicklung aussehen könnte. Sobald es konkrete Angebote oder Termine gibt, informieren wir dich über diesen Kanal.\n\n[Konkrete und überprüfte Kampagnendetails ergänzen, bevor diese Nachricht versendet wird.]\n\nViele Grüße\nDas TENNILO-Team"]
 ];
 $selectedTemplate=(string)($_GET['template']??'');
@@ -247,7 +264,7 @@ $body='<section class="panel"><h2>Versandübersicht</h2>'.$notice.'<div class="m
  .'<div class="metric"><strong>'.(int)$summary['running'].'</strong><span>Freigegebene Kampagnen</span></div>'
  .'<div class="metric"><strong>'.(int)$summary['accepted'].'</strong><span>E-Mails vom Mailserver angenommen</span></div>'
  .'</div><p class="kpi-caption">Die Anzahl bestätigter Kontakte ist nicht gleich der Empfängerzahl einer Kampagne: Die jeweilige Themen-Einwilligung entscheidet. „Angenommen“ ist keine Zustellungsbestätigung.</p></section>';
-$body.='<section class="panel"><h2>Neuen E-Mail-Entwurf anlegen</h2><p>Starte mit einer vorbereiteten Vorlage oder schreibe deine Nachricht selbst. Platzhalter in Vorlagen müssen vor dem Senden ersetzt werden.</p><div class="pills"><a class="pill" href="?template=beta">Betatest-Einladung</a><a class="pill" href="?template=founders">Founders-Update</a><a class="pill" href="?template=crowdfunding">Crowdfunding-Info</a></div><p>Nur Personen mit bestätigter Anmeldung und ausdrücklichem Interesse am gewählten Thema erhalten später eine Nachricht. Der Versand startet niemals automatisch.</p><form method="post">'.csrf().'<input type="hidden" name="action" value="create"><label>Betreff</label><input type="text" name="subject" maxlength="160" value="'.h($template['subject']??'').'" required><label>Interessengebiet</label><select name="topic">';
+$body.='<section class="panel"><h2>Neuen E-Mail-Entwurf anlegen</h2><p>Starte mit einer vorbereiteten Vorlage oder schreibe deine Nachricht selbst. Platzhalter in Vorlagen müssen vor dem Senden ersetzt werden.</p><div class="pills"><a class="pill" href="?template=newsletter">Allgemeines Update</a><a class="pill" href="?template=beta">Betatest-Einladung</a><a class="pill" href="?template=founders">Founders-Update</a><a class="pill" href="?template=crowdfunding">Crowdfunding-Info</a></div><p>Nur Personen mit bestätigter Anmeldung und ausdrücklichem Interesse am gewählten Thema erhalten später eine Nachricht. Der Versand startet niemals automatisch.</p><form method="post">'.csrf().'<input type="hidden" name="action" value="create"><label>Betreff</label><input type="text" name="subject" maxlength="160" value="'.h($template['subject']??'').'" required><label>Interessengebiet</label><select name="topic">';
 foreach($topics as $key=>$name)$body.='<option value="'.h($key).'"'.(($template['topic']??'')===$key?' selected':'').'>'.h($name).'</option>';
 $body.='</select><label>Text der Nachricht</label><textarea name="body" maxlength="10000" required>'.h($template['body']??'').'</textarea><p><button type="submit">Als Entwurf speichern</button></p></form></section>';
 $body.='<section class="panel"><h2>Letzte Kampagnen</h2><table><thead><tr><th>Betreff</th><th>Thema</th><th>Status</th></tr></thead><tbody>';
