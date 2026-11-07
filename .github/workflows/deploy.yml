@@ -19,34 +19,48 @@ jobs:
     if: github.event_name == 'push'
     runs-on: ubuntu-24.04
     steps:
-      - run: echo 'TENNILO-Workflow registriert. Kein Upload ausgeführt.'
+      - run: echo 'Workflow wurde registriert. Kein FTP-Upload ausgeführt.'
 
   deploy:
-    name: Landingpage per FTPS hochladen
+    name: Website und Founders-PHP per FTPS hochladen
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - name: Website aus GitHub abrufen
+      - name: Quellcode abrufen
         uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      - name: Vorbereitende Prüfung
+      - name: Datei-Freigabeliste prüfen
         shell: bash
         run: |
           set -euo pipefail
-          for file in public/founders.php public/founders-admin.php public/founders-setup.php public/index.html public/impressum.html public/datenschutz.html public/robots.txt public/sitemap.xml public/google8cf6756d83169a32.html public/assets/styles.css public/assets/tennilo-logo.png public/assets/tennilo-icon.png public/favicon.png; do
-            test -f "$file" || { echo "::error::Fehlende Datei: $file"; exit 1; }
-          done
+          test -s deploy-files.txt
+          count=0
+          while IFS= read -r file || [[ -n "$file" ]]; do
+            [[ "$file" =~ ^public/[A-Za-z0-9._/-]+$ ]] || { echo "::error::Ungültiger Dateipfad: $file"; exit 1; }
+            [[ "$file" != *..* ]] || { echo "::error::Pfad mit '..' verboten"; exit 1; }
+            test -f "$file" || { echo "::error::Datei fehlt: $file"; exit 1; }
+            count=$((count+1))
+          done < deploy-files.txt
+          echo "Freigegebene Dateien: $count"
+          grep -Fxq "public/founders.php" deploy-files.txt
+          grep -Fxq "public/founders-admin.php" deploy-files.txt
+          grep -Fxq "public/founders-setup.php" deploy-files.txt
+          grep -Fxq "public/founders-check.php" deploy-files.txt
+          grep -Fxq "public/index.html" deploy-files.txt
 
-      - name: PHP-Syntax für Founders prüfen
+      - name: PHP-Syntax prüfen
+        shell: bash
         run: |
+          set -euo pipefail
           php -l public/founders.php
           php -l public/founders-admin.php
           php -l public/founders-setup.php
+          php -l public/founders-check.php
 
-      - name: Ausschließlich Website-Dateien per FTPS übertragen
+      - name: Ausschließlich freigegebene Website-Dateien per FTPS übertragen
         shell: bash
         env:
           FTP_HOST: ${{ secrets.FTP_HOST }}
@@ -57,11 +71,16 @@ jobs:
           : "${FTP_HOST:?FTP_HOST fehlt als Repository-Secret}"
           : "${FTP_USER:?FTP_USER fehlt als Repository-Secret}"
           : "${FTP_PASSWORD:?FTP_PASSWORD fehlt als Repository-Secret}"
-          # Der FTP-Benutzer MUSS als Startverzeichnis /tennilo-website/ haben.
-          # Kein Löschen, keine Änderung der geschützten Test-App.
-          for file in public/assets/styles.css public/assets/tennilo-logo.png public/assets/tennilo-icon.png public/favicon.png public/impressum.html public/datenschutz.html public/robots.txt public/sitemap.xml public/google8cf6756d83169a32.html public/index.html; do
+          # FTP-Benutzer muss sein Startverzeichnis in /tennilo-website/ haben.
+          # Keine Löschungen; Konfigurationsdatei und Datenbank niemals hochladen.
+          count=0
+          while IFS= read -r file || [[ -n "$file" ]]; do
             remote="${file#public/}"
             echo "Übertrage $remote …"
-            curl --fail --silent --show-error --ssl-reqd --ftp-pasv --ftp-create-dirs               --user "${FTP_USER}:${FTP_PASSWORD}"               --upload-file "$file"               "ftp://${FTP_HOST}:21/$remote"
-          done
-          echo 'Website-Dateien einschließlich Founders-Endpunkte wurden übertragen.'
+            curl --fail --silent --show-error --ssl-reqd --ftp-pasv --ftp-create-dirs \
+              --user "${FTP_USER}:${FTP_PASSWORD}" \
+              --upload-file "$file" \
+              "ftp://${FTP_HOST}:21/$remote"
+            count=$((count+1))
+          done < deploy-files.txt
+          echo "$count freigegebene Website-Dateien erfolgreich übertragen."
