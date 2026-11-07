@@ -5,6 +5,7 @@ Statische Landingpage für https://tennilo.de („Coming 2027“).
 - `public/index.html`: Startseite
 - `public/impressum.html`: Impressum
 - `public/datenschutz.html`: Datenschutzhinweise
+- `public/admin/index.php`: gemeinsames TENNILO Backoffice (Newsletter, Founders und Kampagnen)
 - `public/assets/`: Styles und Original-TENNILO-Markenbilder
 - `.github/workflows/deploy.yml`: manuelles FTPS-Deployment
 
@@ -34,3 +35,7 @@ Die Startseite ist als schlanke Vorschauseite gestaltet: Claim „Weniger Orga. 
 - Änderungen an GitHub `main` veröffentlichen nichts automatisch. Erst ein manuell ausgelöster FTPS-Workflow aktualisiert `tennilo.de`.
 
 **Vor erstem V2-Upload:** Inhalte, rechtliche Angaben und Links nochmals kontrollieren. Die Passwortschutz-Test-App bleibt unabhängig.
+
+## TENNILO Backoffice
+
+Interner Einstieg: https://tennilo.de/admin/ (bestehender Founders-Admin-Login). Hintergründe, Sicherheit und Veröffentlichung: [BACKOFFICE.md](BACKOFFICE.md).
