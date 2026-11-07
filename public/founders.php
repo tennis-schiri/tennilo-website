@@ -54,7 +54,7 @@ if($action==='join' && $method==='POST'){
  if((int)$q->fetchColumn()>=6)page('Zu viele Versuche','<p>Bitte versuche es später erneut.</p>',429);
  $db->prepare('INSERT INTO attempts(ip_hash,created_at) VALUES(?,?)')->execute([$ip,$now]);
  $q=$db->prepare('SELECT confirmed_at FROM subscribers WHERE email=?');$q->execute([$email]);$old=$q->fetch();
- if($old && $old['confirmed_at']!==null) page('Fast fertig','<p>Wenn deine Adresse noch nicht bestätigt wurde, erhältst du eine Bestätigungsmail.</p>');
+ if($old && $old['confirmed_at']!==null) page('E-Mail-Adresse bereits registriert','<p>Diese Adresse ist bei TENNILO bereits bestätigt. Weitere Themen wie Founders, Betatests oder den allgemeinen Newsletter kannst du über <a href="/newsletter.php?action=manage">deine E-Mail-Einstellungen</a> hinzufügen. Du erhältst dafür einen geschützten Link an deine E-Mail-Adresse.</p>');
  $confirm=token();$unsubscribe=token();
  $q=$db->prepare('INSERT INTO subscribers(email,role,interests,consent_version,created_at,confirmed_at,confirm_hash,unsubscribe_hash,expires_at) VALUES(?,?,?,?,?,NULL,?,?,?) ON CONFLICT(email) DO UPDATE SET role=excluded.role,interests=excluded.interests,consent_version=excluded.consent_version,created_at=excluded.created_at,confirm_hash=excluded.confirm_hash,unsubscribe_hash=excluded.unsubscribe_hash,expires_at=excluded.expires_at');
  $q->execute([$email,$role,json_encode($interest), 'founders-2026-11', $now,hashed($confirm),hashed($unsubscribe),$now+14*86400]);
