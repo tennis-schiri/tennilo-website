@@ -16,7 +16,7 @@ function tennilo_email_content(string $message): string {
 }
 function tennilo_email_inner(string $subject,string $message,?string $unsubscribeUrl=null,?string $logoSrc=null,string $topic='founders'): string {
  $safeTitle=htmlspecialchars($subject,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');
- $link=$unsubscribeUrl===null?'https://tennilo.de/founders.php?action=unsubscribe-request':$unsubscribeUrl;
+ $link=$unsubscribeUrl===null?($topic==='newsletter'?'https://tennilo.de/newsletter.php?action=manage':'https://tennilo.de/founders.php?action=unsubscribe-request'):$unsubscribeUrl;
  $safeLink=htmlspecialchars($link,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');
  $logoSrc=$logoSrc??'https://tennilo.de/assets/tennilo-logo.png';
  $safeLogo=htmlspecialchars($logoSrc,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');
