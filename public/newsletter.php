@@ -63,8 +63,20 @@ function verifyPending(PDO $db,string $token,string $kind,int $now): array|false
 }
 if($method==='POST'&&in_array($action,['subscribe','manage-request'],true)){
  if(!empty($_POST['website']))nlPage('Vielen Dank','<p>Bitte prüfe dein Postfach.</p>');
- $origin=(string)($_SERVER['HTTP_ORIGIN']??'');
- if($origin!==''&&!in_array($origin,['https://tennilo.de','https://www.tennilo.de'],true))nlPage('Ungültige Anfrage','<p>Bitte benutze das Formular auf tennilo.de.</p>',403);
+ // Subscription changes require a same-site form; preferences only email a
+ // short-lived verification link and are additionally rate-limited.
+ // Some mail apps and privacy browsers submit a nonstandard Origin on that form.
+ if($action==='subscribe'){
+  $origin=(string)($_SERVER['HTTP_ORIGIN']??'');
+  if($origin!=='' && $origin!=='null'){
+   $parts=parse_url($origin);
+   $host=strtolower((string)($parts['host']??''));
+   $scheme=strtolower((string)($parts['scheme']??''));
+   $port=(int)($parts['port']??443);
+   if($scheme!=='https'||!in_array($host,['tennilo.de','www.tennilo.de'],true)||$port!==443)
+    nlPage('Ungültige Anfrage','<p>Bitte benutze das Formular auf tennilo.de.</p>',403);
+  }
+ }
  $email=strtolower(trim((string)($_POST['email']??'')));
  if(!filter_var($email,FILTER_VALIDATE_EMAIL)||strlen($email)>254)nlPage('Adresse prüfen','<p>Bitte eine gültige E-Mail-Adresse eingeben.</p>',422);
  if($action==='subscribe'&&($_POST['consent']??'')!=='yes')nlPage('Einwilligung fehlt','<p>Bitte die freiwillige Newsletter-Einwilligung bestätigen.</p>',422);
@@ -182,7 +194,7 @@ if($method==='POST'&&in_array($action,['preferences-save','delete-all'],true)){
 }
 if($action==='manage'&&$method==='GET'){
  nlPage('E-Mail-Themen verwalten',
- '<p>Gib die E-Mail-Adresse ein, mit der du dich angemeldet hast. Du erhältst einen persönlichen Link für die Verwaltung deiner Themen und Abmeldungen.</p><form method="post"><input type="hidden" name="action" value="manage-request"><label>E-Mail-Adresse<input type="email" name="email" autocomplete="email" maxlength="254" required></label><p><button type="submit">Einstellungslink anfordern</button></p></form>');
+ '<p>Gib die E-Mail-Adresse ein, mit der du dich angemeldet hast. Du erhältst einen persönlichen Link für die Verwaltung deiner Themen und Abmeldungen.</p><form method="post" action="/newsletter.php"><input type="hidden" name="action" value="manage-request"><label>E-Mail-Adresse<input type="email" name="email" autocomplete="email" maxlength="254" required></label><p><button type="submit">Einstellungslink anfordern</button></p></form>');
 }
 nlPage('TENNILO Newsletter',
  '<p>Informationen zu neuen Funktionen, Turnierformaten und zur Entwicklung von TENNILO. Kostenlos und etwa alle vier bis sechs Wochen oder bei wichtigen Neuigkeiten.</p><form method="post"><input type="hidden" name="action" value="subscribe"><div class="hidden"><label>Website <input type="text" name="website" autocomplete="off" tabindex="-1"></label></div><label>E-Mail-Adresse<input type="email" name="email" autocomplete="email" maxlength="254" placeholder="du@tennisverein.de" required></label><label><input type="checkbox" name="consent" value="yes" required> Ich möchte den allgemeinen TENNILO-Newsletter erhalten und habe die <a href="/datenschutz.html#newsletter-datenschutz">Datenschutzhinweise</a> gelesen. Die Einwilligung ist jederzeit widerrufbar.</label><p><button type="submit">Newsletter kostenlos abonnieren</button></p></form><p><a href="/newsletter.php?action=manage">E-Mail-Themen verwalten oder abmelden</a></p>');
