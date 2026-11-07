@@ -204,3 +204,18 @@ h2 em{color:#049a98;font-style:normal}
 .newsletter-honeypot{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
 @media(max-width:1040px){.newsletter-panel{grid-template-columns:1fr;gap:24px;padding:42px}.newsletter-section{padding-bottom:75px}}
 @media(max-width:680px){.newsletter-panel{padding:29px 21px;border-radius:15px}.newsletter-form{padding:22px}.newsletter-input-row{flex-direction:column}.newsletter-input-row button{min-height:46px}.newsletter-section{padding-top:8px;padding-bottom:62px}}
+
+/* Vier Entwicklungs-Highlights: TENNILO Score ist ein eigenständiger Prototyp. */
+.work-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.work-grid .work-card{min-height:400px}
+.score-watch-icon{width:108px;height:108px;display:grid;place-items:center;margin:38px 0 26px;position:relative;transform:rotate(-5deg)}
+.score-watch-icon:before,.score-watch-icon:after{content:"";position:absolute;left:38px;width:32px;height:20px;background:#546c84;border-radius:6px;z-index:0}
+.score-watch-icon:before{top:-13px}.score-watch-icon:after{bottom:-13px}
+.score-watch-screen{z-index:1;position:relative;width:98px;height:98px;border:7px solid #33445b;background:#0e1727;border-radius:28px;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 7px 0 #b6cac8}
+.score-watch-screen span{font-size:10px;font-weight:900;letter-spacing:.12em;color:#c4f3c3}
+.score-watch-screen strong{font-size:24px;letter-spacing:-.07em;color:#e7ff6a;line-height:1.5}
+.score-watch-screen i{width:28px;height:3px;border-radius:2px;background:#77d5ed}
+.score-card-link{text-decoration:none;color:#037c81}
+.score-card-link:hover{text-decoration:underline;text-underline-offset:3px;color:#0b5056}
+@media(min-width:681px) and (max-width:900px){.work-grid .work-card:last-child{grid-column:auto;min-height:400px}}
+@media(max-width:680px){.work-grid{grid-template-columns:1fr}.work-grid .work-card{min-height:365px}.score-watch-icon{margin:27px 0 23px}}
