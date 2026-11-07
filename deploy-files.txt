@@ -9,6 +9,7 @@ public/impressum.html
 public/datenschutz.html
 public/founders-check.php
 public/founders-setup.php
+public/admin/index.php
 public/founders-admin.php
 public/founders-mail.php
 public/founders-email-template.php
