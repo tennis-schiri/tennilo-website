@@ -93,3 +93,13 @@ Der bestehende Admin-Login wurde für die Mailverwaltung erweitert: höchstens a
 Nach dem ersten Mail-Admin-Update meldete der Nutzer einen Login ohne sichtbaren Fortschritt. Ursache vermutlich zwei gleichnamige, aber verschieden gepfadete Sitzungscookies: ursprünglich `tennilo_founders_admin` mit Pfad `/founders-admin.php`, später derselbe Name mit Pfad `/`. Beide Adminseiten nutzen nun gemeinsam `tennilo_founders_portal_v2` (Pfad `/`), wodurch alte Cookies ignoriert werden. Nach gültigem Passwort führt der Login zu `?login=ok`; falls die Sitzung dann nicht besteht, zeigt die Seite eine klare Diagnose statt eines scheinbar unveränderten Loginformulars. Noch nicht auf dem Server getestet.
 
 Zur Inbetriebnahme erneut den [Website-Workflow](https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml) ausführen. Bei acht fehlgeschlagenen Passworteingaben innerhalb von 15 Minuten kann die Anmeldung vorübergehend gesperrt sein; dann nicht wiederholt klicken.
+
+## Status und Einzeltest vom 07.11.2026
+
+**Vom Nutzer bestätigt:** Admin-Login und Teilnehmerliste funktionieren nach Cookie-Korrektur. Testnachricht aus der Mailverwaltung ist tatsächlich bei founders@tennilo.de angekommen. Eine neu bestätigte Wartelistenanmeldung löst die automatische Benachrichtigung an founders@tennilo.de aus.
+
+**Neu im GitHub-Code; Deployment und Test noch offen:** In der Mailverwaltung kann innerhalb eines gespeicherten Entwurfs über „Sicherer Einzeltest“ ein echter Rundmailtext mit **individuellem Abmeldelink an exakt eine manuell eingetragene Adresse** gesendet werden. Voraussetzungen: Die Testadresse ist auf der Warteliste bestätigt und hat dem in der Kampagne gewählten Thema zugestimmt. Zum Schutz vor versehentlichem Versand muss im Formular `EINZELTEST` eingetippt werden. Der Einzeltest gibt keine Empfängerwarteschlange frei und verschickt nichts an andere Kontakte.
+
+**Testablauf:** [Website-Workflow](https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml) ausführen → [Founders-Mailverwaltung](https://tennilo.de/founders-mail.php) öffnen → Entwurf mit Interesse der eigenen Testadresse speichern → Einzeltestadresse eintragen und `EINZELTEST` bestätigen → Mail ankommen lassen → persönlichen Abmeldelink anklicken und Löschung bestätigen → prüfen, dass der Eintrag aus dem Adminbereich verschwindet. Erst nach Abschluss zusätzliche Betriebssicherheit und Newsletterfreigabe prüfen.
+
+**Nicht verwechseln:** Der alte Button „Testmail nur an founders@tennilo.de“ verschickt nur eine Vorschau ohne funktionierenden personalisierten Abmeldelink. Der neue „Sicherer Einzeltest“ prüft die tatsächliche Aussendung samt Abmeldung, ohne alle Kontakte anzuschreiben.
