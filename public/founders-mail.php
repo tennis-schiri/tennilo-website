@@ -13,6 +13,7 @@ $cfg = require $private;
 if (!is_array($cfg) || ($cfg['enabled']??false)!==true || empty($cfg['database']) || empty($cfg['key'])) {
  http_response_code(503); exit('Founders-Verwaltung nicht verfügbar.');
 }
+require_once __DIR__.'/founders-email-template.php';
 session_name('tennilo_founders_portal_v2');
 session_set_cookie_params(['httponly'=>true,'secure'=>true,'samesite'=>'Strict','path'=>'/']);
 session_start();
@@ -52,11 +53,25 @@ function sendMail(string $to,string $subject,string $message,?string $unsubscrib
  $headers=[
   'From: TENNILO Founders <founders@tennilo.de>',
   'Reply-To: founders@tennilo.de',
-  'MIME-Version: 1.0',
-  'Content-Type: text/plain; charset=UTF-8'
+  'MIME-Version: 1.0'
  ];
- if ($unsubscribeUrl!==null) $headers[]='List-Unsubscribe: <'.$unsubscribeUrl.'>';
- return mail($to,subjectHeader($subject),$message,implode("\r\n",$headers),'-ffounders@tennilo.de');
+ $plain=rtrim($message);
+ if ($unsubscribeUrl!==null) {
+  $plain.="\n\n---\nTENNILO Founders · Ein Projekt von Tennis-Schiri\n";
+  $plain.="Du erhaeltst diese Nachricht, weil du Informationen zu diesem Thema angefordert hast.\n";
+  $plain.="Abmelden: ".$unsubscribeUrl."\nKontakt: founders@tennilo.de";
+  $headers[]='List-Unsubscribe: <'.$unsubscribeUrl.'>';
+ } else {
+  $plain.="\n\n---\nTENNILO Founders · Ein Projekt von Tennis-Schiri\n";
+  $plain.="Abmelden: https://tennilo.de/founders.php?action=unsubscribe-request\nKontakt: founders@tennilo.de";
+ }
+ $html=tennilo_email_html($subject,$message,$unsubscribeUrl);
+ $boundary='tennilo_'.bin2hex(random_bytes(16));
+ $headers[]='Content-Type: multipart/alternative; boundary="'.$boundary.'"';
+ $mime='--'.$boundary."\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n".quoted_printable_encode($plain)."\r\n";
+ $mime.='--'.$boundary."\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n".quoted_printable_encode($html)."\r\n";
+ $mime.='--'.$boundary."--\r\n";
+ return mail($to,subjectHeader($subject),$mime,implode("\r\n",$headers),'-ffounders@tennilo.de');
 }
 function opted(string $encoded,string $topic): bool {
  $topics=json_decode($encoded,true);
@@ -69,8 +84,7 @@ function recipients(PDO $db,string $topic): array {
 function footer(string $body,int $id,string $email,string $key): array {
  $sig=hash_hmac('sha256',$id.'|'.$email,$key);
  $url='https://tennilo.de/founders.php?action=unsubscribe-signed&id='.$id.'&sig='.$sig;
- $text=rtrim($body)."\n\n---\nTENNILO Founders · Ein Projekt von Tennis-Schiri\nDu erhaeltst diese Nachricht, weil du entsprechende Informationen angefordert hast.\nAbmelden: ".$url."\nKontakt: founders@tennilo.de";
- return [$text,$url];
+ return [rtrim($body),$url];
 }
 $topics=['beta'=>'Betatests','founders'=>'Founders-Angebote','crowdfunding'=>'Startnext-Crowdfunding'];
 $method=$_SERVER['REQUEST_METHOD']??'GET';
