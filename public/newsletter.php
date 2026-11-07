@@ -96,6 +96,7 @@ if($method==='GET'&&$action==='confirm'){
   $p=verifyPending($db,$token,'subscribe',$now);
   if(!$p) {$db->rollBack();nlPage('Link ungültig','<p>Dieser Link wurde bereits verwendet.</p>',400);}
   $q=$db->prepare('SELECT id,interests,confirmed_at FROM subscribers WHERE email=?');$q->execute([$p['email']]);$old=$q->fetch();
+  $wasSubscribed=$old && $old['confirmed_at']!==null && in_array('newsletter',json_decode((string)$old['interests'],true)?:[],true);
   if(!$old){
    $q=$db->prepare('INSERT INTO subscribers(email,role,interests,consent_version,created_at,confirmed_at,confirm_hash,unsubscribe_hash,expires_at) VALUES(?,?,?,?,?,?,NULL,NULL,?)');
    $q->execute([$p['email'],'sonstige',json_encode(['newsletter']),'newsletter-2026-11',$now,$now,2147483647]);
@@ -118,6 +119,11 @@ if($method==='GET'&&$action==='confirm'){
    ->execute([$sid,'newsletter',$now,'newsletter-2026-11']);
   $db->prepare('DELETE FROM newsletter_pending WHERE token_hash=?')->execute([$p['token_hash']]);
   $db->commit();
+  if(!$wasSubscribed){
+   $message="Eine neue Anmeldung zum allgemeinen TENNILO-Newsletter wurde bestaetigt.\n\nE-Mail: ".$p['email']."\n\nVerwaltung: https://tennilo.de/founders-admin.php\n\nEs werden nur bestaetigte Newsletter-Anmeldungen gemeldet.";
+   if(!nlMail('news@tennilo.de','TENNILO Newsletter: Neue bestaetigte Anmeldung',$message))
+    error_log('TENNILO newsletter admin notification not accepted by mail()');
+  }
  } catch(Throwable $e) {
   if($db->inTransaction())$db->rollBack();
   error_log('TENNILO newsletter confirm error: '.$e->getMessage());
