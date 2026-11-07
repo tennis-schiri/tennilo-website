@@ -5,7 +5,7 @@ $path=dirname(__DIR__).'/tennilo-founders-config.php';
 if(!is_file($path)){http_response_code(503);exit('Founders-Verwaltung noch nicht eingerichtet.');}
 $cfg=require $path;
 if(!is_array($cfg)||($cfg['enabled']??false)!==true||empty($cfg['admin_password_hash'])||empty($cfg['database'])){http_response_code(503);exit('Verwaltung nicht freigeschaltet.');}
-session_name('tennilo_founders_admin');session_set_cookie_params(['httponly'=>true,'secure'=>true,'samesite'=>'Strict','path'=>'/founders-admin.php']);session_start();
+session_name('tennilo_founders_admin');session_set_cookie_params(['httponly'=>true,'secure'=>true,'samesite'=>'Strict','path'=>'/']);session_start();
 function render(string $body): never {
  header('Content-Type: text/html; charset=UTF-8');
  echo '<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>TENNILO Founders · Verwaltung</title><style>body{font:15px/1.6 system-ui;background:#f6f8f4;color:#092b36;margin:0}.wrap{max-width:1000px;margin:6vh auto;background:#fff;padding:32px;border-radius:16px}table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #dce7e1;padding:10px;text-align:left}input,button{padding:10px;border-radius:6px}button{background:#092b36;color:white;border:0;cursor:pointer}a{color:#087a82}small{color:#567}</style><main class="wrap"><h1>TENNILO Founders</h1>'.$body.'</main></html>';exit;
@@ -28,7 +28,7 @@ if(($_GET['export']??'')==='csv'){
 }
 $e=static fn($x)=>htmlspecialchars((string)$x,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');
 $confirmed=count(array_filter($rows,static fn($r)=>$r['confirmed_at']!==null));$pending=count($rows)-$confirmed;
-$html='<p><strong>'.count($rows).'</strong> Einträge · <strong>'.$confirmed.'</strong> bestätigt · <strong>'.$pending.'</strong> offen</p><p><a href="?export=csv">CSV exportieren (enthält personenbezogene Daten)</a></p><form method="post"><input type="hidden" name="action" value="logout"><input type="hidden" name="csrf" value="'.$e($_SESSION['csrf']).'"><button>Abmelden</button></form><div style="overflow-x:auto"><table><thead><tr><th>E-Mail</th><th>Gruppe</th><th>Interessen</th><th>Eingetragen</th><th>Status</th></tr></thead><tbody>';
+$html='<p><a href="/founders-mail.php">E-Mail-Verwaltung: Entwürfe und Rundmails</a></p><p><strong>'.count($rows).'</strong> Einträge · <strong>'.$confirmed.'</strong> bestätigt · <strong>'.$pending.'</strong> offen</p><p><a href="?export=csv">CSV exportieren (enthält personenbezogene Daten)</a></p><form method="post"><input type="hidden" name="action" value="logout"><input type="hidden" name="csrf" value="'.$e($_SESSION['csrf']).'"><button>Abmelden</button></form><div style="overflow-x:auto"><table><thead><tr><th>E-Mail</th><th>Gruppe</th><th>Interessen</th><th>Eingetragen</th><th>Status</th></tr></thead><tbody>';
 foreach($rows as $r)$html.='<tr><td>'.$e($r['email']).'</td><td>'.$e($r['role']).'</td><td>'.$e($r['interests']).'</td><td>'.date('d.m.Y H:i',(int)$r['created_at']).'</td><td>'.($r['confirmed_at']?'Bestätigt':'Offen').'</td></tr>';
 $html.='</tbody></table></div><p><small>Nur bestätigte Adressen für Aussendungen verwenden. Exportdateien sicher aufbewahren und löschen, wenn sie nicht mehr gebraucht werden.</small></p>';
 render($html);
