@@ -42,3 +42,17 @@ Die Codebasis ist in GitHub vorbereitet, aber der Live-Betrieb **nicht verifizie
 Der bis dahin verwendete FTPS-Workflow enthielt einen Fehler: Die PHP-Installerdateien standen in den Prüflisten, **nicht aber in der eigentlichen FTPS-Upload-Schleife**. Der Workflow wurde durch eine einzige `deploy-files.txt`-Freigabeliste korrigiert, die sowohl für Vorprüfung als auch tatsächlichen Upload gilt. Ein minimaler Servercheck `founders-check.php` wurde ergänzt. Die genaue Ursache des beobachteten HTTP 500 ist damit **noch nicht bestätigt**; nach einem erneuten manuellen Upload zuerst den Check aufrufen.
 
 Der Servercheck ist nur zur Fehlersuche vorgesehen und sollte nach erfolgreicher Inbetriebnahme entfernt werden.
+
+## Nach erfolgreicher Einrichtung – Warteliste testen (07.11.2026)
+
+Der Betreiber meldet, dass die Einrichtungs-E-Mail, der Bestätigungslink und die Vergabe des Admin-Passworts erfolgreich funktioniert haben. Ein abschließender Test einer **normalen** Wartelistenanmeldung ist noch offen.
+
+**Testfolge:** 
+1. [Website](https://tennilo.de/#founders) öffnen und mit einer eigenen E-Mail-Adresse anmelden.
+2. Bestätigungs-E-Mail öffnen; Link benutzen.
+3. [Admin](https://tennilo.de/founders-admin.php) aufrufen, erfolgreich bestätigten Eintrag prüfen.
+4. [Online-Abmeldung](https://tennilo.de/founders.php?action=unsubscribe-request) mit derselben E-Mail-Adresse anfordern; Löschlink bestätigen. Prüfen, dass der Eintrag aus der Admin-Ansicht verschwunden ist.
+
+**Veröffentlichung:** Am 07.11. wurde ein wichtiger fehlender Teil ergänzt: Die frühere Abmeldung erforderte einen nicht mehr verfügbaren Original-Token. Ein neuer E-Mail-verifizierter Self-Service-Abmeldeprozess mit 48 Stunden gültigem Link wurde implementiert. Die zeitweilige öffentliche Technikdiagnose `founders-check.php` gibt nach dem nächsten Deployment nur noch HTTP 404 zurück. Der neue Code muss über den manuellen Workflow aktualisiert werden, bevor Punkt 4 getestet wird.
+
+Der bestehende Installer bleibt durch `setup_complete` und `enabled` serverseitig deaktiviert, sobald die Einrichtung vollständig abgeschlossen ist. Spätere Newsletter-Aussendungen sind weiterhin nicht implementiert; sie benötigen einen zuverlässigen Versand und individuelle Abmeldemöglichkeit.
