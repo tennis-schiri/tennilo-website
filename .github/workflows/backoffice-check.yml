@@ -9,6 +9,7 @@ on:
       - 'public/founders-email-template.php'
       - 'public/newsletter.php'
       - 'deploy-files.txt'
+      - 'tests/tennilo-email-template-test.php'
       - '.github/workflows/backoffice-check.yml'
   workflow_dispatch:
 
@@ -32,6 +33,9 @@ jobs:
           for file in public/admin/index.php public/founders-admin.php public/founders-mail.php public/founders-email-template.php public/newsletter.php; do
             php -l "$file"
           done
+      - name: Mail-Vorlagen und Links prüfen
+        shell: bash
+        run: php tests/tennilo-email-template-test.php
       - name: Sichere FTPS-Freigabeliste prüfen
         shell: bash
         run: |
