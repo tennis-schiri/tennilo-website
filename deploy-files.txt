@@ -10,5 +10,6 @@ public/datenschutz.html
 public/founders-check.php
 public/founders-setup.php
 public/founders-admin.php
+public/founders-mail.php
 public/founders.php
 public/index.html
