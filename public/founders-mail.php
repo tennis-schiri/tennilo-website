@@ -16,7 +16,8 @@ if (!is_array($cfg) || ($cfg['enabled']??false)!==true || empty($cfg['database']
 session_name('tennilo_founders_admin');
 session_set_cookie_params(['httponly'=>true,'secure'=>true,'samesite'=>'Strict','path'=>'/']);
 session_start();
-if (empty($_SESSION['authenticated'])) {
+if (empty($_SESSION['authenticated']) || (int)($_SESSION['auth_at']??0)<time()-8*3600) {
+ $_SESSION=[];
  header('Location: /founders-admin.php',true,303); exit;
 }
 if (empty($_SESSION['csrf'])) $_SESSION['csrf']=bin2hex(random_bytes(24));
