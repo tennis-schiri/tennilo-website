@@ -103,3 +103,25 @@ Zur Inbetriebnahme erneut den [Website-Workflow](https://github.com/tennis-schir
 **Testablauf:** [Website-Workflow](https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml) ausführen → [Founders-Mailverwaltung](https://tennilo.de/founders-mail.php) öffnen → Entwurf mit Interesse der eigenen Testadresse speichern → Einzeltestadresse eintragen und `EINZELTEST` bestätigen → Mail ankommen lassen → persönlichen Abmeldelink anklicken und Löschung bestätigen → prüfen, dass der Eintrag aus dem Adminbereich verschwindet. Erst nach Abschluss zusätzliche Betriebssicherheit und Newsletterfreigabe prüfen.
 
 **Nicht verwechseln:** Der alte Button „Testmail nur an founders@tennilo.de“ verschickt nur eine Vorschau ohne funktionierenden personalisierten Abmeldelink. Der neue „Sicherer Einzeltest“ prüft die tatsächliche Aussendung samt Abmeldung, ohne alle Kontakte anzuschreiben.
+
+## Newsletter-Ausbaustufe vom 07.11.2026 – noch nicht live geprüft
+
+Nach dem erfolgreichen Praxistest des **isolierten Einzelversands inklusive individueller Abmeldung** ist die nächste Version in GitHub vorbereitet:
+
+- Einheitliches mobilfreundliches TENNILO-Newsletterdesign in Petrol/Limette, ohne fremde Bilder, Trackingpixel oder externe Schriften. `public/founders-email-template.php` erzeugt den HTML-Teil, `public/founders-mail.php` versendet `multipart/alternative` mit einer passenden Klartext-Version.
+- Admin sieht bei jedem Entwurf eine Layout-Vorschau. Die tatsächlichen persönlichen Abmeldelinks werden erst für die einzelnen Empfänger erzeugt.
+- Vorlagen zum Starten von neuen Entwürfen für `Betatest-Einladung`, `Founders-Update` und `Crowdfunding-Info`. Die Platzhalter und Aussagen müssen vor Versand redaktionell geprüft werden.
+- Übersichts-Kennzahlen: bestätigte Wartelistenkontakte, Entwürfe, freigegebene Kampagnen und seit Aufzeichnung vom Mailserver angenommene Nachrichten.
+- Kampagnenstatistik mit absoluten Werten für `pending`, `sending` (unklar), `accepted`, `failed` und `skipped`. Fortschrittsquote bezieht sich ausschließlich auf abgearbeitete Einträge, unabhängig vom Zustellstatus.
+- Manueller Versand bleibt auf **maximal 5 Nachrichten pro Klick** begrenzt, mit Einwilligungsfilter und individueller Abmeldung.
+- Eine freigegebene Kampagne kann vor den nächsten Chargen mit `STOPP` gestoppt werden; frühere Kampagnen können als neuer Entwurf kopiert werden.
+
+### Prüfablauf nach Update
+
+1. Den [TENNILO-Website-Workflow](https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml) starten. Syntaxprüfung und Upload berücksichtigen beide geänderten PHP-Dateien (Admin und E-Mail-Renderer).
+2. [Founders-Mailverwaltung](https://tennilo.de/founders-mail.php) im Admin öffnen. Die Übersicht und die Vorlagen testen.
+3. Einen Entwurf speichern und zunächst **nur die Testmail an `founders@tennilo.de`** senden. Prüfen, dass das Mailprogramm das gebrandete HTML-Layout zeigt und die Textalternative enthalten ist.
+4. Den sicheren Einzeltest an eine eigene bestätigte Testadresse wiederholen und den individuellen Abmeldelink im HTML und ggf. Klartext prüfen. **Keine echte Kampagne freigeben**, bevor die neue MIME-Darstellung und der Abmeldeprozess erfolgreich geprüft wurden.
+5. Später mit ausschließlich eigenen, ausdrücklich bestätigten Testadressen den Fünfer-Chargenablauf, Zustandszählung und STOPP-Funktion verifizieren, bevor echte Founders-Newsletter verschickt werden.
+
+Keine Zeitautomatik, keine unautorisierte Massenaussendung, kein Öffnungs-/Klicktracking und keine bestätigte Inbox-Zustellstatistik. Technisch bleibt der lokale PHP-`mail()`-Transport aktiv. Eine skalierbare Versandwarteschlange, SMTP-Authentifizierung, Bounce-Verarbeitung, sichere Backups und ein Betriebshandbuch sind weitere Arbeitspunkte.
