@@ -65,12 +65,27 @@ function sendMail(string $to,string $subject,string $message,?string $unsubscrib
   $plain.="\n\n---\nTENNILO Founders · Ein Projekt von Tennis-Schiri\n";
   $plain.="Abmelden: https://tennilo.de/founders.php?action=unsubscribe-request\nKontakt: founders@tennilo.de";
  }
- $html=tennilo_email_html($subject,$message,$unsubscribeUrl);
- $boundary='tennilo_'.bin2hex(random_bytes(16));
- $headers[]='Content-Type: multipart/alternative; boundary="'.$boundary.'"';
- $mime='--'.$boundary."\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n".quoted_printable_encode($plain)."\r\n";
- $mime.='--'.$boundary."\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n".quoted_printable_encode($html)."\r\n";
- $mime.='--'.$boundary."--\r\n";
+ $logoFile=__DIR__.'/assets/tennilo-logo.png';
+ $logo=is_file($logoFile)&&filesize($logoFile)<300000?@file_get_contents($logoFile):false;
+ $hasLogo=is_string($logo)&&$logo!=='';
+ $cid='tennilo-logo@tennilo.de';
+ $html=tennilo_email_html($subject,$message,$unsubscribeUrl,$hasLogo?'cid:'.$cid:null);
+ $alternative='tennilo_alt_'.bin2hex(random_bytes(12));
+ $textPart='--'.$alternative."\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n".quoted_printable_encode($plain)."\r\n";
+ $htmlPart='--'.$alternative."\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n".quoted_printable_encode($html)."\r\n";
+ $alternatives=$textPart.$htmlPart.'--'.$alternative."--\r\n";
+ if ($hasLogo) {
+  $related='tennilo_rel_'.bin2hex(random_bytes(12));
+  $headers[]='Content-Type: multipart/related; boundary="'.$related.'"';
+  $mime='--'.$related."\r\nContent-Type: multipart/alternative; boundary=\"".$alternative."\"\r\n\r\n".$alternatives;
+  $mime.='--'.$related."\r\nContent-Type: image/png; name=\"tennilo-logo.png\"\r\nContent-Transfer-Encoding: base64\r\nContent-ID: <".$cid.">\r\nContent-Disposition: inline; filename=\"tennilo-logo.png\"\r\n\r\n".chunk_split(base64_encode($logo),76,"\r\n");
+  $mime.='--'.$related."--\r\n";
+ } else {
+  // Fallback if local file is missing: use the published tennilo.de logo URL.
+  $headers[]='Content-Type: multipart/alternative; boundary="'.$alternative.'"';
+  $mime=$alternatives;
+  error_log('Founders mailing logo file missing or too large; linked website image used');
+ }
  return mail($to,subjectHeader($subject),$mime,implode("\r\n",$headers),'-ffounders@tennilo.de');
 }
 function opted(string $encoded,string $topic): bool {
