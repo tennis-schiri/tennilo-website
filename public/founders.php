@@ -74,6 +74,35 @@ if($action==='confirm' && $method==='GET'){
  }
  page('Anmeldung bestätigt','<p>Du stehst jetzt auf der TENNILO Founders-Warteliste. Du erhältst nur Informationen zu den ausgewählten Interessen.</p><p>Du kannst dich jederzeit <a href="/founders.php?action=unsubscribe-request">online abmelden</a> oder eine E-Mail an founders@tennilo.de schreiben.</p>');
 }
+if($action==='unsubscribe-topic-signed' && ($method==='GET'||$method==='POST')){
+ $id=filter_var(($method==='POST'?$_POST['id']:$_GET['id'])??null,FILTER_VALIDATE_INT,['options'=>['min_range'=>1]])?:0;
+ $topic=(string)(($method==='POST'?$_POST['topic']:$_GET['topic'])??'');
+ $sig=(string)(($method==='POST'?$_POST['sig']:$_GET['sig'])??'');
+ if(!$id||$topic!=='newsletter'||!preg_match('/^[a-f0-9]{64}$/D',$sig))
+  page('Link ungültig','<p>Dieser Abmeldelink ist ungültig.</p>',400);
+ $q=$db->prepare('SELECT id,email,interests FROM subscribers WHERE id=? AND confirmed_at IS NOT NULL');$q->execute([$id]);$r=$q->fetch();
+ if(!$r||!hash_equals(hash_hmac('sha256',$id.'|'.$r['email'].'|newsletter',$cfg['key']),$sig))
+  page('Link ungültig','<p>Dieser Abmeldelink ist ungültig oder nicht mehr aktuell.</p>',400);
+ $topics=json_decode((string)$r['interests'],true);if(!is_array($topics))$topics=[];
+ if(!in_array('newsletter',$topics,true))page('Bereits abgemeldet','<p>Für diese Adresse ist der allgemeine TENNILO-Newsletter bereits abbestellt.</p>');
+ if($method==='GET'){
+  page('TENNILO Newsletter abbestellen','<p>Möchtest du den allgemeinen TENNILO-Newsletter abbestellen? Andere ausdrücklich ausgewählte Themen bleiben aktiv.</p><form method="post" action="/founders.php"><input type="hidden" name="action" value="unsubscribe-topic-signed"><input type="hidden" name="id" value="'.$id.'"><input type="hidden" name="topic" value="newsletter"><input type="hidden" name="sig" value="'.htmlspecialchars($sig,ENT_QUOTES).'"><button type="submit">Newsletter abbestellen</button></form><p><a href="/newsletter.php?action=manage">Andere E-Mail-Themen verwalten</a></p>');
+ }
+ $left=array_values(array_diff($topics,['newsletter']));
+ try{
+  $db->exec('BEGIN IMMEDIATE');
+  $db->exec('CREATE TABLE IF NOT EXISTS subscriber_consents(subscriber_id INTEGER NOT NULL,topic TEXT NOT NULL,consented_at INTEGER NOT NULL,consent_version TEXT NOT NULL,PRIMARY KEY(subscriber_id,topic))');
+  $db->prepare("DELETE FROM subscriber_consents WHERE subscriber_id=? AND topic='newsletter'")->execute([$id]);
+  if($left)$db->prepare('UPDATE subscribers SET interests=? WHERE id=?')->execute([json_encode($left),$id]);
+  else $db->prepare('DELETE FROM subscribers WHERE id=?')->execute([$id]);
+  $db->commit();
+ }catch(Throwable $e){
+  if($db->inTransaction())$db->rollBack();
+  error_log('TENNILO newsletter topic unsubscribe: '.$e->getMessage());
+  page('Vorübergehend nicht verfügbar','<p>Bitte versuche es später erneut.</p>',503);
+ }
+ page('Newsletter abbestellt','<p>Du erhältst keine weiteren allgemeinen TENNILO-Newsletter. Andere bestätigte Themen bleiben unverändert.</p>');
+}
 if($action==='unsubscribe-signed' && ($method==='GET'||$method==='POST')){
  $id=filter_var(($method==='POST'?$_POST['id']:$_GET['id'])??null,FILTER_VALIDATE_INT,['options'=>['min_range'=>1]])?:0;
  $sig=(string)(($method==='POST'?$_POST['sig']:$_GET['sig'])??'');
