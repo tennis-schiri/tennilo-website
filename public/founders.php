@@ -114,6 +114,8 @@ if($action==='unsubscribe-signed' && ($method==='GET'||$method==='POST')){
  if($method==='GET'){
   page('Von der Warteliste abmelden','<p>Du kannst deine TENNILO Founders-Anmeldung hier vollständig löschen.</p><form method="post" action="/founders.php"><input type="hidden" name="action" value="unsubscribe-signed"><input type="hidden" name="id" value="'.$id.'"><input type="hidden" name="sig" value="'.htmlspecialchars($sig,ENT_QUOTES).'"><button type="submit">Anmeldung endgültig löschen</button></form>');
  }
+ $db->exec('CREATE TABLE IF NOT EXISTS subscriber_consents (subscriber_id INTEGER NOT NULL, topic TEXT NOT NULL, consented_at INTEGER NOT NULL, consent_version TEXT NOT NULL, PRIMARY KEY(subscriber_id,topic))');
+ $db->prepare('DELETE FROM subscriber_consents WHERE subscriber_id=?')->execute([$id]);
  $db->prepare('DELETE FROM subscribers WHERE id=? AND email=?')->execute([$id,$subscriber['email']]);
  page('Abgemeldet','<p>Deine Anmeldung wurde gelöscht. Du erhältst keine weiteren Founders-Rundmails.</p>');
 }
@@ -146,7 +148,12 @@ if($action==='unsubscribe' && $method==='GET'){
 }
 if($action==='unsubscribe' && $method==='POST'){
  $t=(string)($_POST['token']??'');if(!preg_match('/^[a-f0-9]{64}$/',$t))page('Link ungültig','<p>Der Link ist ungültig.</p>',400);
- $db->prepare('DELETE FROM subscribers WHERE unsubscribe_hash=? AND confirmed_at IS NOT NULL AND expires_at>=?')->execute([hashed($t),$now]);
+ $q=$db->prepare('SELECT id FROM subscribers WHERE unsubscribe_hash=? AND confirmed_at IS NOT NULL AND expires_at>=?');
+ $q->execute([hashed($t),$now]);$row=$q->fetch();
+ if(!$row)page('Link ungültig','<p>Dieser Abmeldelink ist bereits verwendet oder ungültig.</p>',400);
+ $db->exec('CREATE TABLE IF NOT EXISTS subscriber_consents (subscriber_id INTEGER NOT NULL, topic TEXT NOT NULL, consented_at INTEGER NOT NULL, consent_version TEXT NOT NULL, PRIMARY KEY(subscriber_id,topic))');
+ $db->prepare('DELETE FROM subscriber_consents WHERE subscriber_id=?')->execute([(int)$row['id']]);
+ $db->prepare('DELETE FROM subscribers WHERE id=? AND unsubscribe_hash=?')->execute([(int)$row['id'],hashed($t)]);
  page('Abgemeldet','<p>Dein Wartelisteneintrag wurde gelöscht.</p>');
 }
 page('TENNILO Founders','<p>Bitte nutze das Anmeldeformular auf unserer Startseite.</p>',404);
