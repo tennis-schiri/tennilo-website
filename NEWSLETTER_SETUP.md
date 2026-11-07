@@ -19,6 +19,14 @@
 - Persönliche Links in allgemeinen Newsletter-Rundmails erlauben das Abmelden **nur vom allgemeinen Newsletter**; andere bestätigte Einwilligungen bleiben bestehen.
 - Nach erstmalig bestätigtem allgemeinen Newsletter-Abo wird eine interne Benachrichtigung an `news@tennilo.de` ausgelöst.
 
+## Mail-Editor 2.0
+
+Der Editor unter `https://tennilo.de/founders-mail.php` unterstützt jetzt pro Entwurf neben Betreff, Thema und Nachrichtentext auch **eigene Überschrift**, **Vorschautext (Preheader)**, **optionalen HTTPS-Aktionsbutton** und drei responsive TENNILO-Gestaltungen. Fünf redaktionelle Vorlagen werden angeboten: Allgemeines Update, Feature-Highlight, Betatest-Einladung, Founders-Update und Crowdfunding-Info.
+
+Beim ersten Aufruf werden fünf Zusatzspalten in der **bestehenden privaten SQLite-Datenbank** ergänzt. Bestehende Kampagnen behalten ihren Status und Inhalt. Vor der Freigabe eine Datenbanksicherung erstellen, den neuen Entwurf speichern, die HTML-Vorschau prüfen und ausschließlich eine eigene Testmail verschicken. Für reale Empfänger bleibt `SENDEN` plus manueller Chargenversand Pflicht.
+
+Mehr Details und Testergebnisse: [BACKOFFICE.md](BACKOFFICE.md).
+
 ## Mail-Verwaltung
 - Der bestehende `https://tennilo.de/founders-mail.php`-Admin verfügt künftig über einen vierten Empfängerkreis „Allgemeiner TENNILO Newsletter“ und die Vorlage „Allgemeines Update“.
 - Der Newsletter hat einen eigenen Versand-Absender `news@tennilo.de`. Founders-Mails bleiben unter `founders@tennilo.de`.
