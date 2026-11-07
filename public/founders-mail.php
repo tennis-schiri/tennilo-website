@@ -113,7 +113,7 @@ if($method==='POST'){
    finish('Kein bestätigter Founders-Eintrag mit Einwilligung zum gewählten Thema für diese Adresse vorhanden.',$id);
   [$message,$url]=footer($campaign['body'],(int)$recipient['id'],(string)$recipient['email'],(string)$cfg['key']);
   $ok=sendMail((string)$recipient['email'],'[EINZELTEST] '.$campaign['subject'],$message,$url);
-  finish($ok?'Einzeltest ausschließlich an '.(string)$recipient['email'].' vom Mailserver angenommen (Zustellung prüfen).':'Einzeltest wurde vom Mailserver abgelehnt.',$id);
+  finish($ok?'Einzeltest an die ausgewählte Testadresse vom Mailserver angenommen (Zustellung prüfen).':'Einzeltest wurde vom Mailserver abgelehnt.',$id);
  }
  if($action==='approve'){
   if($campaign['state']!=='draft'||($_POST['confirmation']??'')!=='SENDEN')finish('Freigabe nicht durchgeführt.',$id);
