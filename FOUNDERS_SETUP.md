@@ -83,3 +83,7 @@ Der bestehende Installer bleibt durch `setup_complete` und `enabled` serverseiti
 - Fünfer-Chargen benötigen jeweils einen manuellen Klick. Bei vielen Kontakten ist ein Transaktions-Maildienst mit Queue/Monitoring sinnvoll.
 - Meldung `accepted` ist kein Nachweis der Zustellung; die Warteschlange vermeidet automatische Wiederholungen bei unklarem Zustand.
 - Zusätzliche Sicherheitsprüfung und Backup-/Wiederherstellungstest vor größerer öffentlicher Nutzung nötig.
+
+### Zusätzliche Absicherung
+
+Der bestehende Admin-Login wurde für die Mailverwaltung erweitert: höchstens acht fehlgeschlagene Passwortversuche je pseudonymisierter IP-Adresse innerhalb von 15 Minuten; Admin-Sitzungen laufen nach acht Stunden ab. Da der Sitzungscookie nun für beide Adminseiten gilt, ist nach dem Deployment eine erneute Anmeldung nötig. Die Loginversuche werden in der privaten SQLite-Datei gespeichert und nach einer Stunde bereinigt.
