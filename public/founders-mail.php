@@ -258,8 +258,10 @@ $templates=[
 ];
 $selectedTemplate=(string)($_GET['template']??'');
 $template=$templates[$selectedTemplate]??null;
+$nlCount=count(recipients($db,'newsletter'));
 $body='<section class="panel"><h2>Versandübersicht</h2>'.$notice.'<div class="metrics">'
- .'<div class="metric"><strong>'.(int)$summary['confirmed'].'</strong><span>Bestätigte Kontakte</span></div>'
+ .'<div class="metric"><strong>'.(int)$summary['confirmed'].'</strong><span>Bestätigte Kontakte insgesamt</span></div>'
+ .'<div class="metric"><strong>'.$nlCount.'</strong><span>Allgemeiner TENNILO-Newsletter</span></div>'
  .'<div class="metric"><strong>'.(int)$summary['drafts'].'</strong><span>Entwürfe</span></div>'
  .'<div class="metric"><strong>'.(int)$summary['running'].'</strong><span>Freigegebene Kampagnen</span></div>'
  .'<div class="metric"><strong>'.(int)$summary['accepted'].'</strong><span>E-Mails vom Mailserver angenommen</span></div>'
