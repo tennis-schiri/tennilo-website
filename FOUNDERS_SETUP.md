@@ -56,3 +56,30 @@ Der Betreiber meldet, dass die Einrichtungs-E-Mail, der Bestätigungslink und di
 **Veröffentlichung:** Am 07.11. wurde ein wichtiger fehlender Teil ergänzt: Die frühere Abmeldung erforderte einen nicht mehr verfügbaren Original-Token. Ein neuer E-Mail-verifizierter Self-Service-Abmeldeprozess mit 48 Stunden gültigem Link wurde implementiert. Die zeitweilige öffentliche Technikdiagnose `founders-check.php` gibt nach dem nächsten Deployment nur noch HTTP 404 zurück. Der neue Code muss über den manuellen Workflow aktualisiert werden, bevor Punkt 4 getestet wird.
 
 Der bestehende Installer bleibt durch `setup_complete` und `enabled` serverseitig deaktiviert, sobald die Einrichtung vollständig abgeschlossen ist. Spätere Newsletter-Aussendungen sind weiterhin nicht implementiert; sie benötigen einen zuverlässigen Versand und individuelle Abmeldemöglichkeit.
+
+## Founders-Benachrichtigungen und Mail-Verwaltung (07.11.2026)
+
+**In GitHub implementiert, auf ALL-INKL noch nicht nach dem Update getestet:**
+
+- Nach erfolgreicher Double-Opt-in-Bestätigung sendet `public/founders.php` eine **interne Benachrichtigung** an `founders@tennilo.de`. Unbestätigte Anmeldungen lösen keine Nachricht aus. Ein Fehler bei der Benachrichtigung verhindert die Anmeldung nicht.
+- Admin-Zugang: [Founders-Verwaltung](https://tennilo.de/founders-admin.php). Der neue Link führt zur [Mail-Verwaltung](https://tennilo.de/founders-mail.php). Nach dem Website-Update ist ggf. eine erneute Admin-Anmeldung erforderlich, da der Sitzungscookie jetzt auch für den Mailbereich gilt.
+- E-Mail-Kampagnen: Entwurf anlegen → Interessengebiet wählen (Beta, Founders oder Crowdfunding) → Entwurf speichern → Testmail nur an founders@tennilo.de → Empfängerkreis mit Eingabe `SENDEN` freigeben → manuell jeweils **bis zu 5** E-Mails versenden.
+- Nur bestätigte Personen, die dem konkreten Thema zugestimmt haben, kommen in die Empfängerliste. Vor jedem Versandschritt wird die aktuelle Einwilligung erneut geprüft. Kein automatischer Start, kein versehentlicher Versand durch den GitHub-Workflow.
+- Jede echte Rundmail erhält einen persönlichen, HMAC-signierten Abmeldelink. Die Abmeldung erfordert zunächst eine Bestätigungsseite und anschließend eine ausdrückliche Löschung. Es wird kein Abmeldetoken im Klartext in der Datenbank gespeichert.
+- Versandstatus: `pending`, `sending`, `accepted`, `failed`, `skipped`. `accepted` bedeutet **an den lokalen Mailserver übergeben**, nicht zugestellt. Keine automatische Wiederholung unsicherer/fehlgeschlagener Versuche; damit sollen Doppelversendungen vermieden werden.
+- Ohne PHP `mail()` als funktionierenden lokalen Mailtransport kann weder Benachrichtigung noch Rundmail funktionieren. Das Postfachpasswort ist für diesen Versandweg nicht erforderlich.
+
+### Tests nach dem nächsten Upload
+
+1. [Direkten Website-Workflow](https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml) ausführen; dieser prüft `php -l` für `founders-mail.php` und lädt die Datei über die zentrale Freigabeliste hoch.
+2. Mit einer eigenen Testadresse erneut anmelden und bestätigen. Prüfen, ob zusätzlich die Betreiberbenachrichtigung im Postfach founders@tennilo.de ankommt. Für einen bereits bestätigten Kontakt wird bewusst keine zweite Benachrichtigung ausgelöst.
+3. Neu in [Founders-Admin](https://tennilo.de/founders-admin.php) anmelden, Link zur Mail-Verwaltung öffnen und einen Entwurf anlegen.
+4. `Testmail nur an founders@tennilo.de` klicken. Nachricht im Postfach ansehen. Entwurf bei Bedarf korrigieren.
+5. **Noch keine Rundmail an echte Interessenten senden**, bis Betreff, Einwilligungszweck, Abmeldelink, organisatorischer Datenschutz und tatsächliche Zustellung im Hosting geprüft sind. Für den ersten vollständigen Rundmailtest nur kontrollierte Testadressen mit ausdrücklicher Einwilligung verwenden.
+
+### Grenzen der ersten Version
+
+- Versand durch PHP `mail()` (noch kein authentifiziertes SMTP, kein Bounce-/Beschwerdemanagement).
+- Fünfer-Chargen benötigen jeweils einen manuellen Klick. Bei vielen Kontakten ist ein Transaktions-Maildienst mit Queue/Monitoring sinnvoll.
+- Meldung `accepted` ist kein Nachweis der Zustellung; die Warteschlange vermeidet automatische Wiederholungen bei unklarem Zustand.
+- Zusätzliche Sicherheitsprüfung und Backup-/Wiederherstellungstest vor größerer öffentlicher Nutzung nötig.
