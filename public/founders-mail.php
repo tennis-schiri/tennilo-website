@@ -6,7 +6,7 @@ header('X-Content-Type-Options: nosniff');
 header('X-Robots-Tag: noindex, nofollow');
 header('Referrer-Policy: no-referrer');
 header('Cache-Control: no-store');
-header("Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+header("Content-Security-Policy: default-src 'none'; img-src 'self' cid:; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
 $private = dirname(__DIR__).'/tennilo-founders-config.php';
 if (!is_file($private)) { http_response_code(503); exit('Konfiguration nicht verfügbar.'); }
 $cfg = require $private;
