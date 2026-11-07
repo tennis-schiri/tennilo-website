@@ -103,6 +103,18 @@ if($method==='POST'){
   $ok=sendMail('founders@tennilo.de','[TEST] '.$campaign['subject'],$sample);
   finish($ok?'Testmail an founders@tennilo.de vom Server angenommen.':'Testmail wurde vom Server abgelehnt.',$id);
  }
+ if($action==='test-one'){
+  if($campaign['state']!=='draft')finish('Einzeltest nur aus einem Entwurf möglich.',$id);
+  $email=strtolower(trim((string)($_POST['test_email']??'')));
+  if(!safeEmail($email)||($_POST['test_confirmation']??'')!=='EINZELTEST')finish('Bitte eine gültige Testadresse und EINZELTEST eingeben.',$id);
+  $q=$db->prepare('SELECT id,email,interests,confirmed_at FROM subscribers WHERE email=? AND confirmed_at IS NOT NULL');
+  $q->execute([$email]);$recipient=$q->fetch();
+  if(!$recipient||!opted((string)$recipient['interests'],(string)$campaign['topic']))
+   finish('Kein bestätigter Founders-Eintrag mit Einwilligung zum gewählten Thema für diese Adresse vorhanden.',$id);
+  [$message,$url]=footer($campaign['body'],(int)$recipient['id'],(string)$recipient['email'],(string)$cfg['key']);
+  $ok=sendMail((string)$recipient['email'],'[EINZELTEST] '.$campaign['subject'],$message,$url);
+  finish($ok?'Einzeltest ausschließlich an '.(string)$recipient['email'].' vom Mailserver angenommen (Zustellung prüfen).':'Einzeltest wurde vom Mailserver abgelehnt.',$id);
+ }
  if($action==='approve'){
   if($campaign['state']!=='draft'||($_POST['confirmation']??'')!=='SENDEN')finish('Freigabe nicht durchgeführt.',$id);
   $people=recipients($db,$campaign['topic']);
@@ -160,6 +172,7 @@ if($id){
   $body.='<form method="post">'.csrf().'<input type="hidden" name="action" value="save"><input type="hidden" name="campaign" value="'.$id.'"><label>Betreff</label><input type="text" maxlength="160" name="subject" value="'.h($c['subject']).'" required><label>Thema / Empfängerkreis</label><select name="topic">';
   foreach($topics as $key=>$name)$body.='<option value="'.h($key).'"'.($c['topic']===$key?' selected':'').'>'.h($name).'</option>';
   $body.='</select><label>Nachricht (Nur Text)</label><textarea name="body" maxlength="10000" required>'.h($c['body']).'</textarea><small>Persönliche Abmeldelinks und Absenderangaben werden beim Versand automatisch ergänzt.</small><p><button type="submit">Entwurf speichern</button></p></form><form method="post">'.csrf().'<input type="hidden" name="action" value="test"><input type="hidden" name="campaign" value="'.$id.'"><button type="submit">Testmail nur an founders@tennilo.de</button></form>';
+  $body.='<div class="warning"><strong>Sicherer Einzeltest:</strong> Nur an die unten eingetragene Adresse. Diese muss sich bereits auf der Warteliste bestätigt und dem ausgewählten Thema zugestimmt haben. Kein Versand an andere Personen, keine Kampagnenfreigabe. Entwurf vor dem Test speichern.</div><form method="post">'.csrf().'<input type="hidden" name="action" value="test-one"><input type="hidden" name="campaign" value="'.$id.'"><label>Bestätigte eigene Testadresse</label><input type="text" name="test_email" maxlength="254" placeholder="Eigene bestätigte Adresse" autocomplete="off" required><label>Zur Bestätigung EINZELTEST eintippen</label><input type="text" name="test_confirmation" autocomplete="off" required><p><button type="submit">Echte Nachricht mit Abmeldelink nur an diese Adresse senden</button></p></form>';
   $body.='<div class="warning"><strong>Versandfreigabe:</strong> Erst eine Testmail prüfen. Bei Freigabe wird eine feste Empfängerliste der zu diesem Zeitpunkt bestätigten Interessenten erstellt. Eine spätere Abmeldung wird vor jedem Sendeversuch erneut berücksichtigt.</div><form method="post">'.csrf().'<input type="hidden" name="action" value="approve"><input type="hidden" name="campaign" value="'.$id.'"><label>Zum Freigeben SENDEN eintippen</label><input type="text" name="confirmation" autocomplete="off" placeholder="SENDEN" required><button type="submit">Empfängerliste freigeben – noch nicht verschicken</button></form>';
  }else{
   $body.='<h3>'.h($c['subject']).'</h3><pre style="white-space:pre-wrap;font:inherit">'.h($c['body']).'</pre><p>Versandstatistik: '.h(json_encode($counts,JSON_UNESCAPED_UNICODE)).'</p><p class="muted">„Vom Server angenommen“ bestätigt keine Zustellung im Postfach. Bei Verbindungsabbruch können Einträge im Zustand „sending“ bleiben; diese werden zur Vermeidung unbemerkter Doppelversendungen nicht automatisch erneut versendet.</p>';
