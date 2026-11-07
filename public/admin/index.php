@@ -146,8 +146,8 @@ $pageTitle = $pageTitles[$view];
   *{box-sizing:border-box}body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:inherit}a:focus-visible,button:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
   .shell{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
   aside{background:var(--dark);color:#e8f9f7;padding:26px 18px;display:flex;flex-direction:column;gap:24px}
-  .brand{display:block;padding:10px 9px}.brand img{width:176px;height:auto;display:block}
-  .brand small{display:block;color:#a5c2c0;font-weight:750;font-size:11px;letter-spacing:.16em;margin-top:12px}
+  .brand{display:block;padding:15px 13px;background:#f6f8f4;border-radius:13px}.brand img{width:176px;height:auto;display:block}
+  .brand small{display:block;color:#49716e;font-weight:750;font-size:11px;letter-spacing:.16em;margin-top:12px}
   nav{display:grid;gap:6px}.nav-label{font-size:10px;text-transform:uppercase;letter-spacing:.17em;color:#97b7b4;padding:5px 11px}
   .nav-link{display:block;border-radius:11px;color:#d4e7e3;text-decoration:none;padding:11px 14px;font-weight:700}
   .nav-link:hover,.nav-link[aria-current=page]{background:#22505a;color:white}
