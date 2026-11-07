@@ -180,3 +180,27 @@ h2 em{color:#049a98;font-style:normal}
 .founders-form small{margin-top:0;color:#bed8d4}
 .founders-honeypot{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
 @media(max-width:680px){.founders-form{padding:16px}.founders-form fieldset{flex-direction:column}.founders-form .btn{width:100%}}
+
+
+/* General TENNILO newsletter – independent from the Founders waitlist */
+.newsletter-section{padding-top:16px;padding-bottom:100px}
+.newsletter-panel{position:relative;background:#e7f5f3;border:1px solid #c3e8e4;border-radius:20px;padding:56px 64px;display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center;overflow:hidden}
+.newsletter-panel:before{content:"";position:absolute;right:-130px;top:-190px;width:420px;height:420px;border:1px solid #78c9c2;border-radius:50%;opacity:.55;pointer-events:none}
+.newsletter-head,.newsletter-form{position:relative;z-index:1}
+.newsletter-panel .eyebrow{color:#048b87;font-size:11px;margin-bottom:17px}
+.newsletter-panel h2{font-size:clamp(38px,3.9vw,54px)}
+.newsletter-panel h2 em{font-style:normal;color:#049a98}
+.newsletter-head p:not(.eyebrow){font-size:15px;line-height:1.65;color:#41676b;margin:19px 0 0}
+.newsletter-form{background:#fff;border:1px solid #d4e9e6;border-radius:15px;padding:30px;box-shadow:0 15px 40px rgba(9,43,54,.055)}
+.newsletter-form>label:first-of-type{display:block;font-size:12px;color:#234951;font-weight:900;margin-bottom:9px}
+.newsletter-input-row{display:flex;gap:8px}
+.newsletter-input-row input{flex:1;min-width:0;background:#f6f8f4;border:1px solid #afcac6;border-radius:8px;padding:13px;font:inherit;color:#092b36;font-size:14px}
+.newsletter-input-row button{border:0;border-radius:8px;background:#092b36;color:#fff;font:inherit;font-weight:850;font-size:12px;padding:13px 18px;cursor:pointer;white-space:nowrap}
+.newsletter-input-row button:hover{background:#0e505a}
+.newsletter-consent{display:flex;gap:9px;align-items:flex-start;color:#42616a;font-size:12px;line-height:1.6;margin:17px 0 0}
+.newsletter-consent input{flex:none;margin-top:3px;accent-color:#008f8e}
+.newsletter-consent a,.newsletter-form small a{color:#007f82;text-underline-offset:2px}
+.newsletter-form small{display:block;font-size:11px;color:#617b7d;margin-top:13px;line-height:1.6}
+.newsletter-honeypot{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
+@media(max-width:1040px){.newsletter-panel{grid-template-columns:1fr;gap:24px;padding:42px}.newsletter-section{padding-bottom:75px}}
+@media(max-width:680px){.newsletter-panel{padding:29px 21px;border-radius:15px}.newsletter-form{padding:22px}.newsletter-input-row{flex-direction:column}.newsletter-input-row button{min-height:46px}.newsletter-section{padding-top:8px;padding-bottom:62px}}
