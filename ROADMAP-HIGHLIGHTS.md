@@ -9,9 +9,9 @@ Der Abschnitt „Daran arbeiten wir“ auf der öffentlichen Startseite ist eine
 | Turnierformate | `schleifchen`, `doppel`, `opc` | `online` bedeutet auf der **geschützten Testseite**, nicht öffentliche Produktverfügbarkeit. Deshalb „IM TEST“. |
 | Live-Ansicht | `live` | `online` im Testserver; echte Browser-/Mehrgeräte-Praxistests stehen noch aus. Deshalb „IM TEST“. |
 | Mehr Turnierideen | `americano`, `mixed`, `updown` | `idea`: reine Ideenphase ohne Leistungs- oder Veröffentlichungszusage. Deshalb „IDEENPHASE“. |
-| TENNILO Score | Eigenständiges Repository `tennis-schiri/tennilo-score` | Eigenständige Tennis-Zähl-App mit Watch-first-Konzept. Interaktiver Browser-Prototyp; **keine fertige native Watch-App**. Öffentlicher Test-Link: https://score.tennilo.de/. Deshalb „PROTOTYP“. |
+| TENNILO Score | Eigenständiges Repository `tennis-schiri/tennilo-score` | Eigenständige Tennis-Zähl-App mit Watch-first-Konzept. Interaktiver Prototyp für interne Entwicklung; **keine fertige native Watch-App**. Kein öffentlicher Link oder Testaufruf. Deshalb „PROTOTYP“. |
 
-Die drei Roadmap-basierten HTML-Karten enthalten `data-roadmap-ids`, damit die Herkunft bei späteren Aktualisierungen nachvollziehbar bleibt. Die vierte Karte (TENNILO Score) verwendet `data-project="tennilo-score"` und verlinkt auf den öffentlichen Browser-Prototyp. Vertrauliche Roadmap-Felder, Kommentare, interne Pläne und Verwaltungsdaten werden **nicht** auf die öffentliche Website übernommen. Es wird bewusst **kein direkter Link** auf das passwortgeschützte interne Roadmap-Board veröffentlicht.
+Die drei Roadmap-basierten HTML-Karten enthalten `data-roadmap-ids`, damit die Herkunft bei späteren Aktualisierungen nachvollziehbar bleibt. Die vierte Karte (TENNILO Score) verwendet `data-project="tennilo-score"`, enthält aber bewusst **keinen Link auf den internen Prototyp**. Vertrauliche Roadmap-Felder, Kommentare, interne Pläne und Verwaltungsdaten werden **nicht** auf die öffentliche Website übernommen. Es wird bewusst **kein direkter Link** auf das passwortgeschützte interne Roadmap-Board veröffentlicht.
 
 ## Abgleich bei künftigen Entwicklungsupdates
 
