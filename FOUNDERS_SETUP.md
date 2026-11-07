@@ -125,3 +125,11 @@ Nach dem erfolgreichen Praxistest des **isolierten Einzelversands inklusive indi
 5. Später mit ausschließlich eigenen, ausdrücklich bestätigten Testadressen den Fünfer-Chargenablauf, Zustandszählung und STOPP-Funktion verifizieren, bevor echte Founders-Newsletter verschickt werden.
 
 Keine Zeitautomatik, keine unautorisierte Massenaussendung, kein Öffnungs-/Klicktracking und keine bestätigte Inbox-Zustellstatistik. Technisch bleibt der lokale PHP-`mail()`-Transport aktiv. Eine skalierbare Versandwarteschlange, SMTP-Authentifizierung, Bounce-Verarbeitung, sichere Backups und ein Betriebshandbuch sind weitere Arbeitspunkte.
+
+## Branding-Anpassung am 07.11.2026
+
+Auf ausdrücklichen Wunsch des Betreibers wird für die Founders-Newsletter **das echte `assets/tennilo-logo.png`** der TENNILO-Website verwendet, kein generierter Schriftzug. Die Farben orientieren sich an `public/assets/styles.css`: Petrol `#092b36`, Türkis `#04c9c2`, warmer Korall-Akzent `#ef7146`, helle Fläche `#f6f8f4`. Auf größere grüne/limettengrüne Flächen wird in der Newsletter-Gestaltung verzichtet, um die Trennung zu Tennis-Schiri zu wahren.
+
+Der Versand verwendet weiterhin HTML plus Klartext. Das lokale originale PNG wird im E-Mail-MIME-Paket als Inline-Bild mit Content-ID beigefügt, sodass die E-Mail keine fremde Bildquelle benötigt. Die HTML-Vorschau im geschützten Admin referenziert das veröffentlichte Logo auf `https://tennilo.de/assets/tennilo-logo.png`. Falls die lokale Datei beim tatsächlichen Versand nicht lesbar ist oder über 300 kB groß ist, wird statt der Einbettung auf dieses veröffentlichte Logo verlinkt. Ein SMTP-Passwort ist nicht nötig.
+
+**Noch nicht live getestet**: Nach dem üblichen [Website-Workflow](https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml) zunächst nur eine Testmail an `founders@tennilo.de` senden. Darstellung des Logos, der Türkis-/Korallfarben und der Klartextalternative im Mailprogramm prüfen. Erst nach positivem Test einen isolierten Einzeltest mit persönlichem Abmeldelink durchführen. Keine reguläre Rundmail an echte Interessenten ohne Freigabe auslösen.
