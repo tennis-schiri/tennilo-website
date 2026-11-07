@@ -10,6 +10,7 @@ on:
       - 'public/newsletter.php'
       - 'deploy-files.txt'
       - 'tests/tennilo-email-template-test.php'
+      - 'tests/tennilo-campaign-editor-test.php'
       - '.github/workflows/backoffice-check.yml'
   workflow_dispatch:
 
@@ -35,7 +36,10 @@ jobs:
           done
       - name: Mail-Vorlagen und Links prüfen
         shell: bash
-        run: php tests/tennilo-email-template-test.php
+        run: |
+          set -euo pipefail
+          php tests/tennilo-email-template-test.php
+          php tests/tennilo-campaign-editor-test.php
       - name: Sichere FTPS-Freigabeliste prüfen
         shell: bash
         run: |
