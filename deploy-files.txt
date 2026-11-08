@@ -19,3 +19,5 @@ public/newsletter.php
 public/index.html
 public/assets/tennilo-tournament-logo.png
 public/assets/tennilo-score-logo.png
+public/assets/score-home.css
+public/assets/site-interactions.js
