@@ -212,3 +212,10 @@ h2 em{color:#049a98;font-style:normal}
 .score-teaser-icon span{font-size:65px;font-weight:900;line-height:1;letter-spacing:-.09em;color:#e7ff6a;transform:rotate(5deg);padding-right:5px}
 @media(min-width:681px) and (max-width:900px){.work-grid .work-card:last-child{grid-column:auto;min-height:400px}}
 @media(max-width:680px){.work-grid{grid-template-columns:1fr}.work-grid .work-card{min-height:365px}.score-teaser-icon{margin:27px 0 23px}}
+
+/* TENNILO Umpire: freigegebenes 00-Original-Logo, keine Details zum Projekt. */
+.umpire-teaser{margin-top:18px;background:#092b36;color:#fff;border-radius:16px;padding:36px clamp(20px,5vw,52px);display:flex;align-items:center;flex-direction:column;gap:10px;text-align:center;overflow:hidden}
+.umpire-teaser-label{color:#b5dad9;font-size:10px;letter-spacing:.17em;font-weight:850}
+.umpire-teaser img{display:block;width:min(100%,625px);height:auto;margin:5px auto 1px;object-fit:contain}
+.umpire-teaser p{margin:0;font-size:15px;line-height:1.6;font-weight:600;color:#d1e6e5}
+@media(max-width:680px){.umpire-teaser{padding:31px 17px}.umpire-teaser-label{font-size:9px;letter-spacing:.1em}.umpire-teaser p{font-size:13px}}
