@@ -1,5 +1,6 @@
 public/assets/styles.css
 public/assets/tennilo-logo.png
+public/assets/tennilo-umpire-logo.png
 public/assets/tennilo-icon.png
 public/favicon.png
 public/robots.txt
