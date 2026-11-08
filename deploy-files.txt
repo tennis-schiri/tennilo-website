@@ -17,3 +17,5 @@ public/founders-email-template.php
 public/founders.php
 public/newsletter.php
 public/index.html
+public/assets/tennilo-tournament-logo.png
+public/assets/tennilo-score-logo.png

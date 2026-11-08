@@ -219,3 +219,21 @@ h2 em{color:#049a98;font-style:normal}
 .umpire-teaser img{display:block;width:min(100%,625px);height:auto;margin:5px auto 1px;object-fit:contain}
 .umpire-teaser p{margin:0;font-size:15px;line-height:1.6;font-weight:600;color:#d1e6e5}
 @media(max-width:680px){.umpire-teaser{padding:31px 17px}.umpire-teaser-label{font-size:9px;letter-spacing:.1em}.umpire-teaser p{font-size:13px}}
+
+/* TENNILO Dachmarke / product family */
+.product-family-section{padding:66px 0 78px;background:#e9f2f0}
+.product-family-header{max-width:790px;margin-bottom:26px}
+.product-family-header h2{font-size:clamp(32px,4vw,58px);letter-spacing:-.055em;line-height:1.06;color:#0a2d37;margin:15px 0}
+.product-family-header h2 em{font-style:normal;color:#087f8b}
+.product-family-header>p:last-child{font-size:16px;line-height:1.65;color:#43626a}
+.product-family-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.product-family-card{min-width:0;background:#fff;border-radius:17px;padding:26px;display:flex;flex-direction:column;gap:15px;box-shadow:0 5px 20px rgba(5,35,45,.055);border:1px solid #d2e4e2}
+.product-family-card-featured{border-color:#56b9b7}
+.product-family-status{font-size:10px;font-weight:850;letter-spacing:.095em;color:#3f757c}
+.product-family-card img{width:100%;max-height:125px;min-height:95px;object-fit:contain;object-position:center}
+.product-family-card h3{font-size:22px;line-height:1.2;color:#082b35;letter-spacing:-.035em;margin:0}
+.product-family-card p{font-size:14px;line-height:1.65;color:#4a6469;margin:0;flex:1}
+.product-family-card a{font-size:13px;font-weight:850;color:#0a6f77;text-decoration:none}
+.product-family-card a:hover{text-decoration:underline}
+@media(max-width:900px){.product-family-grid{grid-template-columns:1fr}.product-family-card img{max-height:155px}.product-family-card{padding:24px}}
+@media(max-width:600px){.product-family-section{padding:45px 0 50px}.product-family-header>p:last-child{font-size:14px}}
