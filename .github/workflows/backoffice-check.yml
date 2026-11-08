@@ -9,6 +9,12 @@ on:
       - 'public/founders-email-template.php'
       - 'public/newsletter.php'
       - 'deploy-files.txt'
+      - 'public/index.html'
+      - 'public/impressum.html'
+      - 'public/datenschutz.html'
+      - 'public/assets/score-home.css'
+      - 'public/assets/site-interactions.js'
+      - 'tests/score-landing-test.mjs'
       - 'tests/tennilo-email-template-test.php'
       - 'tests/tennilo-campaign-editor-test.php'
       - '.github/workflows/backoffice-check.yml'
@@ -34,6 +40,10 @@ jobs:
           for file in public/admin/index.php public/founders-admin.php public/founders-mail.php public/founders-email-template.php public/newsletter.php; do
             php -l "$file"
           done
+      - name: Produktseite und Scroll-Navigation prüfen
+        run: |
+          node --check public/assets/site-interactions.js
+          node --test tests/score-landing-test.mjs
       - name: Mail-Vorlagen und Links prüfen
         shell: bash
         run: |
