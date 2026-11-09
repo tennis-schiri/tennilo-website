@@ -54,11 +54,14 @@ jobs:
           grep -Fxq "public/founders-setup.php" deploy-files.txt
           grep -Fxq "public/founders-check.php" deploy-files.txt
           grep -Fxq "public/index.html" deploy-files.txt
+          grep -Fxq "public/en/index.html" deploy-files.txt
+          grep -Fxq "public/en/imprint.html" deploy-files.txt
+          grep -Fxq "public/en/privacy.html" deploy-files.txt
 
       - name: Score-Startseite und Navigation prüfen
         run: |
           node --check public/assets/site-interactions.js
-          node --test tests/score-landing-test.mjs
+          node --test tests/score-landing-test.mjs tests/tennilo-language-test.mjs
 
       - name: PHP-Syntax prüfen
         shell: bash

@@ -15,6 +15,9 @@ on:
       - 'public/assets/score-home.css'
       - 'public/assets/site-interactions.js'
       - 'tests/score-landing-test.mjs'
+      - 'tests/tennilo-language-test.mjs'
+      - 'public/en/**'
+      - 'public/sitemap.xml'
       - 'tests/tennilo-email-template-test.php'
       - 'tests/tennilo-campaign-editor-test.php'
       - '.github/workflows/backoffice-check.yml'
@@ -43,7 +46,7 @@ jobs:
       - name: Produktseite und Scroll-Navigation prüfen
         run: |
           node --check public/assets/site-interactions.js
-          node --test tests/score-landing-test.mjs
+          node --test tests/score-landing-test.mjs tests/tennilo-language-test.mjs
       - name: Mail-Vorlagen und Links prüfen
         shell: bash
         run: |
