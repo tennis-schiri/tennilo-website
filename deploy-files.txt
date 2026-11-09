@@ -24,3 +24,4 @@ public/assets/site-interactions.js
 public/en/index.html
 public/en/imprint.html
 public/en/privacy.html
+public/assets/score-creative.css
