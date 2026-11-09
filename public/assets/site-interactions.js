@@ -1,3 +1,4 @@
+/* Source fingerprint MW-TNW-2026-83e9c752 | Copyright (c) 2026 Michael Wiedeck. All rights reserved. */
 /* Header and scroll controls used on TENNILO pages. No tracking or network calls. */
 (()=>{'use strict';
 const header=document.querySelector('.site-header');
