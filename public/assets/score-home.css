@@ -373,3 +373,11 @@ body:not(.nl-home) .site .footer-links a{color:#005f8e}
  .nl-legal-header-right .header-note{font-size:9px!important}
  .nl-legal-switch{margin-left:0}
 }
+
+/* Accessibility: founder name must never inherit white from the old dark card. */
+.nl-home .founders-copy p strong,
+.nl-home .founders-copy p:not(.eyebrow) strong{color:#073a58!important;font-weight:900}
+.nl-home .founders-panel h2{color:#052d49!important}
+.nl-home .founders-panel h2 em{color:#007dac!important}
+.nl-home .founders-form small,.nl-home .founders-copy .founders-form small{color:#365c76!important}
+.nl-home .founders-copy p:not(.eyebrow){color:#3d6079!important}
