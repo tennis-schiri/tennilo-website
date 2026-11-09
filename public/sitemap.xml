@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://tennilo.de/</loc></url>
-<url><loc>https://tennilo.de/impressum.html</loc></url>
-<url><loc>https://tennilo.de/datenschutz.html</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+ <url><loc>https://tennilo.de/</loc><xhtml:link rel="alternate" hreflang="de" href="https://tennilo.de/"/><xhtml:link rel="alternate" hreflang="en" href="https://tennilo.de/en/"/></url>
+ <url><loc>https://tennilo.de/en/</loc><xhtml:link rel="alternate" hreflang="de" href="https://tennilo.de/"/><xhtml:link rel="alternate" hreflang="en" href="https://tennilo.de/en/"/></url>
+ <url><loc>https://tennilo.de/impressum.html</loc><xhtml:link rel="alternate" hreflang="de" href="https://tennilo.de/impressum.html"/><xhtml:link rel="alternate" hreflang="en" href="https://tennilo.de/en/imprint.html"/></url>
+ <url><loc>https://tennilo.de/en/imprint.html</loc><xhtml:link rel="alternate" hreflang="de" href="https://tennilo.de/impressum.html"/><xhtml:link rel="alternate" hreflang="en" href="https://tennilo.de/en/imprint.html"/></url>
+ <url><loc>https://tennilo.de/datenschutz.html</loc><xhtml:link rel="alternate" hreflang="de" href="https://tennilo.de/datenschutz.html"/><xhtml:link rel="alternate" hreflang="en" href="https://tennilo.de/en/privacy.html"/></url>
+ <url><loc>https://tennilo.de/en/privacy.html</loc><xhtml:link rel="alternate" hreflang="de" href="https://tennilo.de/datenschutz.html"/><xhtml:link rel="alternate" hreflang="en" href="https://tennilo.de/en/privacy.html"/></url>
 </urlset>
