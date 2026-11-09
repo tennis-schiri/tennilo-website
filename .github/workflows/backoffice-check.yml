@@ -18,6 +18,8 @@ on:
       - 'tests/tennilo-language-test.mjs'
       - 'tests/tennilo-creative-test.mjs'
       - 'public/assets/score-creative.css'
+      - 'public/assets/court-edition.css'
+      - 'public/assets/score-demo.js'
       - 'public/en/**'
       - 'public/sitemap.xml'
       - 'tests/tennilo-email-template-test.php'
@@ -48,6 +50,7 @@ jobs:
       - name: Produktseite und Scroll-Navigation prüfen
         run: |
           node --check public/assets/site-interactions.js
+          node --check public/assets/score-demo.js
           node --test tests/score-landing-test.mjs tests/tennilo-language-test.mjs tests/tennilo-creative-test.mjs
       - name: Mail-Vorlagen und Links prüfen
         shell: bash

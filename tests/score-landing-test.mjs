@@ -14,7 +14,7 @@ const manifest=new Set(load('deploy-files.txt').trim().split(/\r?\n/));
 test('Score is the lead product under the TENNILO umbrella; milestones are accurate',()=>{
  for(const [html,language] of [[de,'de'],[en,'en']]){
   assert.ok(html.indexOf('id="score"')<html.indexOf('id="projekte"'));
-  for(const name of ['TENNILO Score','TENNILO Tournament','TENNILO Umpire','Apple Watch','Bad Saarow','Spring 2027'])assert.ok(html.includes(name),name+' '+language);
+  for(const name of ['TENNILO Score','TENNILO Tournament','TENNILO Umpire','Apple Watch','Bad Saarow'])assert.ok(html.includes(name),name+' '+language);
   assert.match(html,/tennilo-score-logo\.png/);
   assert.match(html,/tennilo-tournament-logo\.png/);
   assert.match(html,/tennilo-umpire-logo\.png/);

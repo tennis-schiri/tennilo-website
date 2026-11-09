@@ -48,7 +48,9 @@ Die Website ist für internationale Besucher zweisprachig aufgebaut:
 - `public/en/index.html` – englische Startseite unter https://tennilo.de/en/
 - `public/impressum.html` / `public/en/imprint.html` – deutsche und englische Anbieterkennzeichnung
 - `public/datenschutz.html` / `public/en/privacy.html` – deutsche und englische Datenschutzhinweise
-- `public/assets/score-home.css` – gemeinsames Score-Branding, inklusive responsive DE/EN-Schalter
+- `public/assets/court-edition.css` – eigenständiges, helles Courtside-Editorial für DE und EN, inklusive responsive Navigation und Sprachumschaltung
+- `public/assets/score-demo.js` – interaktive Spielstand-Illustration (ein Spiel, Deuce/Vorteil, Zurücksetzen; keine veröffentlichte Score-App)
+- `public/assets/score-home.css` und `public/assets/score-creative.css` – ältere Designs, von den Startseiten nicht mehr geladen
 - `public/assets/site-interactions.js` – gemeinsame Navigation und dynamischer Nach-oben-Button, Sprachlabels automatisch nach `<html lang>`
 - `public/sitemap.xml` – beide Sprachen mit hreflang-Verknüpfungen
 - `tests/tennilo-language-test.mjs` – prüft beide Sprachversionen, Formularschnittstellen, rechtliche Anker und Upload-Freigabeliste
@@ -58,3 +60,7 @@ Bei jeder inhaltlichen Änderung an Score, Tournament, Umpire, Meilensteinen ode
 **Formulare:** Newsletter und Founders verwenden weiterhin die bestehenden PHP-Endpunkte und die etablierten Einwilligungs-/Double-Opt-in-Prozesse. Die englischen Formularlabels sind übersetzt; transaktionale PHP-Seiten und E-Mail-Bestätigungen werden derzeit vom Backend in deutscher Sprache ausgegeben. Backend-Texte erst in einem eigenen Schritt lokalisieren und separat testen.
 
 Der Upload erfolgt weiter nur über den manuellen Workflow: https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml
+
+## Courtside Edition (November 2026)
+
+Die beiden Startseiten wurden strukturell neu aufgebaut (TENNILO bleibt Dachmarke, TENNILO Score ist Leitprodukt): warmes Papier, kräftiges Königsblau, orangefarbene Turnierticket-Fläche, interaktives Scoreboard, typografische Features, zwei weitere Projekte, aktuelle News und getrennte Newsletter-/Founders-Formulare. Die Original-Logos bleiben erhalten. Der Betatest am 27.12.2026 in Bad Saarow ist ausdrücklich **geplant**, die Apple Watch ist Voraussetzung und Tester erhalten die App bei Marktreife gratis. Keine Verweise auf die Testseite auf der öffentlichen Homepage. Änderungen an Inhalten immer auf `public/index.html` und `public/en/index.html` spiegeln.
