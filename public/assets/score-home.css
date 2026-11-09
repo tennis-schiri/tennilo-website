@@ -332,3 +332,16 @@ body:not(.nl-home){background:#f5faff;color:#03283f}
 body:not(.nl-home) .legal-kicker,body:not(.nl-home) .header-note{color:#0088b2}
 body:not(.nl-home) .legal-main a{color:#047fa8}
 body:not(.nl-home) .nl-back-to-top{background:conic-gradient(#04d9eb var(--nl-scroll-progress,0%),#0c3958 0)}
+
+/* Corporate legal pages: same blue / cyan identity, without touching privacy text. */
+body:not(.nl-home) .site .site-header{padding:14px 0}
+body:not(.nl-home) .site .header-note{color:#0878a4;letter-spacing:.12em}
+body:not(.nl-home) .site .header-note:before{border-radius:2px;background:#04d9eb}
+body:not(.nl-home) .site .legal-title{color:#00243a;font-weight:950;letter-spacing:-.075em;text-transform:uppercase}
+body:not(.nl-home) .site .legal-kicker{color:#008fae;letter-spacing:.17em}
+body:not(.nl-home) .site .legal-content{color:#425c71}
+body:not(.nl-home) .site .legal-content h2{color:#063758}
+body:not(.nl-home) .site .legal-content address{border:1px solid #cadde9;border-radius:0;background:#fff;box-shadow:8px 8px 0 #e1f1fa}
+body:not(.nl-home) .site .back-link{color:#047fa8}
+body:not(.nl-home) .site .footer-inner{border-top:1px solid #d0e2ec}
+body:not(.nl-home) .site .footer-links a{color:#005f8e}
