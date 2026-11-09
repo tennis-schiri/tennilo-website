@@ -62,6 +62,7 @@ jobs:
           grep -Fxq "public/assets/score-demo.js" deploy-files.txt
           grep -Fxq "public/assets/theme.js" deploy-files.txt
           grep -Fxq "public/assets/theme.css" deploy-files.txt
+          grep -Fxq "public/assets/back-to-top.css" deploy-files.txt
 
       - name: Score-Startseite und Navigation prüfen
         run: |

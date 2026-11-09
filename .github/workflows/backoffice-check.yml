@@ -22,6 +22,7 @@ on:
       - 'public/assets/score-demo.js'
       - 'public/assets/theme.js'
       - 'public/assets/theme.css'
+      - 'public/assets/back-to-top.css'
       - 'tests/tennilo-theme-test.mjs'
       - 'public/en/**'
       - 'public/sitemap.xml'

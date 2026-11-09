@@ -65,3 +65,19 @@ test('Sticky navigation, responsive menu and scroll-to-top remain functional',()
  assert.match(behavior,/scrollTo\(\{top:0,behavior:/);
  assert.match(behavior,/document\.documentElement\.lang/);
 });
+
+test('Animated scroll progress ring is present on DE/EN and legal pages',()=>{
+ const animation=load('public/assets/back-to-top.css');
+ for(const file of ['public/index.html','public/en/index.html','public/impressum.html','public/datenschutz.html','public/en/imprint.html','public/en/privacy.html']){
+  const html=load(file);
+  assert.match(html,/class="[^"]*tc-progress-button/,'Missing circular button in '+file);
+  assert.match(html,/back-to-top\.css\?v=1/,'Missing progress styles in '+file);
+  assert.match(html,/aria-label="(?:Nach oben|Zurück nach oben|Back to top)"/,file);
+ }
+ assert.match(animation,/conic-gradient\(from -90deg,var\(--tc-progress-fill\) var\(--nl-scroll-progress,0%\)/);
+ assert.match(animation,/html\[data-theme="dark"\] body \.nl-back-to-top\.tc-progress-button/);
+ assert.match(animation,/@media\(prefers-reduced-motion:reduce\)/);
+ assert.match(behavior,/--nl-scroll-progress/);
+ assert.match(behavior,/scrollTo\(\{top:0,behavior:/);
+ assert.ok(manifest.has('public/assets/back-to-top.css'));
+});

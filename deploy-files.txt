@@ -29,3 +29,4 @@ public/assets/court-edition.css
 public/assets/score-demo.js
 public/assets/theme.js
 public/assets/theme.css
+public/assets/back-to-top.css
