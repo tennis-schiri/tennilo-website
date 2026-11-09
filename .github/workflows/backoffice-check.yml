@@ -55,7 +55,7 @@ jobs:
           node --check public/assets/site-interactions.js
           node --check public/assets/score-demo.js
           node --check public/assets/theme.js
-          node --test tests/score-landing-test.mjs tests/tennilo-language-test.mjs tests/tennilo-creative-test.mjs
+          node --test tests/score-landing-test.mjs tests/tennilo-language-test.mjs tests/tennilo-creative-test.mjs tests/tennilo-theme-test.mjs
       - name: Mail-Vorlagen und Links prüfen
         shell: bash
         run: |
