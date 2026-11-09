@@ -64,3 +64,9 @@ Der Upload erfolgt weiter nur über den manuellen Workflow: https://github.com/t
 ## Courtside Edition (November 2026)
 
 Die beiden Startseiten wurden strukturell neu aufgebaut (TENNILO bleibt Dachmarke, TENNILO Score ist Leitprodukt): warmes Papier, kräftiges Königsblau, orangefarbene Turnierticket-Fläche, interaktives Scoreboard, typografische Features, zwei weitere Projekte, aktuelle News und getrennte Newsletter-/Founders-Formulare. Die Original-Logos bleiben erhalten. Der Betatest am 27.12.2026 in Bad Saarow ist ausdrücklich **geplant**, die Apple Watch ist Voraussetzung und Tester erhalten die App bei Marktreife gratis. Keine Verweise auf die Testseite auf der öffentlichen Homepage. Änderungen an Inhalten immer auf `public/index.html` und `public/en/index.html` spiegeln.
+
+## Dark Mode / Light Mode
+
+`public/assets/theme.js` ermittelt beim ersten Besuch die Betriebssystem-Einstellung (`prefers-color-scheme`) und setzt das Theme vor dem Laden der Stylesheets, um einen Farbblitz zu vermeiden. Der manuelle Tag/Nacht-Schalter ist in beiden Sprachversionen, Impressum und Datenschutzerklärung sichtbar; die Auswahl wird unter `tennilo-color-theme` ausschließlich lokal im Browser gespeichert. Ohne manuelle Vorgabe reagieren Seiten automatisch auf einen Wechsel der Systemeinstellung. Bei deaktiviertem Local Storage funktioniert das Umschalten für die aktuelle Sitzung weiterhin. Styles: `public/assets/theme.css` mit individuellen Kontrasten auch für Founders- und Newsletter-Formulare. Keine Cookies, Tracking-Endpunkte oder externen Requests für das Theme.
+
+CI/Deploy prüfen Theme-Verhalten mit `tests/tennilo-theme-test.mjs`. Bei Änderungen an Farben oder Komponenten beide Themes und die mobilen Ansichten berücksichtigen.

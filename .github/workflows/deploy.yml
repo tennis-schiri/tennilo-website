@@ -60,12 +60,15 @@ jobs:
           grep -Fxq "public/assets/score-creative.css" deploy-files.txt
           grep -Fxq "public/assets/court-edition.css" deploy-files.txt
           grep -Fxq "public/assets/score-demo.js" deploy-files.txt
+          grep -Fxq "public/assets/theme.js" deploy-files.txt
+          grep -Fxq "public/assets/theme.css" deploy-files.txt
 
       - name: Score-Startseite und Navigation prüfen
         run: |
           node --check public/assets/site-interactions.js
           node --check public/assets/score-demo.js
-          node --test tests/score-landing-test.mjs tests/tennilo-language-test.mjs tests/tennilo-creative-test.mjs
+          node --check public/assets/theme.js
+          node --test tests/score-landing-test.mjs tests/tennilo-language-test.mjs tests/tennilo-creative-test.mjs tests/tennilo-theme-test.mjs
 
       - name: PHP-Syntax prüfen
         shell: bash
