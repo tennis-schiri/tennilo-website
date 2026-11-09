@@ -25,3 +25,5 @@ public/en/index.html
 public/en/imprint.html
 public/en/privacy.html
 public/assets/score-creative.css
+public/assets/court-edition.css
+public/assets/score-demo.js
