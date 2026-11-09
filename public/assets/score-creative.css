@@ -1,0 +1,204 @@
+/* TENNILO Creative Edition 03 — 2026-11-09
+   A tennis-court-inspired editorial sport-tech design for the original Score wordmark.
+   Source for functional forms remains unchanged. */
+.nl-home{--lime:#04d9eb;--teal:#00aacf;--ink:#062c47;--mid:#476478;--line:#c0ddea}
+.nl-home .site-shell{background:#f3f8fc}
+.nl-home .nl-header{background:rgba(249,252,255,.97);border-bottom:1px solid #bed5e4}
+.nl-home .nl-header-inner{position:relative}
+.nl-home .nl-header-inner:after{content:"";position:absolute;bottom:-2px;left:0;width:36%;height:3px;background:linear-gradient(90deg,#00d8f1,#8e68ff 70%,transparent)}
+.nl-home .nl-masterbrand{border-right:1px solid #bed5e4}
+.nl-home .nl-nav a{font-size:10px;letter-spacing:.11em}
+.nl-home .nl-nav a:hover{color:#6d36b7}
+.nl-home .nl-instagram{background:#001c33;clip-path:polygon(12px 0,100% 0,100% 100%,0 100%,0 12px)}
+.nl-home .nl-lang-switch{background:#e8f4fb;border-color:#bcd6e6}
+.nl-home .nl-lang-switch a[aria-current="page"]{background:#001e3b;color:#4ef6ff}
+.nl-home .nl-hero{position:relative;background:#001322;overflow:hidden;min-height:775px}
+.nl-home .nl-hero:before{content:"";position:absolute;inset:0;pointer-events:none;background:
+ linear-gradient(139deg,transparent 33%,rgba(51,210,247,.045) 33.2%,transparent 33.4%),
+ repeating-linear-gradient(90deg,transparent 0 159px,rgba(93,188,221,.075) 160px 161px),
+ radial-gradient(ellipse at 80% 58%,rgba(2,110,157,.28),transparent 52%);z-index:0}
+.nl-home .nl-hero:after{height:4px;background:linear-gradient(90deg,#10c7f8 0%,#03eaff 52%,#7e71ff 100%)}
+.nl-hero-oversize{position:absolute;inset:auto -2% -14% auto;font-weight:1000;font-size:clamp(190px,33vw,610px);line-height:.75;letter-spacing:-.135em;color:transparent;-webkit-text-stroke:1px rgba(100,211,246,.19);transform:rotate(-9deg);pointer-events:none;z-index:0;white-space:nowrap}
+.nl-hero-sidecode{position:absolute;left:max(10px,calc((100% - 1400px)/2));top:35%;writing-mode:vertical-rl;transform:rotate(180deg);font-size:9px;letter-spacing:.22em;font-weight:850;color:#54a2c8;opacity:.75;z-index:2}
+.nl-home .nl-hero-layout{min-height:765px;grid-template-columns:1.04fr .96fr;gap:15px}
+.nl-home .nl-hero-copy{padding-top:41px;padding-bottom:41px;padding-left:19px}
+.nl-home .nl-score-logo-frame{width:min(100%,465px);margin:58px 0 34px}
+.nl-home .nl-hero h1{font-size:clamp(64px,7.1vw,113px);letter-spacing:-.102em;line-height:.88;margin-bottom:31px;position:relative;z-index:1}
+.nl-home .nl-hero h1 em{font-style:normal;color:#6af0ff;-webkit-text-stroke:.4px #9df8ff}
+.nl-home .nl-hero-lead{max-width:560px;font-size:15px;color:#c1d7e9;line-height:1.77}
+.nl-home .nl-hero-tags span{background:transparent;border-color:rgba(38,164,210,.42);border-left:3px solid #35dceb;padding:10px 12px}
+.nl-home .nl-hero-tags span b{color:#79f4ff}
+.nl-home .nl-button-primary{background:#0fe0f7;box-shadow:7px 7px 0 #016289}
+.nl-home .nl-button-primary:hover{background:#83f1fc;box-shadow:10px 10px 0 #016289}
+.nl-home .nl-button-quiet{border-color:rgba(116,226,247,.45);clip-path:none}
+.nl-home .nl-watch-stage{min-height:680px;perspective:1100px;overflow:visible}
+.nl-home .nl-watch-stage:before{background:radial-gradient(circle,rgba(13,235,250,.11),transparent 69%);width:610px;height:610px}
+.nl-court-schematic{position:absolute;inset:0;z-index:0;pointer-events:none;transform:rotate(-16deg);opacity:.8;display:flex;align-items:center;justify-content:center}
+.nl-court-boundary{width:min(93%,590px);aspect-ratio:1 / 1.38;border:2px solid rgba(72,207,241,.37);position:relative;box-shadow:0 0 45px rgba(40,155,215,.06),inset 0 0 90px rgba(0,205,248,.025)}
+.nl-court-boundary:before,.nl-court-boundary:after{content:"";position:absolute;left:15%;right:15%;height:1px;background:rgba(74,216,246,.44)}
+.nl-court-boundary:before{top:20%}.nl-court-boundary:after{bottom:20%}
+.nl-court-net{position:absolute;left:-4%;right:-4%;top:50%;border-top:2px dashed rgba(117,218,246,.43)}
+.nl-court-service{position:absolute;inset:20% 15%;border-left:2px solid rgba(74,216,246,.37);border-right:2px solid rgba(74,216,246,.37)}
+.nl-court-center{position:absolute;top:20%;bottom:20%;left:50%;border-left:2px solid rgba(74,216,246,.37)}
+.nl-court-trajectory{position:absolute;left:15%;top:18%;height:62%;width:56%;border:2px dashed rgba(111,115,250,.8);border-left:0;border-bottom:0;border-radius:0 100% 0 0;transform:rotate(12deg);filter:drop-shadow(0 0 7px rgba(113,106,250,.45))}
+.nl-court-ball{position:absolute;left:72%;top:28%;width:14px;height:14px;background:#f4e6ff;border:3px solid #7f5aff;border-radius:50%;box-shadow:0 0 0 7px rgba(151,95,254,.18),0 0 27px rgba(164,123,253,.8);animation:nl-ball-glow 3s ease-in-out infinite}
+@keyframes nl-ball-glow{50%{box-shadow:0 0 0 13px rgba(151,95,254,.12),0 0 34px rgba(164,123,253,.95)}}
+.nl-home .nl-orbit-one{border-color:rgba(75,190,239,.21);border-style:dashed}
+.nl-home .nl-orbit-two{border-color:rgba(146,112,242,.25)}
+.nl-board-dimension{position:absolute;top:16%;right:10px;z-index:3;font-weight:900;letter-spacing:.17em;font-size:10px;color:#aeebff;background:#04243b;padding:9px 13px;border-left:3px solid #9f7aff;transform:rotate(4deg)}
+.nl-home .nl-board{border:1px solid rgba(142,231,248,.55);box-shadow:26px 27px 0 rgba(0,7,21,.8),0 32px 75px rgba(0,6,18,.8),inset 0 0 35px rgba(11,218,244,.06);transform:perspective(1100px) rotateY(-11deg) rotateX(5deg) rotate(-7deg);transition:transform .4s}
+.nl-home .nl-board:hover{transform:perspective(1100px) rotateY(-7deg) rotateX(2deg) rotate(-3deg)}
+.nl-home .nl-board:before{height:8px;width:23%;background:linear-gradient(90deg,#04e9f4,#9770ff)}
+.nl-home .nl-board-point{font-size:clamp(55px,5.2vw,79px);color:#4aeffa}
+.nl-home .nl-floating-stat{background:#8d72ff;color:#fff;box-shadow:12px 12px 0 rgba(0,8,22,.73);right:2%;transform:rotate(8deg)}
+.nl-home .nl-highlight-bar{background:#f0f8fc;border-bottom:1px solid #accadf;color:#001e38}
+.nl-home .nl-highlight-grid{padding-top:32px;padding-bottom:32px}
+.nl-home .nl-highlight-intro{padding:0 0 0 15px;border-left:4px solid #735eea}
+.nl-home .nl-highlight-intro strong{font-size:18px;text-transform:uppercase;line-height:1.12}
+.nl-home .nl-highlight-date strong{font-size:clamp(30px,3.1vw,53px);color:#004b82}
+.nl-home .nl-highlight-link{border-color:#096394}
+.nl-motion-marquee{height:56px;overflow:hidden;display:flex;align-items:center;background:#00263f;color:#e7fafe;border-top:1px solid rgba(76,191,239,.38);border-bottom:1px solid rgba(76,191,239,.38);position:relative}
+.nl-motion-marquee:before,.nl-motion-marquee:after{content:"";width:50px;height:100%;position:absolute;top:0;z-index:1;pointer-events:none}
+.nl-motion-marquee:before{left:0;background:linear-gradient(90deg,#00263f,transparent)}
+.nl-motion-marquee:after{right:0;background:linear-gradient(270deg,#00263f,transparent)}
+.nl-motion-track{display:flex;align-items:center;gap:42px;width:max-content;white-space:nowrap;font-size:12px;font-weight:900;letter-spacing:.18em;animation:nl-ticker-slide 34s linear infinite;will-change:transform}
+.nl-motion-track b{color:#aa82ff;font-size:24px;font-weight:500}
+.nl-motion-track span:nth-of-type(3n+2){color:#67e8f5}
+@keyframes nl-ticker-slide{to{transform:translateX(-48%)}}
+.nl-home .nl-features{background:#f9fcff;position:relative}
+.nl-home .nl-features:before{content:"40";position:absolute;right:-1%;top:10%;font-size:clamp(160px,30vw,500px);line-height:.8;letter-spacing:-.1em;font-weight:1000;color:transparent;-webkit-text-stroke:1px rgba(3,150,207,.12);pointer-events:none}
+.nl-home .nl-feature-layout{position:relative;z-index:1}
+.nl-home .nl-feature-intro h2{font-size:clamp(48px,5.8vw,89px)}
+.nl-home .nl-feature-intro h2 em{background:#062b46;color:#9aeafb;padding:0 .1em;display:inline-block;transform:skewX(-7deg);margin:3px 0}
+.nl-home .nl-feature-rail{border-top:4px solid #0ac9e5;color:#04577f}
+.nl-home .nl-feature-rows{border-top:4px solid #052d4b}
+.nl-home .nl-feature-row{min-height:173px;position:relative;isolation:isolate}
+.nl-home .nl-feature-row:before{content:"";position:absolute;left:-23px;top:0;width:2px;height:0;background:#7b5aff;transition:height .25s}
+.nl-home .nl-feature-row:hover:before{height:100%}
+.nl-home .nl-feature-mark{color:#abd9f5;font-style:italic}
+.nl-home .nl-feature-row:nth-child(2) .nl-feature-mark,.nl-home .nl-feature-row:nth-child(4) .nl-feature-mark{color:#b2a4fc}
+.nl-statement{position:relative;background:#00daf1;min-height:235px;overflow:hidden;isolation:isolate}
+.nl-statement:before{content:"";position:absolute;right:-60px;top:-170px;width:600px;height:500px;border:60px solid rgba(0,56,93,.1);transform:rotate(22deg);pointer-events:none}
+.nl-statement .wrap{height:235px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;position:relative}
+.nl-statement-small{font-size:10px;font-weight:900;letter-spacing:.2em;color:#025473;margin-bottom:13px;z-index:1}
+.nl-statement-small i{font-style:normal;color:#9870f4}
+.nl-statement strong{font-size:clamp(50px,8.1vw,120px);line-height:.91;font-weight:1000;letter-spacing:-.095em;color:#001d36;white-space:nowrap;z-index:1;font-style:italic}
+.nl-statement-court{position:absolute;right:5%;top:-42px;font-size:320px;color:transparent;-webkit-text-stroke:2px rgba(4,57,100,.21);font-weight:1000;line-height:1;transform:rotate(-13deg);z-index:0}
+.nl-statement-cross{position:absolute;font-size:110px;top:5px;right:-50px;color:#8e73ff;-webkit-text-stroke:0}
+.nl-home .nl-timeline-section{background:#001d34}
+.nl-home .nl-milestone-track{border-top:2px solid #10cbef;border-bottom:1px solid #426b85}
+.nl-home .nl-milestone{position:relative}
+.nl-home .nl-milestone:before{content:"";position:absolute;top:-4px;left:0;width:38px;height:6px;background:#06cfee}
+.nl-home .nl-milestone-active{background:#00d7ed;box-shadow:15px 17px 0 #0b3d6b;transform:translateY(-10px)}
+.nl-home .nl-milestone-active:before{background:#977aff}
+.nl-home .nl-milestone-active h3{color:#012c48}
+.nl-home .nl-milestone-note{border-left:2px solid #8c73ff;padding-left:19px}
+.nl-home .nl-projects{background:#e6f3fa;position:relative}
+.nl-home .nl-projects:before{content:"";position:absolute;left:0;top:0;width:100%;height:26px;background:repeating-linear-gradient(100deg,transparent 0 40px,rgba(55,162,207,.16) 41px 42px,transparent 43px 83px)}
+.nl-home .nl-project-grid{gap:26px;align-items:start;padding-bottom:24px}
+.nl-home .nl-project-card{clip-path:polygon(0 0,calc(100% - 31px) 0,100% 31px,100% 100%,0 100%);padding:34px 38px 30px;border-radius:0;min-height:545px;transition:transform .28s,box-shadow .28s}
+.nl-home .nl-project-card:hover{transform:translateY(-7px)}
+.nl-home .nl-project-umpire{margin-top:56px;background:#082943}
+.nl-home .nl-project-tournament{box-shadow:12px 12px 0 #d0e6f1}
+.nl-home .nl-project-top{color:#245e8b}
+.nl-home .nl-project-art{height:195px}
+.nl-home .nl-project-umpire .nl-project-art img{background:#f4fcff;border:1px solid #cbeef8}
+.nl-home .nl-project-card h3{font-size:clamp(38px,4.7vw,69px)}
+.nl-home .nl-updates{background:#f8fcff}
+.nl-home .nl-update-row{border-bottom:1px solid #b8d5e5;position:relative}
+.nl-home .nl-update-row:before{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:0;background:#18c9f6;transition:width .3s}
+.nl-home .nl-update-row:hover:before{width:100%}
+.nl-home .nl-update-row h3{font-weight:950}
+.nl-home .nl-signups-lab{background:radial-gradient(ellipse at 4% 91%,rgba(122,113,252,.1),transparent 39%),linear-gradient(180deg,#e5f3fb,#ddecf7);position:relative;padding:100px 0 115px}
+.nl-home .nl-signups-lab:before{content:"TENNILO / MEMBERSHIP";position:absolute;top:22px;left:max(22px,calc((100% - 1280px)/2));font-size:10px;font-weight:900;letter-spacing:.19em;color:#41708c}
+.nl-home .newsletter-panel{clip-path:polygon(0 0,calc(100% - 25px) 0,100% 25px,100% 100%,0 100%);background:linear-gradient(116deg,#002034,#052f52);border-left:5px solid #00cfe8}
+.nl-home .newsletter-head h2{font-size:clamp(43px,4.5vw,72px);font-weight:1000;line-height:1.0}
+.nl-home .newsletter-head h2 em{color:#7cefff}
+.nl-home .newsletter-form{border:0;box-shadow:11px 11px 0 #064e75}
+.nl-home .newsletter-input-row button{background:#00d7ec;clip-path:polygon(9px 0,100% 0,100% 100%,0 100%,0 9px)}
+/* Founders: semantic grid, darker readable copy, and a separate ticket-like form */
+.nl-home .founders-panel.nl-founders-ticket{display:block;position:relative;background:#fff;border:0;border-top:7px solid #00d5ef;border-radius:0;padding:0;overflow:hidden;box-shadow:14px 14px 0 #b8d6eb;min-height:0}
+.nl-home .nl-founders-ticket:before{content:"F";position:absolute;left:-26px;top:53px;z-index:0;font-size:clamp(330px,43vw,650px);font-weight:1000;line-height:.9;letter-spacing:-.15em;color:transparent;-webkit-text-stroke:2px rgba(8,130,180,.08);pointer-events:none}
+.nl-home .nl-founders-ticket:after{content:"//  TENNILO  /  2027";position:absolute;top:0;right:0;z-index:2;padding:10px 23px;background:#083b5a;color:#76edff;font-size:10px;font-weight:900;letter-spacing:.1em}
+.nl-home .founders-panel .founders-copy{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);column-gap:clamp(35px,5vw,95px);row-gap:14px;align-items:start;padding:70px clamp(24px,4.7vw,66px) 62px;position:relative;z-index:1}
+.nl-home .founders-copy>.nl-founder-serial,
+.nl-home .founders-copy>.founders-eyebrow,
+.nl-home .founders-copy>h2,
+.nl-home .founders-copy>p:not(.eyebrow){grid-column:1}
+.nl-founder-serial{display:block;font-size:10px;font-weight:900;letter-spacing:.18em;color:#197596;align-self:start;margin-bottom:21px}
+.nl-home .founders-panel .founders-eyebrow{color:#1383a2;letter-spacing:.14em;margin:0;font-size:10px}
+.nl-home .founders-panel h2{font-size:clamp(42px,4.2vw,67px);text-transform:uppercase;line-height:1;letter-spacing:-.084em;font-weight:1000;margin:6px 0 15px;max-width:580px;color:#052c49!important}
+.nl-home .founders-panel h2 em{font-style:normal;color:#006ea4!important;display:inline;box-shadow:inset 0 -12px 0 rgba(38,221,246,.26)}
+.nl-home .founders-copy>p:not(.eyebrow){margin:0 0 6px;font-size:14px;line-height:1.76;color:#365a71!important;max-width:480px}
+.nl-home .founders-copy>p:not(.eyebrow) strong{color:#00354f!important}
+.nl-home .founders-form-shell{grid-column:2;grid-row:1 / span 8;max-width:none;width:100%;margin:0!important;padding:27px;box-sizing:border-box;background:#052841;border:1px solid #063d5d;position:relative;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,0 100%)}
+.nl-home .founders-form-shell:before{content:attr(data-caption);display:block;color:#80e8f6;font-size:10px;font-weight:900;letter-spacing:.19em;margin:2px 0 21px;padding-bottom:17px;border-bottom:1px solid rgba(123,219,250,.26)}
+.nl-home .founders-form{background:#f7fcff;border:0;border-radius:0;padding:26px 27px;box-shadow:none;gap:12px}
+.nl-home .founders-form>label,.nl-home .founders-form legend{font-weight:850;color:#124462}
+.nl-home .founders-form fieldset{gap:13px 15px}
+.nl-home .founders-form fieldset label{color:#244f6b!important}
+.nl-home .founders-form input[type=checkbox]{accent-color:#007fb0}
+.nl-home .founders-form>input,.nl-home .founders-form>select{border:1px solid #99c5d8;background:#fff;color:#092f4a}
+.nl-home .founders-form .btn-lime{font-weight:900;min-height:46px;background:#00cce6;color:#002439}
+.nl-home .founders-form .btn-lime:hover{background:#85f0ff}
+.nl-home .founders-form small,.nl-home .founders-form small a{font-size:11px;line-height:1.65;color:#355c77!important}
+.nl-home .founders-consent{font-size:12px;line-height:1.68;color:#244d67!important}
+.nl-home .founders-consent a{color:#006ca1!important;text-decoration:underline}
+.nl-home .founders-panel .founders-art{display:none}
+.nl-home .nl-join{background:#001827}
+.nl-home .nl-join-card{position:relative;isolation:isolate}
+.nl-home .nl-join-card:after{content:"?";position:absolute;top:-10px;right:7%;font-size:clamp(200px,26vw,380px);line-height:1;font-weight:1000;color:transparent;-webkit-text-stroke:1px rgba(109,237,250,.13);transform:rotate(14deg);z-index:-1;pointer-events:none}
+.nl-home .nl-back-to-top{border-radius:0;clip-path:polygon(10px 0,100% 0,100% 100%,0 100%,0 10px)}
+.nl-home .nl-back-to-top span:first-child{border-radius:0}
+@media(max-width:1160px){
+ .nl-hero-sidecode{display:none}
+ .nl-home .nl-hero-copy{padding-left:0}
+ .nl-home .nl-board{transform:rotate(-5deg)}
+ .nl-home .nl-board:hover{transform:rotate(-3deg)}
+ .nl-home .founders-panel .founders-copy{column-gap:35px;padding:64px 39px}
+}
+@media(max-width:860px){
+ .nl-home .nl-hero-layout{grid-template-columns:1fr;min-height:0}
+ .nl-home .nl-watch-stage{min-height:520px;overflow:hidden}
+ .nl-home .nl-court-boundary{width:min(70%,540px)}
+ .nl-home .nl-board{width:min(77%,530px)}
+ .nl-home .nl-board-dimension{top:12%;right:14%}
+ .nl-home .nl-floating-stat{right:13%;bottom:10%}
+ .nl-home .nl-hero-oversize{font-size:48vw;bottom:16%}
+ .nl-home .nl-statement strong{font-size:clamp(48px,9vw,100px)}
+ .nl-home .founders-panel .founders-copy{grid-template-columns:1fr;gap:12px;padding:56px 38px 39px}
+ .nl-home .founders-copy>.nl-founder-serial,.nl-home .founders-copy>.founders-eyebrow,.nl-home .founders-copy>h2,.nl-home .founders-copy>p:not(.eyebrow){grid-column:1}
+ .nl-home .founders-form-shell{grid-column:1;grid-row:auto;margin-top:18px!important;padding:24px}
+ .nl-home .founders-panel h2{max-width:720px}
+ .nl-home .founders-copy>p:not(.eyebrow){max-width:700px}
+ .nl-home .nl-project-umpire{margin-top:32px}
+}
+@media(max-width:620px){
+ .nl-home .nl-hero h1{font-size:clamp(45px,12vw,75px)}
+ .nl-home .nl-hero-oversize{font-size:49vw;bottom:10%}
+ .nl-home .nl-court-boundary{width:87%}
+ .nl-home .nl-board{width:87%;transform:rotate(-4deg)}
+ .nl-home .nl-board:hover{transform:rotate(-4deg)}
+ .nl-home .nl-board-dimension{right:6%;top:10%}
+ .nl-home .nl-floating-stat{right:1%;bottom:6%}
+ .nl-home .nl-motion-marquee{height:43px}
+ .nl-motion-track{font-size:10px;gap:25px}
+ .nl-statement,.nl-statement .wrap{min-height:156px;height:156px}
+ .nl-statement strong{font-size:clamp(40px,10vw,64px);white-space:normal}
+ .nl-statement-court{font-size:210px;right:-5%;top:-10px}
+ .nl-home .nl-project-umpire{margin-top:0}
+ .nl-home .nl-project-card{min-height:420px;padding:24px 25px}
+ .nl-home .nl-feature-row{min-height:0}
+ .nl-home .nl-signups-lab{padding:80px 0 70px}
+ .nl-home .founders-panel .founders-copy{padding:47px 20px 26px}
+ .nl-home .founders-panel h2{font-size:clamp(38px,9vw,57px);max-width:100%}
+ .nl-home .founders-form-shell{padding:16px;margin-top:12px!important}
+ .nl-home .founders-form{padding:18px 15px}
+ .nl-home .nl-founder-serial{margin-bottom:18px}
+ .nl-home .nl-founders-ticket:after{font-size:8px;padding:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ .nl-motion-track{animation:none!important;will-change:auto}
+ .nl-court-ball{animation:none!important}
+ .nl-home .nl-board,.nl-home .nl-feature-row,.nl-home .nl-project-card{transition:none!important}
+}
