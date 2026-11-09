@@ -39,3 +39,22 @@ Die Startseite ist als schlanke Vorschauseite gestaltet: Claim „Weniger Orga. 
 ## TENNILO Backoffice
 
 Interner Einstieg: https://tennilo.de/admin/ (bestehender Founders-Admin-Login). Hintergründe, Sicherheit und Veröffentlichung: [BACKOFFICE.md](BACKOFFICE.md).
+
+## Zweisprachige Website (DE / EN)
+
+Die Website ist für internationale Besucher zweisprachig aufgebaut:
+
+- `public/index.html` – deutsche Startseite unter https://tennilo.de/
+- `public/en/index.html` – englische Startseite unter https://tennilo.de/en/
+- `public/impressum.html` / `public/en/imprint.html` – deutsche und englische Anbieterkennzeichnung
+- `public/datenschutz.html` / `public/en/privacy.html` – deutsche und englische Datenschutzhinweise
+- `public/assets/score-home.css` – gemeinsames Score-Branding, inklusive responsive DE/EN-Schalter
+- `public/assets/site-interactions.js` – gemeinsame Navigation und dynamischer Nach-oben-Button, Sprachlabels automatisch nach `<html lang>`
+- `public/sitemap.xml` – beide Sprachen mit hreflang-Verknüpfungen
+- `tests/tennilo-language-test.mjs` – prüft beide Sprachversionen, Formularschnittstellen, rechtliche Anker und Upload-Freigabeliste
+
+Bei jeder inhaltlichen Änderung an Score, Tournament, Umpire, Meilensteinen oder News **beide Startseiten** abgleichen. Das Gleiche gilt für Änderungen an den rechtlichen Unterseiten: DE und EN aktualisieren. Die Sprachumschaltung erfolgt manuell per Links im Header, ohne Cookies oder Redirect anhand der Browsersprache.
+
+**Formulare:** Newsletter und Founders verwenden weiterhin die bestehenden PHP-Endpunkte und die etablierten Einwilligungs-/Double-Opt-in-Prozesse. Die englischen Formularlabels sind übersetzt; transaktionale PHP-Seiten und E-Mail-Bestätigungen werden derzeit vom Backend in deutscher Sprache ausgegeben. Backend-Texte erst in einem eigenen Schritt lokalisieren und separat testen.
+
+Der Upload erfolgt weiter nur über den manuellen Workflow: https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml
