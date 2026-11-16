@@ -81,3 +81,13 @@ test('Animated scroll progress ring is present on DE/EN and legal pages',()=>{
  assert.match(behavior,/scrollTo\(\{top:0,behavior:/);
  assert.ok(manifest.has('public/assets/back-to-top.css'));
 });
+
+
+test('Updates are sorted newest first on DE and EN pages',()=>{
+ for(const html of [de,en]){
+  const block=html.split('<div class="tc-news-list">')[1]?.split('</div>\\n </div>\\n</section>')[0];
+  assert.ok(block,'Updates section missing');
+  const dates=[...block.matchAll(/<time datetime="(\\d{4}-\\d{2}-\\d{2})">/g)].map(m=>m[1]);
+  assert.deepEqual(dates,['2026-11-09','2026-11-09','2026-11-07']);
+ }
+});
