@@ -30,3 +30,9 @@ public/assets/score-demo.js
 public/assets/theme.js
 public/assets/theme.css
 public/assets/back-to-top.css
+public/assets/tennilo-score-cutout.png
+public/assets/tennilo-score-cutout-dark.png
+public/assets/tennilo-tournament-cutout.png
+public/assets/tennilo-umpire-cutout.png
+public/assets/tennilo-logo-dark.png
+public/assets/transparent-logos.css

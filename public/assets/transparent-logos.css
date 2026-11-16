@@ -1,0 +1,33 @@
+/* All TENNILO trademarks retain their approved letterforms: transparent PNGs, no logo tiles. */
+.tc-home .tc-brand img,.tc-home .tc-score-wordmark img,
+.tc-home .tc-project>img,.tc-home .tc-footer-top img{
+  border:0!important;
+  padding:0!important;
+  background:transparent!important;
+  box-shadow:none;
+  object-fit:contain;
+}
+.tc-home .tc-brand img{height:auto;max-height:42px}
+.tc-home .tc-score-wordmark img{width:100%;height:auto}
+.tc-home .tc-score-wordmark{max-width:290px}
+.tc-home .tc-project>img{height:170px}
+.tc-home .tc-logo-dark{display:none}
+html[data-theme="dark"] .tc-home .tc-logo-light{display:none!important}
+html[data-theme="dark"] .tc-home .tc-logo-dark{display:block!important}
+.tc-home .tc-footer-top .tc-footer-brandmark{display:block!important;filter:none!important}
+.tc-home .tc-project-tournament>img{max-width:420px}
+.tc-home .tc-project-umpire>img{max-width:390px;filter:drop-shadow(0 2px 0 rgba(0,0,0,.12))}
+html[data-theme="dark"] .tc-home .tc-project>img{
+  border:0!important;background:transparent!important;padding:0!important;
+}
+body:not(.tc-home) .site .logo-link img{
+  background:transparent!important;border:0!important;padding:0!important;box-shadow:none!important;
+}
+html[data-theme="dark"] body:not(.tc-home) .site .logo-link img{
+  background:transparent!important;border:0!important;padding:0!important;
+  filter:brightness(0) invert(1);
+}
+@media(max-width:680px){
+  .tc-home .tc-project>img{height:125px}
+  .tc-home .tc-score-wordmark{width:min(100%,315px)}
+}

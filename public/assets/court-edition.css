@@ -42,7 +42,7 @@ body.tc-home{margin:0;font-family:Arial,Helvetica,system-ui,sans-serif;backgroun
 .tc-hero h1 em{font-style:normal;color:var(--tc-royal);position:relative}
 .tc-hero h1 em:after{content:"";position:absolute;left:0;bottom:-11px;width:100%;height:10px;background:var(--tc-signal);transform:skewX(-17deg)}
 .tc-hero-summary{display:grid;grid-template-columns:minmax(120px,215px) minmax(0,1fr);gap:28px;padding-top:27px;border-top:2px solid var(--tc-ink);position:relative;z-index:1;align-items:start}
-.tc-score-wordmark img{width:100%;object-fit:contain;background:#fff;padding:9px;border:1px solid #d3d4dc}
+.tc-score-wordmark img{width:100%;object-fit:contain;background:transparent;padding:0;border:0}
 .tc-hero-summary strong{font-size:15px;font-weight:900;line-height:1.4;display:block;margin-bottom:8px}
 .tc-hero-summary p{font-size:14px;line-height:1.75;color:#4b5e6d}
 .tc-hero-links{display:flex;flex-wrap:wrap;align-items:center;gap:22px;margin-top:25px}
@@ -150,7 +150,7 @@ body.tc-home{margin:0;font-family:Arial,Helvetica,system-ui,sans-serif;backgroun
 .tc-project-tournament{background:#fffdf8;color:var(--tc-ink)}
 .tc-project-umpire{background:var(--tc-royal);color:#fff}
 .tc-project-top{display:flex;justify-content:space-between;gap:15px;font-size:10px;letter-spacing:.12em;font-weight:900;border-bottom:1px solid currentColor;padding-bottom:20px}
-.tc-project>img{width:min(100%,390px);height:170px;object-fit:contain;object-position:left center;margin:25px 0;background:#fff;padding:16px;border:1px solid #e4e0e5;position:relative;z-index:1}
+.tc-project>img{width:min(100%,390px);height:170px;object-fit:contain;object-position:left center;margin:25px 0;background:transparent;padding:0;border:0;position:relative;z-index:1}
 .tc-project-umpire>img{width:min(100%,360px)}
 .tc-project-details{margin-top:auto;position:relative;z-index:1}
 .tc-project h3{font-family:Impact,"Arial Narrow",Arial,sans-serif;font-size:clamp(60px,7vw,108px);letter-spacing:-.03em;line-height:.93;text-transform:uppercase;margin:0 0 24px}
