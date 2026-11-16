@@ -17,9 +17,9 @@ test('New editorial design replaces the former dashboard and keeps original bran
   assert.ok(!html.includes('score-home.css'), 'Old homepage stylesheet should not load');
   assert.ok(!html.includes('score-creative.css'), 'Old overlay stylesheet should not load');
   assert.ok(html.includes('tennilo-logo.png'));
-  assert.ok(html.includes('tennilo-score-logo.png'));
-  assert.ok(html.includes('tennilo-tournament-logo.png'));
-  assert.ok(html.includes('tennilo-umpire-logo.png'));
+  assert.ok(html.includes('tennilo-score-cutout.png'));
+  assert.ok(html.includes('tennilo-tournament-cutout.png'));
+  assert.ok(html.includes('tennilo-umpire-cutout.png'));
  }
  assert.match(css,/--tc-paper:#f8f5ee/);
  assert.match(css,/--tc-royal:#2333c9/);

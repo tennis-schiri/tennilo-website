@@ -15,9 +15,9 @@ test('Score is the lead product under the TENNILO umbrella; milestones are accur
  for(const [html,language] of [[de,'de'],[en,'en']]){
   assert.ok(html.indexOf('id="score"')<html.indexOf('id="projekte"'));
   for(const name of ['TENNILO Score','TENNILO Tournament','TENNILO Umpire','Apple Watch','Bad Saarow'])assert.ok(html.includes(name),name+' '+language);
-  assert.match(html,/tennilo-score-logo\.png/);
-  assert.match(html,/tennilo-tournament-logo\.png/);
-  assert.match(html,/tennilo-umpire-logo\.png/);
+  assert.match(html,/tennilo-score-cutout\.png/);
+  assert.match(html,/tennilo-tournament-cutout\.png/);
+  assert.match(html,/tennilo-umpire-cutout\.png/);
   assert.ok(!/app\.tennis-schiri\.de|score\.tennilo\.de|testseite|test-site/i.test(html));
  }
  assert.match(de,/27\.12\.2026/);

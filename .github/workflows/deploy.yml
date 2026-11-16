@@ -32,6 +32,13 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Freigestellte TENNILO-Logos erstellen
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet "Pillow>=10,<13"
+          python3 scripts/prepare_transparent_logos.py
+
       - name: Datei-Freigabeliste prüfen
         shell: bash
         run: |
@@ -63,6 +70,12 @@ jobs:
           grep -Fxq "public/assets/theme.js" deploy-files.txt
           grep -Fxq "public/assets/theme.css" deploy-files.txt
           grep -Fxq "public/assets/back-to-top.css" deploy-files.txt
+          grep -Fxq "public/assets/transparent-logos.css" deploy-files.txt
+          grep -Fxq "public/assets/tennilo-tournament-cutout.png" deploy-files.txt
+          grep -Fxq "public/assets/tennilo-score-cutout.png" deploy-files.txt
+          grep -Fxq "public/assets/tennilo-score-cutout-dark.png" deploy-files.txt
+          grep -Fxq "public/assets/tennilo-umpire-cutout.png" deploy-files.txt
+          grep -Fxq "public/assets/tennilo-logo-dark.png" deploy-files.txt
 
       - name: Score-Startseite und Navigation prüfen
         run: |

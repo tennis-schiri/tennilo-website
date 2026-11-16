@@ -23,6 +23,8 @@ on:
       - 'public/assets/theme.js'
       - 'public/assets/theme.css'
       - 'public/assets/back-to-top.css'
+      - 'public/assets/transparent-logos.css'
+      - 'scripts/prepare_transparent_logos.py'
       - 'tests/tennilo-theme-test.mjs'
       - 'public/en/**'
       - 'public/sitemap.xml'
@@ -43,6 +45,13 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
+      - name: Freigestellte TENNILO-Logos erstellen
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet "Pillow>=10,<13"
+          python3 scripts/prepare_transparent_logos.py
+
       - name: PHP-Syntax prüfen
         shell: bash
         run: |
