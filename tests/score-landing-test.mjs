@@ -96,7 +96,7 @@ test('Updates are sorted newest first on DE and EN pages',()=>{
 test('Real Score prototype screenshots are presented in both languages',()=>{
  for(const html of [de,en]){
   assert.match(html,/class="tc-gallery tc-section"/);
-  assert.match(html,/score-gallery\\.css\\?v=1/);
+  assert.ok(html.includes('score-gallery.css?v=1'));
   for(const name of ['score-demo-watch.png','score-demo-phone.png','score-demo-scoreboard.png']){
    assert.ok(html.includes(name),name);
    assert.ok(manifest.has('public/assets/'+name),name+' not deployed');
