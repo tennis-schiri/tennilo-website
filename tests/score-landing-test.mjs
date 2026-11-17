@@ -91,3 +91,17 @@ test('Updates are sorted newest first on DE and EN pages',()=>{
   assert.deepEqual(dates,['2026-11-09','2026-11-09','2026-11-07']);
  }
 });
+
+
+test('Real Score prototype screenshots are presented in both languages',()=>{
+ for(const html of [de,en]){
+  assert.match(html,/class="tc-gallery tc-section"/);
+  assert.match(html,/score-gallery\\.css\\?v=1/);
+  for(const name of ['score-demo-watch.png','score-demo-phone.png','score-demo-scoreboard.png']){
+   assert.ok(html.includes(name),name);
+   assert.ok(manifest.has('public/assets/'+name),name+' not deployed');
+   assert.ok(fs.statSync(path.join(root,'public/assets',name)).size>15000,name+' has no screenshot data');
+  }
+  assert.ok(html.includes('TENNILO Score'));
+ }
+});

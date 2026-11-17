@@ -1,0 +1,56 @@
+/* Authentic TENNILO Score prototype screenshot gallery – Courtside Edition. */
+.tc-gallery{background:#efeae2;color:#081e36;padding-top:118px;padding-bottom:120px;border-bottom:1px solid #c5c2bf}
+.tc-gallery-heading{display:grid;grid-template-columns:1.2fr .6fr;gap:48px;align-items:end;margin-bottom:40px}
+.tc-gallery-heading h2{font-family:Impact,"Arial Narrow","Arial Black",Arial,sans-serif;font-size:clamp(51px,6.8vw,104px);font-weight:950;text-transform:uppercase;letter-spacing:-.017em;line-height:.94;margin:0}
+.tc-gallery-heading h2 em{font-style:normal;color:#2333c9}
+.tc-gallery-heading>p{font-size:15px;line-height:1.75;color:#586575;max-width:410px;margin:0}
+.tc-gallery-grid{display:grid;grid-template-columns:.87fr 1.13fr;gap:18px}
+.tc-gallery-card{display:flex;flex-direction:column;min-width:0;margin:0;overflow:hidden}
+.tc-gallery-card>a{display:flex;align-items:center;justify-content:center;flex:1;min-height:390px;text-decoration:none;overflow:hidden}
+.tc-gallery-visual{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:35px;overflow:hidden}
+.tc-gallery-visual img{display:block;width:auto;height:auto;max-width:100%;max-height:520px;object-fit:contain;filter:drop-shadow(12px 18px 14px rgba(0,0,0,.16));transition:transform .22s ease}
+.tc-gallery-card a:hover img{transform:translateY(-5px) scale(1.02)}
+.tc-gallery-watch{background:#071e34;color:#fff}
+.tc-gallery-watch .tc-gallery-visual{background:radial-gradient(circle at 51% 47%,#174167 0,#071e34 71%)}
+.tc-gallery-phone{background:#d8e1f5;color:#061f3a}
+.tc-gallery-phone .tc-gallery-visual{background:repeating-linear-gradient(100deg,transparent 0 88px,rgba(35,51,201,.045) 89px 90px)}
+.tc-gallery-card figcaption{display:grid;grid-template-columns:1fr auto;gap:9px 12px;padding:22px 28px 26px;border-top:1px solid rgba(126,144,171,.25)}
+.tc-gallery-card figcaption>span{grid-column:1/-1;font-size:10px;font-weight:950;letter-spacing:.16em;color:#67cee4}
+.tc-gallery-card figcaption strong{font-family:Impact,"Arial Narrow",Arial,sans-serif;font-size:clamp(23px,2.45vw,36px);text-transform:uppercase;letter-spacing:.01em;line-height:1.1}
+.tc-gallery-card figcaption small{font-size:11px;line-height:1.35;align-self:end;text-align:right;opacity:.72}
+.tc-gallery-phone figcaption>span{color:#2333c9}
+.tc-gallery-board{grid-column:1/-1;background:#2333c9;color:#fff;display:grid;grid-template-columns:1fr .33fr;align-items:stretch}
+.tc-gallery-board>a{min-height:300px}
+.tc-gallery-board .tc-gallery-visual{padding:34px 45px}
+.tc-gallery-board .tc-gallery-visual img{max-height:430px}
+.tc-gallery-board figcaption{display:flex;flex-direction:column;justify-content:center;border-top:0;border-left:1px solid rgba(255,255,255,.27);padding:35px;gap:13px}
+.tc-gallery-board figcaption>span{color:#ffbb9f}
+.tc-gallery-board figcaption small{text-align:left}
+.tc-gallery-note{font-size:12px;line-height:1.6;color:#6b6d79;margin-top:22px}
+html[data-theme="dark"] .tc-gallery{background:#111f34;color:#f4f6ff;border-color:#34516a}
+html[data-theme="dark"] .tc-gallery-heading h2 em{color:#7b91ff}
+html[data-theme="dark"] .tc-gallery-heading>p,html[data-theme="dark"] .tc-gallery-note{color:#b2c3d7}
+html[data-theme="dark"] .tc-gallery-phone{background:#263b5a;color:#fff}
+html[data-theme="dark"] .tc-gallery-phone figcaption>span{color:#8fafff}
+@media(max-width:920px){
+ .tc-gallery-heading{grid-template-columns:1fr;gap:20px}
+ .tc-gallery-heading>p{max-width:720px}
+ .tc-gallery-grid{gap:12px}
+ .tc-gallery-visual{padding:22px}
+ .tc-gallery-card figcaption{padding:20px}
+}
+@media(max-width:680px){
+ .tc-gallery{padding-top:70px;padding-bottom:72px}
+ .tc-gallery-heading h2{font-size:clamp(48px,11vw,76px)}
+ .tc-gallery-grid{grid-template-columns:1fr}
+ .tc-gallery-card>a{min-height:300px}
+ .tc-gallery-visual{padding:22px}
+ .tc-gallery-visual img{max-height:420px}
+ .tc-gallery-board{grid-column:1;display:flex;flex-direction:column}
+ .tc-gallery-board>a{min-height:200px}
+ .tc-gallery-board .tc-gallery-visual{padding:18px}
+ .tc-gallery-board .tc-gallery-visual img{max-height:290px}
+ .tc-gallery-board figcaption{border-top:1px solid rgba(255,255,255,.27);border-left:0}
+ .tc-gallery-card figcaption strong{font-size:28px}
+}
+@media(prefers-reduced-motion:reduce){.tc-gallery-visual img{transition:none!important}}

@@ -67,6 +67,10 @@ jobs:
           grep -Fxq "public/assets/score-creative.css" deploy-files.txt
           grep -Fxq "public/assets/court-edition.css" deploy-files.txt
           grep -Fxq "public/assets/score-demo.js" deploy-files.txt
+          grep -Fxq "public/assets/score-gallery.css" deploy-files.txt
+          grep -Fxq "public/assets/score-demo-watch.png" deploy-files.txt
+          grep -Fxq "public/assets/score-demo-phone.png" deploy-files.txt
+          grep -Fxq "public/assets/score-demo-scoreboard.png" deploy-files.txt
           grep -Fxq "public/assets/theme.js" deploy-files.txt
           grep -Fxq "public/assets/theme.css" deploy-files.txt
           grep -Fxq "public/assets/back-to-top.css" deploy-files.txt

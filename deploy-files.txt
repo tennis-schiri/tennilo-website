@@ -36,3 +36,7 @@ public/assets/tennilo-tournament-cutout.png
 public/assets/tennilo-umpire-cutout.png
 public/assets/tennilo-logo-dark.png
 public/assets/transparent-logos.css
+public/assets/score-gallery.css
+public/assets/score-demo-watch.png
+public/assets/score-demo-phone.png
+public/assets/score-demo-scoreboard.png
