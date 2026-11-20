@@ -51,9 +51,8 @@ if (
             $stmt = $db->prepare('INSERT INTO page_views (day,page,device,views) VALUES (?,?,?,1)
                 ON CONFLICT(day,page,device) DO UPDATE SET views=views+1');
             $stmt->execute([$day, $page, $device]);
-            if (random_int(1, 200) === 1) {
-                $db->exec("DELETE FROM page_views WHERE day < date('now', '-400 days')");
-            }
+            // Purge expired aggregates on every write; no cron job is needed.
+            $db->exec("DELETE FROM page_views WHERE day < date('now', '-400 days')");
         } catch (Throwable $e) {
             // Never leak filesystem/database information to public visitors.
             error_log('TENNILO aggregated statistics unavailable: '.get_class($e));
