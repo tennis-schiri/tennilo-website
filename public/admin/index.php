@@ -191,7 +191,6 @@ $pageTitle = $pageTitles[$view];
   <nav aria-label="Backoffice-Menü">
     <span class="nav-label">Verwaltung</span>
     <a class="nav-link" href="/admin/" <?= $view==='dashboard'?'aria-current="page"':'' ?>>Übersicht</a>
-    <a class="nav-link" href="/admin/analytics.php">Besucherstatistik</a>
     <a class="nav-link" href="/admin/?view=subscribers" <?= $view==='subscribers'?'aria-current="page"':'' ?>>Abonnenten</a>
     <a class="nav-link" href="/admin/?view=campaigns" <?= $view==='campaigns'?'aria-current="page"':'' ?>>Kampagnen</a>
     <a class="nav-link" href="/admin/?view=settings" <?= $view==='settings'?'aria-current="page"':'' ?>>Einstellungen & Links</a>
