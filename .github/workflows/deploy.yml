@@ -98,6 +98,7 @@ jobs:
           php -l public/newsletter.php
           php -l public/admin/index.php
           php -l public/admin/analytics.php
+          php tests/tennilo-analytics-test.php
           php -l public/visit.php
           php -l public/founders-admin.php
           php -l public/founders-mail.php

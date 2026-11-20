@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - 'public/admin/**'
+      - 'public/visit.php'
+      - 'tests/tennilo-analytics-test.php'
       - 'public/founders-admin.php'
       - 'public/founders-mail.php'
       - 'public/founders-email-template.php'
@@ -57,7 +59,7 @@ jobs:
         run: |
           set -euo pipefail
           php -v
-          for file in public/admin/index.php public/founders-admin.php public/founders-mail.php public/founders-email-template.php public/newsletter.php; do
+          for file in public/visit.php public/admin/analytics.php public/admin/index.php public/founders-admin.php public/founders-mail.php public/founders-email-template.php public/newsletter.php; do
             php -l "$file"
           done
       - name: Produktseite und Scroll-Navigation prüfen
@@ -72,11 +74,14 @@ jobs:
           set -euo pipefail
           php tests/tennilo-email-template-test.php
           php tests/tennilo-campaign-editor-test.php
+          php tests/tennilo-analytics-test.php
       - name: Sichere FTPS-Freigabeliste prüfen
         shell: bash
         run: |
           set -euo pipefail
           grep -Fxq 'public/admin/index.php' deploy-files.txt
+          grep -Fxq 'public/visit.php' deploy-files.txt
+          grep -Fxq 'public/admin/analytics.php' deploy-files.txt
           ! grep -Eiq '(\.sqlite|tennilo-founders-config\.php|private|\.env)' deploy-files.txt
           grep -Fq 'php -l public/admin/index.php' .github/workflows/deploy.yml
           echo 'Backoffice bereit für den manuellen Deployment-Workflow (kein Upload).'
