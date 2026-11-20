@@ -55,6 +55,8 @@ jobs:
           grep -Fxq "public/founders.php" deploy-files.txt
           grep -Fxq "public/newsletter.php" deploy-files.txt
           grep -Fxq "public/admin/index.php" deploy-files.txt
+          grep -Fxq "public/admin/analytics.php" deploy-files.txt
+          grep -Fxq "public/visit.php" deploy-files.txt
           grep -Fxq "public/founders-admin.php" deploy-files.txt
           grep -Fxq "public/founders-mail.php" deploy-files.txt
           grep -Fxq "public/founders-email-template.php" deploy-files.txt
@@ -95,6 +97,8 @@ jobs:
           php -l public/founders.php
           php -l public/newsletter.php
           php -l public/admin/index.php
+          php -l public/admin/analytics.php
+          php -l public/visit.php
           php -l public/founders-admin.php
           php -l public/founders-mail.php
           php -l public/founders-email-template.php

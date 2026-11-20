@@ -70,3 +70,13 @@ Die beiden Startseiten wurden strukturell neu aufgebaut (TENNILO bleibt Dachmark
 `public/assets/theme.js` ermittelt beim ersten Besuch die Betriebssystem-Einstellung (`prefers-color-scheme`) und setzt das Theme vor dem Laden der Stylesheets, um einen Farbblitz zu vermeiden. Der manuelle Tag/Nacht-Schalter ist in beiden Sprachversionen, Impressum und Datenschutzerklärung sichtbar; die Auswahl wird unter `tennilo-color-theme` ausschließlich lokal im Browser gespeichert. Ohne manuelle Vorgabe reagieren Seiten automatisch auf einen Wechsel der Systemeinstellung. Bei deaktiviertem Local Storage funktioniert das Umschalten für die aktuelle Sitzung weiterhin. Styles: `public/assets/theme.css` mit individuellen Kontrasten auch für Founders- und Newsletter-Formulare. Keine Cookies, Tracking-Endpunkte oder externen Requests für das Theme.
 
 CI/Deploy prüfen Theme-Verhalten mit `tests/tennilo-theme-test.mjs`. Bei Änderungen an Farben oder Komponenten beide Themes und die mobilen Ansichten berücksichtigen.
+
+## Anonyme Website-Statistik (November 2026)
+
+- Der öffentliche Zähler `public/visit.php` wird von jeder der sechs öffentlichen DE/EN-Seiten als 1×1-Transparenzbild aufgerufen.
+- Gespeichert werden nur aggregierte Tageswerte pro Seite und Geräteklasse in `tennilo-analytics.sqlite` **eine Ebene oberhalb des Webroots**. Die Datei niemals nach GitHub oder per FTPS hochladen.
+- Keine IP-Adressen, User-Agent-Strings, Referrer, Cookies, lokalen Besucherspeicher oder individuellen Profile in der Statistik. DNT/GPC wird respektiert. Bots werden nur heuristisch gefiltert.
+- Unter `/admin/analytics.php` zeigt derselbe geschützte Founders-Admin-Login Seitenaufrufe, Zeitreihe und grobe Geräteverteilung. Es werden **keine Unique Visitors** ermittelt.
+- `/datenschutz.html` und `/en/privacy.html` dokumentieren die Messung. Bei rechtlichen oder technischen Änderungen die Datenschutzhinweise erneut prüfen.
+- Falls nach der Veröffentlichung keine Daten eintreffen, Schreibrechte für das Verzeichnis oberhalb des Webroots sowie PHP-PDO-SQLite prüfen.
+- Direkter manueller FTPS-Upload: https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml

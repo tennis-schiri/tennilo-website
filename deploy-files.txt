@@ -40,3 +40,5 @@ public/assets/score-gallery.css
 public/assets/score-demo-watch.png
 public/assets/score-demo-phone.png
 public/assets/score-demo-scoreboard.png
+public/visit.php
+public/admin/analytics.php
