@@ -21,29 +21,39 @@
 .tc-mw-credit:hover,.tc-mw-credit:focus-visible{opacity:1}
 .tc-mw-credit:focus-visible{outline:2px solid currentColor;outline-offset:4px}
 .tc-mw-credit-label{white-space:nowrap}
-.tc-mw-credit-mark{
-  display:grid;
-  place-items:center;
-  width:35px;
-  height:35px;
-  border:1px solid currentColor;
-  border-radius:7px;
-  font-family:Impact,"Arial Narrow",Arial,sans-serif;
-  font-size:16px;
-  font-weight:900;
-  line-height:1;
-  letter-spacing:.04em;
+.tc-mw-credit-logo{
+  display:block;
   flex-shrink:0;
-  transition:transform .2s ease,background .2s ease;
+  width:72px;
+  height:32px;
+  border:0;
+  background:transparent;
 }
-.tc-mw-credit:hover .tc-mw-credit-mark{transform:translateY(-2px)}
+.tc-mw-credit-logo img{
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:100%;
+  object-fit:contain;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  padding:0;
+  transition:transform .2s ease;
+}
+.tc-mw-credit:hover .tc-mw-credit-logo img{transform:translateY(-2px)}
+.tc-mw-credit-logo-dark{display:none!important}
+.tc-mw-credit-logo-light{display:block!important}
+html[data-theme="dark"] .site-footer .tc-mw-credit-logo-light,
+.tc-footer .tc-mw-credit-logo-light{display:none!important}
+html[data-theme="dark"] .site-footer .tc-mw-credit-logo-dark,
+.tc-footer .tc-mw-credit-logo-dark{display:block!important}
 .tc-footer .tc-mw-credit-row{
   border-top:1px solid rgba(194,208,225,.18);
   color:#d7e2f0;
   padding-top:15px;
   padding-bottom:23px;
 }
-.tc-footer .tc-mw-credit-mark{color:#dceaf8}
 .site-footer .tc-mw-credit-row{
   border-top:1px solid rgba(8,30,54,.15);
   padding-top:14px;
@@ -57,9 +67,9 @@ html[data-theme="dark"] .site-footer .tc-mw-credit-row{
 @media(max-width:600px){
   .tc-mw-credit-row{justify-content:flex-start;padding-top:14px}
   .tc-mw-credit{font-size:10px;gap:9px}
-  .tc-mw-credit-mark{width:31px;height:31px;font-size:15px}
+  .tc-mw-credit-logo{width:66px;height:30px}
 }
 @media(prefers-reduced-motion:reduce){
-  .tc-mw-credit,.tc-mw-credit-mark{transition:none}
-  .tc-mw-credit:hover .tc-mw-credit-mark{transform:none}
+  .tc-mw-credit,.tc-mw-credit-logo img{transition:none}
+  .tc-mw-credit:hover .tc-mw-credit-logo img{transform:none}
 }

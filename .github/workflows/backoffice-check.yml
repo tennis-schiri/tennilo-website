@@ -27,6 +27,8 @@ on:
       - 'public/assets/back-to-top.css'
       - 'public/assets/transparent-logos.css'
       - 'public/assets/footer-credit.css'
+      - 'scripts/build_mw_footer_logos.py'
+      - 'branding/mw-monogram-original.png'
       - 'scripts/prepare_transparent_logos.py'
       - 'tests/tennilo-theme-test.mjs'
       - 'public/en/**'
@@ -54,6 +56,7 @@ jobs:
           set -euo pipefail
           python3 -m pip install --quiet "Pillow>=10,<13"
           python3 scripts/prepare_transparent_logos.py
+          python3 scripts/build_mw_footer_logos.py
 
       - name: PHP-Syntax prüfen
         shell: bash

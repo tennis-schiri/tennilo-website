@@ -77,7 +77,9 @@ test('MW design credit is included on both landing pages and all legal pages',()
  for(const [file,lang] of pages.map(([file,lang])=>[file,lang])){
   const html=read(file);
   assert.match(html,/<a class="tc-mw-credit" href="https:\/\/wiedeck\.de\/"/,file);
-  assert.match(html,/<span class="tc-mw-credit-mark" aria-hidden="true">MW<\/span>/,file);
+  assert.match(html,/src="\/assets\/mw-symbol-light\\.png"/,file);
+  assert.match(html,/src="\/assets\/mw-symbol-dark\\.png"/,file);
+  assert.ok(!html.includes('tc-mw-credit-mark'),'Fake MW lettering must not remain');
   assert.match(html,/footer-credit\.css\?v=1/,file);
   assert.ok(html.includes(lang==='de'?'Webdesign und Entwicklung':'Web design and development'),file);
  }
@@ -86,4 +88,15 @@ test('MW design credit is included on both landing pages and all legal pages',()
  assert.match(credit,/\.tc-footer \.tc-mw-credit-row/);
  assert.match(credit,/\.site-footer \.tc-mw-credit-row/);
  assert.match(credit,/html\[data-theme="dark"\]/);
+ assert.ok(manifest.has('public/assets/mw-symbol-light.png'));
+ assert.ok(manifest.has('public/assets/mw-symbol-dark.png'));
+ for(const variant of ['light','dark']){
+  const file=path.join(root,'public/assets/mw-symbol-'+variant+'.png');
+  const image=fs.readFileSync(file);
+  assert.ok(image.length>1000,variant);
+  assert.equal(image.subarray(1,4).toString(),'PNG');
+  assert.equal(image.readUInt32BE(16),650);
+  assert.equal(image.readUInt32BE(20),246);
+  assert.equal(image.readUInt8(25),6,'MW PNG must include alpha');
+ }
 });

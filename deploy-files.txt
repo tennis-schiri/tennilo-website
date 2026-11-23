@@ -43,3 +43,5 @@ public/assets/score-demo-scoreboard.png
 public/visit.php
 public/admin/analytics.php
 public/assets/footer-credit.css
+public/assets/mw-symbol-light.png
+public/assets/mw-symbol-dark.png
