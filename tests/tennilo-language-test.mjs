@@ -77,8 +77,8 @@ test('MW design credit is included on both landing pages and all legal pages',()
  for(const [file,lang] of pages.map(([file,lang])=>[file,lang])){
   const html=read(file);
   assert.match(html,/<a class="tc-mw-credit" href="https:\/\/wiedeck\.de\/"/,file);
-  assert.match(html,/src="\/assets\/mw-symbol-light\\.png"/,file);
-  assert.match(html,/src="\/assets\/mw-symbol-dark\\.png"/,file);
+  assert.ok(html.includes('src="/assets/mw-symbol-light.png"'),file);
+  assert.ok(html.includes('src="/assets/mw-symbol-dark.png"'),file);
   assert.ok(!html.includes('tc-mw-credit-mark'),'Fake MW lettering must not remain');
   assert.match(html,/footer-credit\.css\?v=1/,file);
   assert.ok(html.includes(lang==='de'?'Webdesign und Entwicklung':'Web design and development'),file);
