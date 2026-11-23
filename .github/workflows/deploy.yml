@@ -77,6 +77,7 @@ jobs:
           grep -Fxq "public/assets/theme.css" deploy-files.txt
           grep -Fxq "public/assets/back-to-top.css" deploy-files.txt
           grep -Fxq "public/assets/transparent-logos.css" deploy-files.txt
+          grep -Fxq "public/assets/footer-credit.css" deploy-files.txt
           grep -Fxq "public/assets/tennilo-tournament-cutout.png" deploy-files.txt
           grep -Fxq "public/assets/tennilo-score-cutout.png" deploy-files.txt
           grep -Fxq "public/assets/tennilo-score-cutout-dark.png" deploy-files.txt

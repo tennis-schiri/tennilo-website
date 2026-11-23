@@ -42,3 +42,4 @@ public/assets/score-demo-phone.png
 public/assets/score-demo-scoreboard.png
 public/visit.php
 public/admin/analytics.php
+public/assets/footer-credit.css

@@ -71,3 +71,19 @@ test('Mobile language switching, navigation and assets are present',()=>{
  const sitemap=read('public/sitemap.xml');
  for(const [,,url] of pages)assert.ok(sitemap.includes('<loc>'+url+'</loc>'),url);
 });
+
+
+test('MW design credit is included on both landing pages and all legal pages',()=>{
+ for(const [file,lang] of pages.map(([file,lang])=>[file,lang])){
+  const html=read(file);
+  assert.match(html,/<a class="tc-mw-credit" href="https:\/\/wiedeck\.de\/"/,file);
+  assert.match(html,/<span class="tc-mw-credit-mark" aria-hidden="true">MW<\/span>/,file);
+  assert.match(html,/footer-credit\.css\?v=1/,file);
+  assert.ok(html.includes(lang==='de'?'Webdesign und Entwicklung':'Web design and development'),file);
+ }
+ assert.ok(manifest.has('public/assets/footer-credit.css'));
+ const credit=read('public/assets/footer-credit.css');
+ assert.match(credit,/\.tc-footer \.tc-mw-credit-row/);
+ assert.match(credit,/\.site-footer \.tc-mw-credit-row/);
+ assert.match(credit,/html\[data-theme="dark"\]/);
+});

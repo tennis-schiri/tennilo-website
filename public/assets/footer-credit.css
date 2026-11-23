@@ -1,0 +1,65 @@
+/* TENNILO — discreet MW design/development signature, same placement on every page. */
+.tc-mw-credit-row{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  padding-top:15px;
+  padding-bottom:20px;
+}
+.tc-mw-credit{
+  display:inline-flex;
+  flex-wrap:nowrap;
+  align-items:center;
+  gap:11px;
+  text-decoration:none;
+  font:600 11px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;
+  letter-spacing:.015em;
+  color:inherit;
+  opacity:.79;
+  transition:opacity .2s ease;
+}
+.tc-mw-credit:hover,.tc-mw-credit:focus-visible{opacity:1}
+.tc-mw-credit:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+.tc-mw-credit-label{white-space:nowrap}
+.tc-mw-credit-mark{
+  display:grid;
+  place-items:center;
+  width:35px;
+  height:35px;
+  border:1px solid currentColor;
+  border-radius:7px;
+  font-family:Impact,"Arial Narrow",Arial,sans-serif;
+  font-size:16px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.04em;
+  flex-shrink:0;
+  transition:transform .2s ease,background .2s ease;
+}
+.tc-mw-credit:hover .tc-mw-credit-mark{transform:translateY(-2px)}
+.tc-footer .tc-mw-credit-row{
+  border-top:1px solid rgba(194,208,225,.18);
+  color:#d7e2f0;
+  padding-top:15px;
+  padding-bottom:23px;
+}
+.tc-footer .tc-mw-credit-mark{color:#dceaf8}
+.site-footer .tc-mw-credit-row{
+  border-top:1px solid rgba(8,30,54,.15);
+  padding-top:14px;
+  padding-bottom:0;
+  color:#3a5666;
+}
+html[data-theme="dark"] .site-footer .tc-mw-credit-row{
+  border-top-color:#435874;
+  color:#d7e3f4;
+}
+@media(max-width:600px){
+  .tc-mw-credit-row{justify-content:flex-start;padding-top:14px}
+  .tc-mw-credit{font-size:10px;gap:9px}
+  .tc-mw-credit-mark{width:31px;height:31px;font-size:15px}
+}
+@media(prefers-reduced-motion:reduce){
+  .tc-mw-credit,.tc-mw-credit-mark{transition:none}
+  .tc-mw-credit:hover .tc-mw-credit-mark{transform:none}
+}

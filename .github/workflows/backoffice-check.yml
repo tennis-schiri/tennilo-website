@@ -26,6 +26,7 @@ on:
       - 'public/assets/theme.css'
       - 'public/assets/back-to-top.css'
       - 'public/assets/transparent-logos.css'
+      - 'public/assets/footer-credit.css'
       - 'scripts/prepare_transparent_logos.py'
       - 'tests/tennilo-theme-test.mjs'
       - 'public/en/**'
