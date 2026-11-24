@@ -114,5 +114,13 @@ test('Device gallery artwork has real transparent outer corners',()=>{
   const file=fs.readFileSync(path.join(root,'public/assets','score-demo-'+name+'.png'));
   assert.equal(file.subarray(1,4).toString(),'PNG');
   assert.equal(file.readUInt8(25),6,name+' must be RGBA PNG');
+  assert.ok(file.length>25000,name+' must retain real detailed screen contents');
  }
+});
+
+test('Cut-out device screenshots have no CSS rectangle or background tiles',()=>{
+ const style=fs.readFileSync(path.join(root,'public/assets/score-gallery.css'),'utf8');
+ assert.match(style,/\.tc-gallery-visual img\{[^}]*background:transparent;border:0/);
+ assert.match(style,/\.tc-gallery-watch \.tc-gallery-visual\{background:transparent\}/);
+ assert.match(style,/\.tc-gallery-phone \.tc-gallery-visual\{background:transparent\}/);
 });
