@@ -2,7 +2,7 @@ name: TENNILO Logo-Qualitaetspruefung
 on:
   workflow_dispatch:
   push:
-    paths: ['.github/workflows/logo-audit.yml']
+    paths: ['.github/workflows/logo-audit.yml', 'scripts/prepare_transparent_logos.py', 'public/assets/tennilo-*-logo.png', 'public/assets/tennilo-logo.png', 'public/assets/tennilo-icon.png']
 permissions:
   contents: read
 jobs:
