@@ -193,6 +193,7 @@ $pageTitle = $pageTitles[$view];
     <a class="nav-link" href="/admin/" <?= $view==='dashboard'?'aria-current="page"':'' ?>>Übersicht</a>
     <a class="nav-link" href="/admin/?view=subscribers" <?= $view==='subscribers'?'aria-current="page"':'' ?>>Abonnenten</a>
     <a class="nav-link" href="/admin/?view=campaigns" <?= $view==='campaigns'?'aria-current="page"':'' ?>>Kampagnen</a>
+    <a class="nav-link" href="/admin/founders.php">Founders-Abwicklung</a>
     <a class="nav-link" href="/admin/?view=settings" <?= $view==='settings'?'aria-current="page"':'' ?>>Einstellungen & Links</a>
   </nav>
   <div class="side-foot">
@@ -221,6 +222,7 @@ $pageTitle = $pageTitles[$view];
       <a href="/founders-mail.php?template=newsletter">Newsletter erstellen <small>Vorlage „Allgemeines Update“, Absender news@tennilo.de</small></a>
       <a href="/founders-mail.php">Entwürfe & Versand <small>Testmail, Vorschau, manuelle Freigabe und Versandstatus</small></a>
       <a href="/admin/?view=subscribers&topic=newsletter">Newsletter-Kontakte <small>Nur bestätigte Adressen mit separater Newsletter-Einwilligung</small></a>
+      <a href="/admin/founders.php">Founders-Abwicklung <small>Startnext-Import, Zertifikate, Gegenleistungen und Partnerfreigaben</small></a>
       <a href="/founders-admin.php">Founders-Liste & CSV-Export <small>Geschützter Zugang zum bisherigen Kontaktbereich</small></a>
     </div></section>
     <section class="panel"><h2>Empfänger nach Thema</h2>

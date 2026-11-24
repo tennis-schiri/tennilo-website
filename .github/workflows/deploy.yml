@@ -40,6 +40,7 @@ jobs:
           python3 scripts/prepare_transparent_logos.py
           python3 scripts/build_mw_footer_logos.py
           python3 scripts/prepare_founders_badges.py
+          python3 scripts/prepare_founders_certificates.py
           for variant in tf09-light tf09-dark tf12-light tf12-dark; do
             upper="${variant%%-*}"; mode="${variant#*-}"
             cp "brand-assets/founders/TENNILO-Founders-${upper^^}-$mode.png" "public/assets/tennilo-founders-$variant.png"
@@ -106,6 +107,10 @@ jobs:
           php -l public/founders.php
           php -l public/newsletter.php
           php -l public/admin/index.php
+          php -l public/admin/founders.php
+          php -l public/admin/founders-fulfilment-lib.php
+          php -l public/founders/supporters.php
+          php tests/founders-fulfilment-test.php
           php -l public/admin/analytics.php
           php tests/tennilo-analytics-test.php
           php -l public/visit.php

@@ -9,7 +9,9 @@ header("Content-Security-Policy: default-src 'none'; img-src 'self'; style-src '
 require dirname(__DIR__).'/admin/founders-fulfilment-lib.php';
 $rows=[];$lang=($_GET['lang']??'')==='en'?'en':'de';$de=$lang==='de';
 try{
- $cfg=require dirname(__DIR__,2).'/tennilo-founders-config.php';
+ $config=dirname(__DIR__,2).'/tennilo-founders-config.php';
+ if(!is_file($config))throw new RuntimeException('Unavailable');
+ $cfg=require $config;
  if(is_array($cfg)&&($cfg['enabled']??false)===true&&!empty($cfg['database'])&&is_file($cfg['database'])){
   $db=new PDO('sqlite:'.$cfg['database'],null,null,[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC]);
   $db->exec('PRAGMA query_only=ON');$rows=ffPublicRows($db);
