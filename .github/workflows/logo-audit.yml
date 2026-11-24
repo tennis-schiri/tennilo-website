@@ -1,0 +1,44 @@
+name: TENNILO Logo-Qualitaetspruefung
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/logo-audit.yml']
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install Pillow
+      - run: python scripts/prepare_transparent_logos.py
+      - name: Render originals and generated assets on light and dark backgrounds
+        run: |
+          python - <<'PY'
+          from PIL import Image, ImageDraw
+          from pathlib import Path
+          p=Path('public/assets')
+          out=Path('logo-audit');out.mkdir(exist_ok=True)
+          names=['tennilo-logo.png','tennilo-logo-dark.png','tennilo-score-logo.png','tennilo-score-cutout.png','tennilo-score-cutout-dark.png','tennilo-tournament-logo.png','tennilo-tournament-cutout.png','tennilo-umpire-logo.png','tennilo-umpire-cutout.png','tennilo-icon.png']
+          import shutil
+          sheet=Image.new('RGB',(1440,240*len(names)),(225,230,234));d=ImageDraw.Draw(sheet)
+          for i,n in enumerate(names):
+              f=p/n; im=Image.open(f).convert('RGBA')
+              shutil.copy2(f,out/n)
+              y=i*240
+              d.text((12,y+8),f'{n} | {im.width} x {im.height}',fill=(10,25,40))
+              im.thumbnail((680,198),Image.Resampling.LANCZOS)
+              for j,c in enumerate(((248,248,248),(5,25,43))):
+                  tile=Image.new('RGBA',(700,204),c+(255,))
+                  tile.alpha_composite(im,((700-im.width)//2,(204-im.height)//2))
+                  sheet.paste(tile.convert('RGB'),(10+j*720,y+28))
+          sheet.save(out/'audit.png')
+          for n in names:
+              im=Image.open(out/n)
+              print(n,im.size,im.mode,im.getextrema()[-1] if im.mode=='RGBA' else 'opaque')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TENNILO-logo-audit
+          path: logo-audit/
+          retention-days: 3
