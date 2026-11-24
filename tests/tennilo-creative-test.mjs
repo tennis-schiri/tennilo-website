@@ -28,16 +28,16 @@ test('New editorial design replaces the former dashboard and keeps original bran
  assert.match(css,/\.tc-project-spread\{display:grid/);
 });
 
-test('Light Founders section uses dark legible text without white-on-white',()=>{
- assert.match(css,/\.tc-founders\{background:#deddf5;color:var\(--tc-ink\)/);
- assert.match(css,/\.tc-founders \.tc-signup-intro p strong\{color:#061c3a\}/);
- assert.match(css,/\.tc-home \.founders-form\{box-shadow:8px 8px 0 var\(--tc-royal\)/);
- assert.match(css,/\.tc-home \.founders-form fieldset label\{[^}]*color:#243c56!important/);
- assert.match(css,/\.tc-home \.founders-consent,[^}]*color:#2e435e!important/);
+test('Compact Founders teaser and separate campaign retain legibility and both themes',()=>{
+ const campaign=read('public/assets/founders-campaign.css');
+ assert.match(campaign,/\.tc-home \.tc-founders-teaser\{background:#f0e6d2;color:#071f32/);
+ assert.match(campaign,/html\[data-theme="dark"\] \.tc-home \.tc-founders-teaser\{background:#25262b;color:#eff8ff/);
+ assert.match(campaign,/\.tf-page \.founders-form label\{[^}]*color:var\(--tf-ink\)/);
+ assert.match(campaign,/\.tf-page \.founders-form input\[type=email\],/);
  assert.match(css,/@media\(max-width:680px\)/);
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
- assert.match(en,/MAKE MORE/);
- assert.match(de,/GEMEINSAM MEHR/);
+ assert.ok(read('public/founders/index.html').includes('Gemeinsam mehr'));
+ assert.ok(read('public/en/founders/index.html').includes('Make more'));
 });
 
 function setup(lang='de'){
