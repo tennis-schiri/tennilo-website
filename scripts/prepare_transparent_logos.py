@@ -5,74 +5,58 @@ Run in CI and before the manual FTPS upload: python scripts/prepare_transparent_
 Requires Pillow. The source RGB/RGBA logos remain immutable.
 """
 from pathlib import Path
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 
 ASSETS = Path("public/assets")
 
 
 def score_cutout(source, target, dark=False):
-    """Isolate the exact original SCORE lettering from its navy photo backdrop."""
-    image = Image.open(source).convert("RGB")
-    width, height = image.size
-    source_pixels = image.load()
-    result = Image.new("RGBA", image.size, (0, 0, 0, 0))
-    target_pixels = result.load()
-    for y in range(height):
-        ratio = y / max(1, height - 1)
-        for x in range(width):
-            red, green, blue = source_pixels[x, y]
-            top, bottom = source_pixels[x, 0], source_pixels[x, height - 1]
-            background = tuple(top[c] * (1 - ratio) + bottom[c] * ratio for c in range(3))
-            difference = max(abs(value - background[c]) for c, value in enumerate((red, green, blue)))
-            alpha = max(0.0, min(1.0, (difference - 19) / 75))
-            alpha = alpha * alpha * (3 - 2 * alpha)
-            if alpha <= 0.01:
-                continue
-            colored = blue - red > 42 and green - red > 24
-            if not dark and not colored and red > 115 and green > 115 and blue > 115:
-                foreground = (7, 30, 52)
-            elif colored or dark:
-                foreground = tuple(max(0, min(255, int(
-                    (value - (1 - alpha) * background[c]) / max(alpha, 0.18)
-                ))) for c, value in enumerate((red, green, blue)))
-            else:
-                foreground = (7, 30, 52)
-            target_pixels[x, y] = (*foreground, round(255 * alpha))
-    result.save(target, optimize=True)
+    """Isolate letters without carrying the backdrop glow into the alpha mask."""
+    image=Image.open(source).convert('RGB'); w,h=image.size; pix=image.load()
+    core=Image.new('L',image.size); cp=core.load()
+    for y in range(h):
+        for x in range(w):
+            r,g,b=pix[x,y]
+            if r>145 or (g-r>72 and b-r>88 and g>100): cp[x,y]=255
+    support=core.filter(ImageFilter.MaxFilter(3)); sp=support.load()
+    result=Image.new('RGBA',image.size); out=result.load()
+    for y in range(h):
+        ratio=y/max(1,h-1)
+        for x in range(w):
+            if not sp[x,y]:continue
+            r,g,b=pix[x,y]; bg=tuple(pix[x,0][c]*(1-ratio)+pix[x,h-1][c]*ratio for c in range(3))
+            white=r>80 and r>g*.65
+            if cp[x,y]:a=1
+            elif white:a=max(0,min(1,(r-bg[0])/(245-bg[0])))
+            else:a=max(0,min(1,((g-r)-(bg[1]-bg[0]))/100))
+            if a<.04:continue
+            if white and not dark:fg=(7,30,52)
+            elif a==1:fg=(r,g,b)
+            else:fg=tuple(max(0,min(255,round((v-(1-a)*bg[c])/max(a,.1)))) for c,v in enumerate((r,g,b)))
+            out[x,y]=(*fg,round(255*a))
+    result.save(target,optimize=True)
 
 
-def tournament_cutout(source, target):
-    """Clip ONLY the original TT04 outer silhouette; preserve original frame & glyphs."""
-    image = Image.open(source).convert("RGBA")
-    width, height = image.size
+def curve(p0,p1,p2,p3,steps=60):
+    return [tuple((1-t)**3*p0[i]+3*(1-t)**2*t*p1[i]+3*(1-t)*t*t*p2[i]+t**3*p3[i] for i in (0,1)) for t in (k/steps for k in range(1,steps+1))]
 
-    def curve(p0, p1, p2, p3, steps=25):
-        result = []
-        for k in range(1, steps + 1):
-            t = k / steps
-            u = 1 - t
-            result.append((
-                int(u**3 * p0[0] + 3*u*u*t*p1[0] + 3*u*t*t*p2[0] + t**3*p3[0]),
-                int(u**3 * p0[1] + 3*u*u*t*p1[1] + 3*u*t*t*p2[1] + t**3*p3[1])
-            ))
-        return result
 
-    # Original TT04 is 1361 x 390. Smooth, tilted rounded-plate silhouette.
-    points = [(156, 13), (1245, 13)]
-    points += curve((1245, 13), (1323, 13), (1353, 45), (1339, 121))
-    points += [(1284, 308)]
-    points += curve((1284, 308), (1273, 366), (1225, 384), (1190, 387))
-    points += [(90, 387)]
-    points += curve((90, 387), (11, 385), (-7, 352), (8, 283))
-    points += [(77, 90)]
-    points += curve((77, 90), (94, 31), (123, 13), (156, 13))
-    polygon = [(round(x*width/1361), round(y*height/390)) for x, y in points]
-    scale = 3
-    mask = Image.new("L", (width*scale, height*scale), 0)
-    ImageDraw.Draw(mask).polygon([(x*scale, y*scale) for x, y in polygon], fill=255)
-    mask = mask.resize((width, height), Image.Resampling.LANCZOS)
-    image.putalpha(mask)
-    image.save(target, optimize=True)
+def tournament_cutout(source,target):
+    """Follow the actual TT04 outer plate and remove the small rectangular cyan spill."""
+    im=Image.open(source).convert('RGBA'); w,h=im.size
+    points=[(162,15),(1232,15)]+curve((1232,15),(1281,15),(1314,52),(1305,108))+[(1248,307)]+curve((1248,307),(1236,353),(1202,381),(1168,381))+[(83,381)]+curve((83,381),(28,381),(-8,341),(12,282))+[(77,89)]+curve((77,89),(93,40),(124,15),(162,15))
+    scale=4; mask=Image.new('L',(w*scale,h*scale)); draw=ImageDraw.Draw(mask)
+    def polygon(ps):return [(round(x*w/1361*scale),round(y*h/390*scale)) for x,y in ps]
+    draw.polygon(polygon(points),fill=255)
+    repair=Image.new('L',(w*scale,h*scale)); dr=ImageDraw.Draw(repair)
+    region=[(1145,240),(1215.5,240),(1202,286)]+curve((1202,286),(1198,312),(1180,337),(1150,337))+[(1145,337)]
+    dr.polygon(polygon(region),fill=255)
+    repair=repair.resize(im.size,Image.Resampling.LANCZOS)
+    patch=im.copy(); pp=patch.load(); ip=im.load()
+    for y in range(round(235*h/390),round(337*h/390)):
+        c=ip[round(1158*w/1361),y]
+        for x in range(round(1144*w/1361),round(1217*w/1361)): pp[x,y]=c
+    im=Image.composite(patch,im,repair); im.putalpha(mask.resize(im.size,Image.Resampling.LANCZOS));im.save(target,optimize=True)
 
 
 def umpire_cutout(source, target):
