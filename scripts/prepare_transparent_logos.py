@@ -108,7 +108,7 @@ def umbrella_dark(source, target):
     for y in range(height):
         for x in range(width):
             r, g, b, a = data[x, y]
-            if a > 0 and r < 80 and g < 125 and b < 160:
+            if a > 0 and r < 80 and g < 125 and b < 160 and g - r < 55:
                 data[x, y] = (239, 248, 255, a)
     image.save(target, optimize=True)
 
