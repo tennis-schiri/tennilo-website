@@ -28,18 +28,20 @@ test('Score is the lead product under the TENNILO umbrella; milestones are accur
  assert.match(en,/free of charge/);
 });
 
-test('Newsletter, Founders and privacy links are preserved on both languages',()=>{
- for(const [html,language] of [[de,'de'],[en,'en']]){
+test('Homepage retains newsletter; Founders registration lives on the campaign page',()=>{
+ for(const [html,language,url] of [[de,'de','/founders/'],[en,'en','/en/founders/']]){
   assert.match(html,/<form method="post" action="\/newsletter\.php" class="newsletter-form">/);
-  assert.match(html,/<form method="post" action="\/founders\.php" class="founders-form">/);
-  assert.equal((html.match(/<form\b/g)||[]).length,2,language);
-  for(const id of ['newsletter-email','founder-email','founder-role'])assert.ok(html.includes('id="'+id+'"'));
+  assert.doesNotMatch(html,/action="\/founders\.php"/);
+  assert.equal((html.match(/<form\b/g)||[]).length,1,language);
+  assert.ok(html.includes('id="newsletter-email"'));
   assert.match(html,/name="consent" value="yes" required/);
   const link=language==='en'?'/en/privacy.html':'/datenschutz.html';
-  assert.ok(html.includes(link+'#founders-datenschutz'));
   assert.ok(html.includes(link+'#newsletter-datenschutz'));
+  assert.ok(html.includes('href="'+url+'"'));
+  assert.ok(html.indexOf('id="founders"')<html.indexOf('id="score"'));
+  assert.doesNotMatch(html,/Founding Premium Partner|Founding Partner|Club Plus|founder-email/);
  }
- assert.equal((en.match(/name="lang" value="en"/g)||[]).length,2);
+ assert.equal((en.match(/name="lang" value="en"/g)||[]).length,1);
 });
 
 test('All deployed local assets exist and all local links are valid',()=>{

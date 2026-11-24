@@ -33,6 +33,7 @@
 <meta property="og:description" content="TENNILO Score: die neue Zähl-App für Apple Watch und iPhone. Geplanter Betatest am 27. Dezember 2026 in Bad Saarow. TENNILO Tournament und Umpire sind weitere Projekte.">
 <meta property="og:image" content="https://tennilo.de/assets/tennilo-score-logo.png">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/assets/founders-campaign.css?v=2">
 </head>
 <body class="tc-home" id="oben">
 <div class="tc-shell">
@@ -40,7 +41,7 @@
  <div class="tc-container tc-header-inner">
   <a class="tc-brand" href="#oben" aria-label="Zur Startseite"><img class="tc-logo-light" src="/assets/tennilo-logo.png" alt="TENNILO" width="184" height="34"><img class="tc-logo-dark" src="/assets/tennilo-logo-dark.png" alt="" aria-hidden="true" width="184" height="34"></a>
   <nav class="nl-nav tc-nav" id="nl-nav" aria-label="Hauptnavigation">
-   <a href="#score">Score</a><a href="#funktionen">Funktionen</a><a href="#meilensteine">Meilensteine</a><a href="#projekte">Projekte</a><a href="#updates">News</a><a href="#newsletter">Newsletter</a><a href="/founders/">Founders</a>
+   <a href="/founders/">Founders</a><a href="#score">Score</a><a href="#funktionen">Funktionen</a><a href="#meilensteine">Meilensteine</a><a href="#projekte">Projekte</a><a href="#updates">News</a><a href="#newsletter">Newsletter</a>
   </nav>
   <button class="tc-theme-toggle" type="button" data-theme-toggle aria-label="Dunkelmodus einschalten" title="Dunkelmodus einschalten" aria-pressed="false"><svg class="tc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.9 13.1A9 9 0 0 1 10.9 3.1 9 9 0 1 0 20.9 13.1Z"/></svg><svg class="tc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><span data-theme-label>Dunkel</span></button>
   <nav class="tc-languages" aria-label="Sprache wählen">
@@ -52,6 +53,7 @@
  </div>
 </header>
 <main id="main">
+<section class="tc-founders-teaser" id="founders" aria-labelledby="founders-title"><div class="tc-container tc-founders-teaser-inner"><h2 id="founders-title"><img class="tf-teaser-light" src="/assets/tennilo-founders-tf12-light.png" alt="TENNILO Founders" width="2550" height="420"><img class="tf-teaser-dark" src="/assets/tennilo-founders-tf12-dark.png" alt="TENNILO Founders" width="2550" height="420"></h2><p>Gemeinsam die Zukunft des digitalen Tennis gestalten. Unterstütze die Entwicklung von TENNILO Score, Tournament und Umpire.</p><a class="tf-teaser-link" href="/founders/">Zur Founders-Kampagne <span aria-hidden="true">↗</span></a></div></section>
 <section class="tc-hero" id="score" aria-labelledby="tc-headline">
  <div class="tc-container tc-hero-mast"><span>TENNILO <b> / </b> 2026—2027</span><span>PRODUCT STUDIO <b> / </b> Nº 001</span></div>
  <div class="tc-container tc-hero-grid">
@@ -148,7 +150,7 @@
  </div>
 </section>
 <section class="tc-signups" aria-label="TENNILO Community">
- <div class="tc-container tc-signups-grid">
+ <div class="tc-container tc-signups-grid tc-signups-single">
   <section class="tc-newsletter" id="newsletter" aria-labelledby="newsletter-title"><div class="tc-signup-intro"><span class="tc-index">BRIEFWECHSEL / TENNILO NEWS</span><h2 id="newsletter-title">POST VOM<br><em>CENTER COURT.</em></h2><p>Neuigkeiten zu Score, Tournament und Umpire – nur, wenn es wirklich etwas zu berichten gibt.</p><small>Kostenlos, jederzeit abbestellbar und unabhängig von der Founders-Warteliste.</small></div><form method="post" action="/newsletter.php" class="newsletter-form">
             <input type="hidden" name="action" value="subscribe">
             <div class="newsletter-honeypot" aria-hidden="true"><label>Website <input name="website" type="text" autocomplete="off" tabindex="-1"></label></div>
@@ -160,28 +162,6 @@
             <label class="newsletter-consent"><input type="checkbox" name="consent" value="yes" required> Ich möchte den allgemeinen TENNILO-Newsletter per E-Mail erhalten. Meine Einwilligung ist freiwillig und jederzeit widerrufbar. <a href="/datenschutz.html#newsletter-datenschutz">Datenschutzhinweise</a>.</label>
             <small>Zur Bestätigung erhältst du eine E-Mail von news@tennilo.de. <a href="/newsletter.php?action=manage">Themen verwalten oder abmelden</a>.</small>
           </form></section>
-  <section class="tc-founders" id="founders" aria-labelledby="founders-title"><div class="tc-signup-intro"><span class="tc-index">MITMACHEN / TENNILO FOUNDERS</span><h2 id="founders-title">GEMEINSAM MEHR<br><em>MÖGLICH MACHEN.</em></h2><p><strong>TENNILO Founders</strong> ist unsere geplante Crowdfunding- und Vorverkaufsaktion für Score, Tournament und Umpire. Im Mittelpunkt steht zunächst TENNILO Score.</p><p><strong>Be part of the beginning.</strong> Spieler, Vereine und Partner können jetzt unverbindlich ihr Interesse anmelden. Angestrebter Finanzierungsstart: 14. Dezember 2026, vorbehaltlich der notwendigen Freigaben.</p><p><a class="tc-link-pill" href="/founders/">Zur Founders-Kampagne ↗</a></p><small>Die kostenlose Interessenliste ist unverbindlich und unabhängig vom Score-Betatest. Keine Bestellung, Reservierung oder Zahlung.</small></div><form method="post" action="/founders.php" class="founders-form">
-                <input type="hidden" name="action" value="join">
-                <div class="founders-honeypot" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
-                <label for="founder-email">E-Mail-Adresse <span aria-hidden="true">*</span></label>
-                <input id="founder-email" type="email" name="email" autocomplete="email" maxlength="254" placeholder="du@tennisverein.de" required>
-                <label for="founder-role">Ich interessiere mich als</label>
-                <select id="founder-role" name="role">
-                  <option value="verein">Verein / Vorstand</option>
-                  <option value="veranstalter">Turnierveranstalter</option>
-                  <option value="trainer">Trainer / Tennisschule</option>
-                  <option value="spieler">Spieler / Privatperson</option>
-                  <option value="sonstige">Sonstiges</option>
-                </select>
-                <fieldset><legend>Was interessiert dich?</legend>
-                  <label><input type="checkbox" name="interests[]" value="beta"> Betatests</label>
-                  <label><input type="checkbox" name="interests[]" value="founders" checked> Founders-Angebote</label>
-                  <label><input type="checkbox" name="interests[]" value="crowdfunding" checked> Crowdfunding auf Startnext</label>
-                </fieldset>
-                <label class="founders-consent"><input type="checkbox" name="consent" value="yes" required> Ich möchte E-Mails zu meinen ausgewählten TENNILO-Themen erhalten. Die Einwilligung ist freiwillig und jederzeit widerrufbar. Hinweise zur Verarbeitung in der <a href="/datenschutz.html#founders-datenschutz">Datenschutzerklärung</a>.</label>
-                <button type="submit" class="btn btn-lime">Kostenlos auf die Warteliste</button>
-                <small>Nach der Anmeldung erhältst du einen Bestätigungslink per E-Mail. Kein Kauf, keine Kosten. <a href="/founders.php?action=unsubscribe-request">Bereits angemeldet? Hier abmelden.</a></small>
-              </form></section>
  </div>
 </section>
 <section class="tc-outro"><div class="tc-container"><span>005 / INPUT</span><h2>UND DU?</h2><p>Was müsste eine Tennis-Zähl-App unbedingt können? Sag uns, was dir bei einem echten Match wichtig ist.</p><a href="https://www.instagram.com/tennilo.app/" target="_blank" rel="noopener noreferrer">Deine Idee auf Instagram senden ↗</a></div></section>

@@ -13,7 +13,7 @@ const source=read('public/assets/score-demo.js');
 
 test('New editorial design replaces the former dashboard and keeps original branding',()=>{
  for(const html of [de,en]){
-  for(const token of ['tc-hero','tc-score-stage','tc-demo','tc-manifesto','tc-beta','tc-feature-line','tc-project-spread','tc-news-item','tc-signups','tc-founders','court-edition.css'])assert.ok(html.includes(token),token);
+  for(const token of ['tc-hero','tc-score-stage','tc-demo','tc-manifesto','tc-beta','tc-feature-line','tc-project-spread','tc-news-item','tc-signups','tc-founders-teaser','court-edition.css'])assert.ok(html.includes(token),token);
   assert.ok(!html.includes('score-home.css'), 'Old homepage stylesheet should not load');
   assert.ok(!html.includes('score-creative.css'), 'Old overlay stylesheet should not load');
   assert.ok(html.includes('tennilo-logo.png'));

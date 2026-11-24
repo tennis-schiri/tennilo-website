@@ -39,11 +39,11 @@ test('English version fully represents the new editorial TENNILO homepage',()=>{
  assert.deepEqual(ids(german),ids(english),'German and English IDs must match');
  for(const value of ['GAME.','SET.','FUTURE.','Apple Watch','BAD SAAROW','TOURNAMENT','UMPIRE','SPRING 2027'])assert.ok(english.includes(value),value);
  assert.match(english,/action="\/newsletter\.php"/);
- assert.match(english,/action="\/founders\.php"/);
- assert.equal((english.match(/<form\b/g)||[]).length,2);
- assert.equal((english.match(/name="lang" value="en"/g)||[]).length,2);
+ assert.ok(english.includes('href="/en/founders/"'));
+ assert.equal((english.match(/<form\b/g)||[]).length,1);
+ assert.equal((english.match(/name="lang" value="en"/g)||[]).length,1);
  assert.match(english,/href="\/en\/privacy\.html#newsletter-datenschutz"/);
- assert.match(english,/href="\/en\/privacy\.html#founders-datenschutz"/);
+ assert.ok(read('public/en/founders/index.html').includes('/en/privacy.html#founders-datenschutz'));
  for(const match of english.matchAll(/href="#([^"]+)"/g))assert.ok(ids(english).includes(match[1]),match[1]);
  assert.doesNotMatch(english,/app\.tennis-schiri\.de|testseite|test-site/);
 });

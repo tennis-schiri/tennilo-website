@@ -31,6 +31,7 @@
 <meta property="og:description" content="TENNILO Score: a tennis scorekeeping app in development for Apple Watch and iPhone. First beta planned for December 27, 2026, in Bad Saarow. Discover Tournament and Umpire.">
 <meta property="og:image" content="https://tennilo.de/assets/tennilo-score-logo.png">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/assets/founders-campaign.css?v=2">
 </head>
 <body class="tc-home" id="oben">
 <div class="tc-shell">
@@ -38,7 +39,7 @@
  <div class="tc-container tc-header-inner">
   <a class="tc-brand" href="#oben" aria-label="Back to homepage"><img class="tc-logo-light" src="/assets/tennilo-logo.png" alt="TENNILO" width="184" height="34"><img class="tc-logo-dark" src="/assets/tennilo-logo-dark.png" alt="" aria-hidden="true" width="184" height="34"></a>
   <nav class="nl-nav tc-nav" id="nl-nav" aria-label="Main navigation">
-   <a href="#score">Score</a><a href="#funktionen">Features</a><a href="#meilensteine">Milestones</a><a href="#projekte">Projects</a><a href="#updates">News</a><a href="#newsletter">Newsletter</a><a href="/en/founders/">Founders</a>
+   <a href="/en/founders/">Founders</a><a href="#score">Score</a><a href="#funktionen">Features</a><a href="#meilensteine">Milestones</a><a href="#projekte">Projects</a><a href="#updates">News</a><a href="#newsletter">Newsletter</a>
   </nav>
   <button class="tc-theme-toggle" type="button" data-theme-toggle aria-label="Enable dark mode" title="Enable dark mode" aria-pressed="false"><svg class="tc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.9 13.1A9 9 0 0 1 10.9 3.1 9 9 0 1 0 20.9 13.1Z"/></svg><svg class="tc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><span data-theme-label>Dark</span></button>
   <nav class="tc-languages" aria-label="Choose language">
@@ -50,6 +51,7 @@
  </div>
 </header>
 <main id="main">
+<section class="tc-founders-teaser" id="founders" aria-labelledby="founders-title"><div class="tc-container tc-founders-teaser-inner"><h2 id="founders-title"><img class="tf-teaser-light" src="/assets/tennilo-founders-tf12-light.png" alt="TENNILO Founders" width="2550" height="420"><img class="tf-teaser-dark" src="/assets/tennilo-founders-tf12-dark.png" alt="TENNILO Founders" width="2550" height="420"></h2><p>Shape the future of digital tennis together. Support the development of TENNILO Score, Tournament and Umpire.</p><a class="tf-teaser-link" href="/en/founders/">Explore Founders <span aria-hidden="true">↗</span></a></div></section>
 <section class="tc-hero" id="score" aria-labelledby="tc-headline">
  <div class="tc-container tc-hero-mast"><span>TENNILO <b> / </b> 2026—2027</span><span>PRODUCT STUDIO <b> / </b> Nº 001</span></div>
  <div class="tc-container tc-hero-grid">
@@ -146,7 +148,7 @@
  </div>
 </section>
 <section class="tc-signups" aria-label="TENNILO Community">
- <div class="tc-container tc-signups-grid">
+ <div class="tc-container tc-signups-grid tc-signups-single">
   <section class="tc-newsletter" id="newsletter" aria-labelledby="newsletter-title"><div class="tc-signup-intro"><span class="tc-index">IN YOUR INBOX / TENNILO NEWS</span><h2 id="newsletter-title">NOTES FROM<br><em>CENTER COURT.</em></h2><p>Score, Tournament and Umpire updates – only when there's something worth sharing.</p><small>Free to subscribe, easy to unsubscribe and separate from the Founders waitlist.</small></div><form method="post" action="/newsletter.php" class="newsletter-form">
             <input type="hidden" name="lang" value="en">
             <input type="hidden" name="action" value="subscribe">
@@ -159,29 +161,6 @@
             <label class="newsletter-consent"><input type="checkbox" name="consent" value="yes" required> I agree to receive the general TENNILO newsletter by email. My consent is voluntary and can be withdrawn at any time. <a href="/en/privacy.html#newsletter-datenschutz">Privacy policy</a>.</label>
             <small>You will receive a confirmation email from news@tennilo.de. <a href="/newsletter.php?action=manage&lang=en">Manage topics or unsubscribe</a>.</small>
           </form></section>
-  <section class="tc-founders" id="founders" aria-labelledby="founders-title"><div class="tc-signup-intro"><span class="tc-index">GET INVOLVED / TENNILO FOUNDERS</span><h2 id="founders-title">MAKE MORE<br><em>POSSIBLE TOGETHER.</em></h2><p><strong>TENNILO Founders</strong> is our planned crowdfunding and pre-sale initiative to support Score, Tournament and Umpire, with Score as our first priority.</p><p><strong>Be part of the beginning.</strong> We are collecting non-binding interest from players, clubs and partners now. The planned funding launch is 14 December 2026, subject to readiness and approval.</p><p><a class="tc-link-pill" href="/en/founders/">Explore the Founders campaign ↗</a></p><small>The waitlist is free, non-binding and separate from Score beta registration. No purchase, reservation or payment.</small></div><form method="post" action="/founders.php" class="founders-form">
-            <input type="hidden" name="lang" value="en">
-                <input type="hidden" name="action" value="join">
-                <div class="founders-honeypot" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
-                <label for="founder-email">Email address <span aria-hidden="true">*</span></label>
-                <input id="founder-email" type="email" name="email" autocomplete="email" maxlength="254" placeholder="you@tennisclub.com" required>
-                <label for="founder-role">I'm interested as a</label>
-                <select id="founder-role" name="role">
-                  <option value="verein">Club / committee</option>
-                  <option value="veranstalter">Tournament organizer</option>
-                  <option value="trainer">Coach / tennis academy</option>
-                  <option value="spieler">Player / individual</option>
-                  <option value="sonstige">Other</option>
-                </select>
-                <fieldset><legend>What are you interested in?</legend>
-                  <label><input type="checkbox" name="interests[]" value="beta"> Beta tests</label>
-                  <label><input type="checkbox" name="interests[]" value="founders" checked> Founders offers</label>
-                  <label><input type="checkbox" name="interests[]" value="crowdfunding" checked> Crowdfunding on Startnext</label>
-                </fieldset>
-                <label class="founders-consent"><input type="checkbox" name="consent" value="yes" required> I agree to receive emails about my chosen TENNILO topics. My consent is voluntary and can be withdrawn at any time. Please see the <a href="/en/privacy.html#founders-datenschutz">privacy policy</a>.</label>
-                <button type="submit" class="btn btn-lime">Join the free waitlist</button>
-                <small>After signing up, you will receive a confirmation link by email. No purchase or payment required. <a href="/founders.php?action=unsubscribe-request&lang=en">Already signed up? Unsubscribe here.</a></small>
-              </form></section>
  </div>
 </section>
 <section class="tc-outro"><div class="tc-container"><span>005 / INPUT</span><h2>YOUR CALL.</h2><p>What should a tennis scoring app absolutely get right? Tell us what matters during a real match.</p><a href="https://www.instagram.com/tennilo.app/" target="_blank" rel="noopener noreferrer">Share your ideas on Instagram ↗</a></div></section>

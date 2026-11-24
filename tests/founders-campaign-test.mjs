@@ -17,7 +17,7 @@ test('Founders campaigns are bilingual, locally hosted, deployable and waitlist-
   assert.ok(html.includes('name="action" value="join"'));
   assert.ok(html.includes('name="consent" value="yes" required'));
   for(const topic of ['founders','crowdfunding','beta'])assert.ok(html.includes('value="'+topic+'"'));
-  for(const name of ['Bronze','Silver','Gold','Platinum','Club','Club Plus','Founding Partner'])assert.ok(html.includes(name));
+  for(const name of ['Bronze','Silver','Gold','Platinum','Diamond','Club','Club Plus','Founding Partner','Founding Premium Partner'])assert.ok(html.includes(name));
   assert.doesNotMatch(html,/checkout\.stripe|paypal\.com|<form[^>]+action="https?:/i);
   const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
   assert.equal(new Set(ids).size,ids.length);
@@ -33,4 +33,17 @@ test('Both themes use approved Founders originals with transparent alpha',()=>{
   assert.equal(img[25],6);
  }
  assert.ok(read('public/assets/founders-campaign.css').includes('html[data-theme="dark"]'));
+});
+
+test('Nine approved price points and all five funding goals appear only on campaign pages',()=>{
+ for(const [file,lang] of [['public/founders/index.html','de'],['public/en/founders/index.html','en']]){
+  const html=read(file);
+  const prices=[10,29,69,149,299,69,199,599,999];
+  const section=html.split('id="pakete"')[1].split('</section>')[0];
+  assert.equal((section.match(/class="tf-card tf-tier"/g)||[]).length,9);
+  const found=[...section.matchAll(/<b>([^<]+)<\/b>/g)].map(m=>Number(m[1].replace(/\D/g,'')));
+  assert.deepEqual(found,prices);
+  const goals=html.split('id="ziele"')[1].split('</section>')[0];
+  assert.deepEqual([...goals.matchAll(/<b>([^<]+)<\/b>/g)].map(m=>Number(m[1].replace(/\D/g,''))),[2500,5000,10000,15000,25000]);
+ }
 });

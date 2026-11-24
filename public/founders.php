@@ -156,4 +156,4 @@ if($action==='unsubscribe' && $method==='POST'){
  $db->prepare('DELETE FROM subscribers WHERE id=? AND unsubscribe_hash=?')->execute([(int)$row['id'],hashed($t)]);
  page('Abgemeldet','<p>Dein Wartelisteneintrag wurde gelöscht.</p>');
 }
-page('TENNILO Founders','<p>Bitte nutze das Anmeldeformular auf unserer Startseite.</p>',404);
+page('TENNILO Founders','<p>Bitte nutze das Anmeldeformular auf unserer <a href="/founders/#anmelden">Founders-Seite</a>.</p>',404);
