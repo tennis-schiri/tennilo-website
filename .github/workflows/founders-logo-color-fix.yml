@@ -1,0 +1,62 @@
+name: TENNILO Founders – Farbkorrektur
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/founders-logo-color-fix.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install Pillow
+      - name: Correct dark logos without changing light originals
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          from io import BytesIO
+          import base64,re,sys
+          
+          def darken(im):
+              im=im.convert('RGBA'); p=im.load()
+              for y in range(im.height):
+                  for x in range(im.width):
+                      r,g,b,a=p[x,y]
+                      if a and r<80 and g<125 and b<160 and g-r<55:
+                          p[x,y]=(239,248,255,a)
+              return im
+          
+          root=Path('brand-assets/founders')
+          for id in ('TF09','TF12'):
+              prefix='TENNILO-Founders-'+id
+              light=root/(prefix+'-light.png'); dark=root/(prefix+'-dark.png')
+              source=Image.open(light).convert('RGBA'); im=Image.open(dark).convert('RGBA')
+              box=(0,0,im.width,450) if id=='TF09' else (0,0,1500,im.height)
+              im.paste(darken(source.crop(box)),box[:2]); im.save(dark,optimize=True)
+              light_svg=(root/(prefix+'-light.svg')).read_text()
+              dark_svg=root/(prefix+'-dark.svg'); s=dark_svg.read_text()
+              pattern=r'(data:image/png;base64,)([^"\\x27]+)'
+              # The embedded PNG is delimited by double quotes.
+              pattern=r'(data:image/png;base64,)([^"]+)'
+              m=re.search(pattern,light_svg)
+              original=Image.open(BytesIO(base64.b64decode(m.group(2))))
+              b=BytesIO(); darken(original).save(b,format='PNG',optimize=True)
+              s=re.sub(pattern,lambda m:m.group(1)+base64.b64encode(b.getvalue()).decode(),s,count=1)
+              dark_svg.write_text(s)
+          readme=root/'README.txt'
+          s=readme.read_text().replace('existing TENNILO recolor rule (RGB 239,248,255), retained cyan','TENNILO recolor rule (RGB 239,248,255), complete cyan gradient retained')
+          if '1.0.1' not in s:s+='\nRevision 1.0.1: corrected dark-mode recoloring so the entire original turquoise diagonal is retained.\n'
+          readme.write_text(s)
+          PY
+      - name: Save corrected brand assets
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add brand-assets/founders/TENNILO-Founders-TF09-dark.png brand-assets/founders/TENNILO-Founders-TF09-dark.svg brand-assets/founders/TENNILO-Founders-TF12-dark.png brand-assets/founders/TENNILO-Founders-TF12-dark.svg brand-assets/founders/README.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'Fix full turquoise gradient in Founders dark logos'
+            git push origin HEAD:main
+          fi
