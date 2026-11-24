@@ -45,3 +45,10 @@ public/admin/analytics.php
 public/assets/footer-credit.css
 public/assets/mw-symbol-light.png
 public/assets/mw-symbol-dark.png
+public/assets/founders-campaign.css
+public/assets/tennilo-founders-tf09-light.png
+public/assets/tennilo-founders-tf09-dark.png
+public/assets/tennilo-founders-tf12-light.png
+public/assets/tennilo-founders-tf12-dark.png
+public/founders/index.html
+public/en/founders/index.html

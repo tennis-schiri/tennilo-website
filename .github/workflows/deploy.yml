@@ -39,6 +39,10 @@ jobs:
           python3 -m pip install --quiet "Pillow>=10,<13"
           python3 scripts/prepare_transparent_logos.py
           python3 scripts/build_mw_footer_logos.py
+          for variant in tf09-light tf09-dark tf12-light tf12-dark; do
+            upper="${variant%%-*}"; mode="${variant#*-}"
+            cp "brand-assets/founders/TENNILO-Founders-${upper^^}-$mode.png" "public/assets/tennilo-founders-$variant.png"
+          done
 
       - name: Datei-Freigabeliste prüfen
         shell: bash
@@ -92,7 +96,7 @@ jobs:
           node --check public/assets/site-interactions.js
           node --check public/assets/score-demo.js
           node --check public/assets/theme.js
-          node --test tests/score-landing-test.mjs tests/tennilo-language-test.mjs tests/tennilo-creative-test.mjs tests/tennilo-theme-test.mjs
+          node --test tests/score-landing-test.mjs tests/tennilo-language-test.mjs tests/tennilo-creative-test.mjs tests/tennilo-theme-test.mjs tests/founders-campaign-test.mjs
 
       - name: PHP-Syntax prüfen
         shell: bash
