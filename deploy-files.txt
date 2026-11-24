@@ -52,3 +52,12 @@ public/assets/tennilo-founders-tf12-light.png
 public/assets/tennilo-founders-tf12-dark.png
 public/founders/index.html
 public/en/founders/index.html
+public/assets/founders-badges/fb01-bronze.webp
+public/assets/founders-badges/fb02-silver.webp
+public/assets/founders-badges/fb03-gold.webp
+public/assets/founders-badges/fb04-platinum.webp
+public/assets/founders-badges/fb05-diamond.webp
+public/assets/founders-badges/fc01-club.webp
+public/assets/founders-badges/fc02-club-plus.webp
+public/assets/founders-badges/fc03-founding-partner.webp
+public/assets/founders-badges/fc04-founding-premium-partner.webp

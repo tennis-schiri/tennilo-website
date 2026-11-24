@@ -35,6 +35,7 @@ on:
       - 'public/founders/**'
       - 'public/assets/founders-campaign.css'
       - 'brand-assets/founders/**'
+      - 'scripts/prepare_founders_badges.py'
       - 'tests/founders-campaign-test.mjs'
       - 'public/sitemap.xml'
       - 'tests/tennilo-email-template-test.php'
@@ -61,6 +62,7 @@ jobs:
           python3 -m pip install --quiet "Pillow>=10,<13"
           python3 scripts/prepare_transparent_logos.py
           python3 scripts/build_mw_footer_logos.py
+          python3 scripts/prepare_founders_badges.py
           for variant in tf09-light tf09-dark tf12-light tf12-dark; do
             upper="${variant%%-*}"; mode="${variant#*-}"
             cp "brand-assets/founders/TENNILO-Founders-${upper^^}-$mode.png" "public/assets/tennilo-founders-$variant.png"

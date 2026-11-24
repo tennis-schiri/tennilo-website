@@ -50,3 +50,6 @@ html[data-theme="dark"] .tc-home .tf-teaser-link{background:#e6bd70;color:#071f3
 @media(max-width:520px){.tc-home .tc-founders-teaser{padding:16px 0}.tc-home .tc-founders-teaser-inner{grid-template-columns:1fr;gap:10px}.tc-home .tc-founders-teaser h2{max-width:235px}.tc-home .tf-teaser-link{grid-column:auto}.tf-tiers-private,.tf-tiers-club,.tf-stretch-grid{grid-template-columns:1fr}}
 
 .tf-free-support{display:flex;justify-content:space-between;align-items:center;gap:22px;margin:22px 0 30px;border-left:4px solid var(--tf-gold)}.tf-free-support h3{margin-top:7px}.tf-free-support-status{flex:0 0 auto;font-size:13px;font-weight:750;color:var(--tf-accent);max-width:210px}@media(max-width:680px){.tf-free-support{display:block}.tf-free-support-status{margin-top:14px;max-width:none}}
+
+/* Approved Founders badge art: consistent size on every package. */
+.tf-tier-badge{display:block;width:min(100%,146px);height:auto;aspect-ratio:1;object-fit:contain;align-self:center;margin:2px auto 8px}.tf-tier h3{overflow-wrap:anywhere}.tf-tiers-private .tf-tier{padding:18px}.tf-tiers-club .tf-tier{padding:20px}@media(max-width:520px){.tf-tier-badge{width:138px}.tf-tiers-private .tf-tier,.tf-tiers-club .tf-tier{padding:20px}}

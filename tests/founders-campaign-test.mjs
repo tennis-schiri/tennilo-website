@@ -67,3 +67,12 @@ test('Founders supports all three products on equal terms independently of relea
   assert.ok(html.includes(lang==='de'?'gleichwertige Bestandteile der Kampagne':'equal parts of the campaign'));
  }
 });
+
+test('Nine approved badge images are used on each campaign page',()=>{
+ const names=["fb01-bronze","fb02-silver","fb03-gold","fb04-platinum","fb05-diamond","fc01-club","fc02-club-plus","fc03-founding-partner","fc04-founding-premium-partner"];
+ for(const page of ['public/founders/index.html','public/en/founders/index.html']){
+  const html=read(page);
+  assert.equal((html.match(/class="tf-tier-badge"/g)||[]).length,9);
+  for(const name of names){const file='public/assets/founders-badges/'+name+'.webp';assert.ok(html.includes('src="/assets/founders-badges/'+name+'.webp"'),name);assert.ok(manifest.has(file),file);assert.ok(fs.existsSync(path.join(root,file)),file);}
+ }
+});
