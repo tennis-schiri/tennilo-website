@@ -47,3 +47,14 @@ test('Nine approved price points and all five funding goals appear only on campa
   assert.deepEqual([...goals.matchAll(/<b>([^<]+)<\/b>/g)].map(m=>Number(m[1].replace(/\D/g,''))),[2500,5000,10000,15000,25000]);
  }
 });
+
+test('Financial support is exclusively through Startnext, including unrestricted free contributions',()=>{
+ for(const [file,lang] of [['public/founders/index.html','de'],['public/en/founders/index.html','en']]){
+  const html=read(file);
+  assert.ok(html.includes('id="freie-unterstuetzung"'));
+  assert.ok(html.includes(lang==='de'?'individuellen Betrag ab 5 €':'your own amount from €5'));
+  assert.ok(html.includes(lang==='de'?'ausschließlich über Startnext':'exclusively through Startnext'));
+  assert.doesNotMatch(html,/eigener Vorverkauf|direkter Vorverkauf|direct pre-sale|crowdfunding and pre-sale|Crowdfunding- und Vorverkaufsinitiative/i);
+  assert.equal((html.match(/<form\b/g)||[]).length,1);
+ }
+});
