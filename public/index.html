@@ -40,7 +40,7 @@
  <div class="tc-container tc-header-inner">
   <a class="tc-brand" href="#oben" aria-label="Zur Startseite"><img class="tc-logo-light" src="/assets/tennilo-logo.png" alt="TENNILO" width="184" height="34"><img class="tc-logo-dark" src="/assets/tennilo-logo-dark.png" alt="" aria-hidden="true" width="184" height="34"></a>
   <nav class="nl-nav tc-nav" id="nl-nav" aria-label="Hauptnavigation">
-   <a href="#score">Score</a><a href="#funktionen">Funktionen</a><a href="#meilensteine">Meilensteine</a><a href="#projekte">Projekte</a><a href="#updates">News</a><a href="#newsletter">Newsletter</a>
+   <a href="#score">Score</a><a href="#funktionen">Funktionen</a><a href="#meilensteine">Meilensteine</a><a href="#projekte">Projekte</a><a href="#updates">News</a><a href="#newsletter">Newsletter</a><a href="#founders">Founders</a>
   </nav>
   <button class="tc-theme-toggle" type="button" data-theme-toggle aria-label="Dunkelmodus einschalten" title="Dunkelmodus einschalten" aria-pressed="false"><svg class="tc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.9 13.1A9 9 0 0 1 10.9 3.1 9 9 0 1 0 20.9 13.1Z"/></svg><svg class="tc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><span data-theme-label>Dunkel</span></button>
   <nav class="tc-languages" aria-label="Sprache wählen">
@@ -160,7 +160,7 @@
             <label class="newsletter-consent"><input type="checkbox" name="consent" value="yes" required> Ich möchte den allgemeinen TENNILO-Newsletter per E-Mail erhalten. Meine Einwilligung ist freiwillig und jederzeit widerrufbar. <a href="/datenschutz.html#newsletter-datenschutz">Datenschutzhinweise</a>.</label>
             <small>Zur Bestätigung erhältst du eine E-Mail von news@tennilo.de. <a href="/newsletter.php?action=manage">Themen verwalten oder abmelden</a>.</small>
           </form></section>
-  <section class="tc-founders" id="founders" aria-labelledby="founders-title"><div class="tc-signup-intro"><span class="tc-index">MITMACHEN / TENNILO FOUNDERS</span><h2 id="founders-title">GEMEINSAM MEHR<br><em>MÖGLICH MACHEN.</em></h2><p><strong>TENNILO Founders</strong> – TENNILO Founders richtet sich an Menschen und Vereine, die unsere Produktfamilie früh begleiten wollen. Geplant sind Entwicklungsnews, mögliche Founders-Angebote und eventuell Crowdfunding.</p><small>Die unverbindliche Founders-Warteliste ist keine Anmeldung zum Score-Betatest. Es gibt derzeit weder Preise noch einen Kampagnenstart.</small></div><form method="post" action="/founders.php" class="founders-form">
+  <section class="tc-founders" id="founders" aria-labelledby="founders-title"><div class="tc-signup-intro"><span class="tc-index">MITMACHEN / TENNILO FOUNDERS</span><h2 id="founders-title">GEMEINSAM MEHR<br><em>MÖGLICH MACHEN.</em></h2><p><strong>TENNILO Founders</strong> ist unsere geplante Crowdfunding- und Vorverkaufsaktion für Score, Tournament und Umpire. Im Mittelpunkt steht zunächst TENNILO Score.</p><p><strong>Be part of the beginning.</strong> Spieler, Vereine und Partner können jetzt unverbindlich ihr Interesse anmelden. Angestrebter Finanzierungsstart: 14. Dezember 2026, vorbehaltlich der notwendigen Freigaben.</p><details><summary>Geplante Finanzierungsziele und Pakete ansehen</summary><p>Erstes Ziel: 2.500 €; Hauptziel: 5.000 €. Die Mittel sollen Entwicklung, Tests, Infrastruktur und Markteinführung unterstützen.</p><p>Vorgesehene Pakete: Bronze 10 €, Silver 25 €, Gold 50 €, Platinum 100 €; Club 69 €, Club Plus 179 €, Founding Partner 499 €. Digitale Anerkennung und Vereinslizenz-Angebote werden geprüft. Preise und Gegenleistungen sind noch unverbindlich.</p><p>Geplant sind ein eigener Vorverkauf und eine Startnext-Kampagne. Noch keine Zahlungsannahme. Keine Unternehmensanteile oder Gewinnbeteiligung.</p></details><small>Die kostenlose Interessenliste ist unverbindlich und unabhängig vom Score-Betatest. Keine Bestellung, Reservierung oder Zahlung.</small></div><form method="post" action="/founders.php" class="founders-form">
                 <input type="hidden" name="action" value="join">
                 <div class="founders-honeypot" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
                 <label for="founder-email">E-Mail-Adresse <span aria-hidden="true">*</span></label>
@@ -174,9 +174,9 @@
                   <option value="sonstige">Sonstiges</option>
                 </select>
                 <fieldset><legend>Was interessiert dich?</legend>
-                  <label><input type="checkbox" name="interests[]" value="beta" checked> Betatests</label>
+                  <label><input type="checkbox" name="interests[]" value="beta"> Betatests</label>
                   <label><input type="checkbox" name="interests[]" value="founders" checked> Founders-Angebote</label>
-                  <label><input type="checkbox" name="interests[]" value="crowdfunding"> Crowdfunding auf Startnext</label>
+                  <label><input type="checkbox" name="interests[]" value="crowdfunding" checked> Crowdfunding auf Startnext</label>
                 </fieldset>
                 <label class="founders-consent"><input type="checkbox" name="consent" value="yes" required> Ich möchte E-Mails zu meinen ausgewählten TENNILO-Themen erhalten. Die Einwilligung ist freiwillig und jederzeit widerrufbar. Hinweise zur Verarbeitung in der <a href="/datenschutz.html#founders-datenschutz">Datenschutzerklärung</a>.</label>
                 <button type="submit" class="btn btn-lime">Kostenlos auf die Warteliste</button>
