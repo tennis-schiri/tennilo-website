@@ -90,7 +90,9 @@ test('Updates are sorted newest first on DE and EN pages',()=>{
   const block=html.split('<div class="tc-news-list">')[1]?.split('</section>')[0];
   assert.ok(block,'Updates section missing');
   const dates=[...block.matchAll(/<time datetime="([^"]+)">/g)].map(m=>m[1]);
-  assert.deepEqual(dates,['2026-11-09','2026-11-09','2026-11-07']);
+  assert.deepEqual(dates,['2026-11-25','2026-11-09','2026-11-09','2026-11-07']);
+  const labels=[...block.matchAll(/<b aria-hidden="true">(\d+)<\/b>/g)].map(m=>m[1]);
+  assert.deepEqual(labels,['01','02','03','04']);
  }
 });
 
@@ -123,4 +125,13 @@ test('Cut-out device screenshots have no CSS rectangle or background tiles',()=>
  assert.match(style,/\.tc-gallery-visual img\{[^}]*background:transparent;border:0/);
  assert.match(style,/\.tc-gallery-watch \.tc-gallery-visual\{background:transparent\}/);
  assert.match(style,/\.tc-gallery-phone \.tc-gallery-visual\{background:transparent\}/);
+});
+
+test('ClubDisplay availability announcement is published in DE and EN updates',()=>{
+ const deUpdates=de.split('<div class="tc-news-list">')[1].split('</section>')[0];
+ const enUpdates=en.split('<div class="tc-news-list">')[1].split('</section>')[0];
+ assert.match(deUpdates,/TENNILO ClubDisplay – noch 2026 verfügbar/);
+ assert.match(deUpdates,/Marktstart ist noch für 2026 geplant/);
+ assert.match(enUpdates,/TENNILO ClubDisplay – available in 2026/);
+ assert.match(enUpdates,/Launch is planned before the end of 2026/);
 });
