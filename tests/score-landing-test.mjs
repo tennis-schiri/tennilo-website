@@ -130,8 +130,8 @@ test('Cut-out device screenshots have no CSS rectangle or background tiles',()=>
 test('ClubDisplay availability announcement is published in DE and EN updates',()=>{
  const deUpdates=de.split('<div class="tc-news-list">')[1].split('</section>')[0];
  const enUpdates=en.split('<div class="tc-news-list">')[1].split('</section>')[0];
- assert.match(deUpdates,/TENNILO ClubDisplay – noch 2026 verfügbar/);
+ assert.match(deUpdates,/TENNILO ClubDisplay BASIC – für 2026 geplant/);
  assert.match(deUpdates,/Marktstart ist noch für 2026 geplant/);
- assert.match(enUpdates,/TENNILO ClubDisplay – available in 2026/);
+ assert.match(enUpdates,/TENNILO ClubDisplay BASIC – planned for 2026/);
  assert.match(enUpdates,/Launch is planned before the end of 2026/);
 });
