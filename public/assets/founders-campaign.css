@@ -53,3 +53,6 @@ html[data-theme="dark"] .tc-home .tf-teaser-link{background:#e6bd70;color:#071f3
 
 /* Approved Founders badge art: consistent size on every package. */
 .tf-tier-badge{display:block;width:min(100%,146px);height:auto;aspect-ratio:1;object-fit:contain;align-self:center;margin:2px auto 8px}.tf-tier h3{overflow-wrap:anywhere}.tf-tiers-private .tf-tier{padding:18px}.tf-tiers-club .tf-tier{padding:20px}@media(max-width:520px){.tf-tier-badge{width:138px}.tf-tiers-private .tf-tier,.tf-tiers-club .tf-tier{padding:20px}}
+
+/* Four equally weighted Founders projects. */
+.tf-project-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.tf-project-grid .tf-card{min-width:0}.tf-project-grid a{display:inline-block;margin-top:8px;font-weight:700;color:var(--tf-gold)}@media(max-width:1050px){.tf-project-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.tf-project-grid{grid-template-columns:1fr}}

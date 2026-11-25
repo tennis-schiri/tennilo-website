@@ -59,11 +59,11 @@ test('Financial support is exclusively through Startnext, including unrestricted
  }
 });
 
-test('Founders supports all three products on equal terms independently of release order',()=>{
+test('Founders supports all four products on equal terms independently of release order',()=>{
  for(const [file,lang] of [['public/founders/index.html','de'],['public/en/founders/index.html','en']]){
   const html=read(file);
-  for(const product of ['Score','Tournament','Umpire'])assert.ok(html.includes('<h3>TENNILO '+product+'</h3>'));
-  assert.doesNotMatch(html,/01 \/ PRIORITÄT|01 \/ PRIORITY|Zuerst steht Score im Fokus|Score comes first/);
+  for(const product of ['Score','Tournament','Umpire','ClubDisplay'])assert.ok(html.includes('<h3>TENNILO '+product+'</h3>'));
+  assert.doesNotMatch(html,/01 \/ PRIORITÄT|01 \/ PRIORITY|Zuerst steht Score im Fokus|Score comes first|alle drei Projekte|all three projects|Drittelung|three-way split/i);
   assert.ok(html.includes(lang==='de'?'gleichwertige Bestandteile der Kampagne':'equal parts of the campaign'));
  }
 });
@@ -74,5 +74,15 @@ test('Nine approved badge images are used on each campaign page',()=>{
   const html=read(page);
   assert.equal((html.match(/class="tf-tier-badge"/g)||[]).length,9);
   for(const name of names){const file='public/assets/founders-badges/'+name+'.webp';assert.ok(html.includes('src="/assets/founders-badges/'+name+'.webp"'),name);assert.ok(manifest.has(file),file);assert.ok(fs.existsSync(path.join(root,file)),file);}
+ }
+});
+
+test('ClubDisplay pilot is included in the four-project Founders grid and homepage teaser',()=>{
+ for(const [page,home,lang] of [['public/founders/index.html','public/index.html','de'],['public/en/founders/index.html','public/en/index.html','en']]){
+ const h=read(page);const section=h.split('class="tf-grid tf-project-grid"')[1].split('</section>')[0];
+ assert.equal((section.match(/<article class="tf-card">/g)||[]).length,4);
+ assert.ok(section.includes('TENNILO ClubDisplay')&&section.includes('BASIC')&&section.includes('PLUS'));
+ assert.ok(section.includes(lang==='de'?'href="/clubdisplay/"':'href="/en/clubdisplay/"'));
+ assert.ok(read(home).split('id="founders"')[1].split('</section>')[0].includes('ClubDisplay'));
  }
 });
