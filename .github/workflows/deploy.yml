@@ -169,6 +169,8 @@ jobs:
               "de": f"{root}/?deploy_check={build}",
               "en": f"{root}/en/?deploy_check={build}",
               "logo": f"{root}/assets/tennilo-tournament-cutout.png?deploy_check={build}",
+              "founders_de": f"{root}/founders/?deploy_check={build}",
+              "founders_en": f"{root}/en/founders/?deploy_check={build}",
           }
 
           def retrieve(url):
@@ -192,6 +194,11 @@ jobs:
                           raise RuntimeError(f"{lang}: Freigestelltes Logo nicht im Live-HTML")
                       if "transparent-logos.css" not in content:
                           raise RuntimeError(f"{lang}: Transparenz-Stylesheet fehlt")
+                  for lang, key in (("DE", "founders_de"), ("EN", "founders_en")):
+                      founders = retrieve(urls[key]).decode("utf-8")
+                      for product in ("Score", "Tournament", "Umpire", "ClubDisplay"):
+                          if f"<h3>TENNILO {product}</h3>" not in founders:
+                              raise RuntimeError(f"{lang}: Founders-Projekt fehlt: {product}")
                   logo = Image.open(io.BytesIO(retrieve(urls["logo"]))).convert("RGBA")
                   alpha = logo.getchannel("A")
                   if logo.size != (1361, 390) or alpha.getextrema()[0] != 0:
