@@ -3,8 +3,13 @@ name: TENNILO Website manuell veröffentlichen
 on:
   workflow_dispatch:
   push:
+    branches: [main]
     paths:
       - '.github/workflows/deploy.yml'
+      - 'public/**'
+      - 'tests/**'
+      - 'scripts/**'
+      - 'deploy-files.txt'
 
 permissions:
   contents: read
@@ -16,14 +21,14 @@ concurrency:
 jobs:
   discover:
     name: Workflow registrieren – kein Upload
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[deploy-live]')
     runs-on: ubuntu-24.04
     steps:
       - run: echo 'Workflow wurde registriert. Kein FTP-Upload ausgeführt.'
 
   deploy:
     name: Website und Founders-PHP per FTPS hochladen
-    if: github.event_name == 'workflow_dispatch'
+    if: (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[deploy-live]'))) && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
