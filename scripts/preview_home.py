@@ -52,10 +52,18 @@ try:
             if language == "" and width == 1440:
                 for section in ["projekte", "clubdisplay", "funktionen", "einblicke"]:
                     item = page.locator("#" + section)
+                    # Native lazy-loading is asynchronous; ensure images are
+                    # decoded before evaluating screenshots of the whole section.
+                    for img in item.locator('img').all():
+                        img.scroll_into_view_if_needed()
+                        img.evaluate("(el) => el.decode().catch(() => {})")
                     item.screenshot(path=str(OUT / f"section-{section}.jpg"),
                                     type="jpeg", quality=76, animations="disabled")
             if width == 390:
                 assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth + 2"), "Mobile layout has horizontal overflow"
+                for img in page.locator("#projekte img").all():
+                    img.scroll_into_view_if_needed()
+                    img.evaluate("(el) => el.decode().catch(() => {})")
                 page.locator("#projekte").screenshot(path=str(OUT / "products-mobile.jpg"),
                                                     type="jpeg", quality=75, animations="disabled")
             print(f"Rendered {label}: {width}x{height}", flush=True)

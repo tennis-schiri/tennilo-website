@@ -94,7 +94,8 @@ body.tc-home{margin:0;min-width:320px;background:var(--tn-bg);color:var(--tn-tex
 .tn-product-top .tn-status{font-size:11px;color:var(--tn-accent);font-weight:620;letter-spacing:0;line-height:1.35}
 .tn-product-art{height:102px;display:flex;align-items:center;justify-content:flex-start;max-width:100%;margin:12px 0 14px;background:transparent}
 .tn-product-art img{width:auto;max-width:100%;max-height:86px;object-fit:contain;object-position:left center}
-.tn-product-club .tn-product-art img{max-height:92px}
+.tn-product-club .tn-product-art{background:#183c53;border-radius:6px;padding:12px;justify-content:center}
+.tn-product-club .tn-product-art img{max-height:74px;width:100%;object-position:center}
 .tn-product-text h3{margin:0 0 10px;font-size:22px;font-weight:740}
 .tn-product-text p{font-size:13px;line-height:1.65;color:var(--tn-muted)}
 .tn-text-link{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:auto;padding-top:22px;text-decoration:none;font-size:13px;font-weight:720;color:var(--tn-accent)!important}
@@ -108,9 +109,9 @@ body.tc-home{margin:0;min-width:320px;background:var(--tn-bg);color:var(--tn-tex
 .tn-club-copy li{position:relative;padding-left:24px;font-size:14px;color:var(--tn-text);line-height:1.5}
 .tn-club-copy li:before{content:"";position:absolute;left:1px;top:8px;width:8px;height:8px;background:var(--tn-accent);border-radius:50%}
 .tn-inline-status{margin:0 0 22px!important;font-size:12px;font-weight:650;color:var(--tn-accent)}
-.tn-club-art{margin:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:18px;min-height:370px;padding:40px;background:var(--tn-soft);border:1px solid var(--tn-border);border-radius:11px}
+.tn-club-art{margin:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:18px;min-height:370px;padding:40px;background:#183c53;border:1px solid #183c53;border-radius:11px}
 .tn-club-art img{width:100%;max-width:395px;max-height:248px;object-fit:contain}
-.tn-club-art figcaption{color:var(--tn-muted);font-size:12px}
+.tn-club-art figcaption{color:#d9e6ec;font-size:12px}
 
 /* Score product detail and a restrained, fully interactive scorer. */
 .tn-score{background:var(--tn-surface);border-bottom:1px solid var(--tn-border)}
@@ -266,7 +267,8 @@ html[data-theme="dark"] .tn-product-top{color:#a7c0ce}
 html[data-theme="dark"] .tn-club-art,
 html[data-theme="dark"] .tc-gallery-visual,
 html[data-theme="dark"] .tn-beta{background:var(--tn-soft);border-color:var(--tn-border)}
-html[data-theme="dark"] .tn-club-art figcaption{color:var(--tn-muted)}
+html[data-theme="dark"] .tn-club-art{background:#183c53;border-color:#183c53}
+html[data-theme="dark"] .tn-club-art figcaption{color:#d9e6ec}
 html[data-theme="dark"] .tn-demo-shell{background:#0d2637}
 html[data-theme="dark"] .tc-demo{background:#19374a;color:#fff;border-color:#49677a}
 html[data-theme="dark"] .tc-demo-actions button:first-child{background:#d8ecf2;color:#102f40;border-color:#d8ecf2}
@@ -377,3 +379,7 @@ html[data-theme="dark"] .tn-product-score .tn-product-art img,
 html[data-theme="dark"] .tn-product-tournament .tn-product-art img,
 html[data-theme="dark"] .tn-product-umpire .tn-product-art img{filter:brightness(0) invert(.92)}
 /* Keep the existing Founders campaign page unaffected. */
+
+/* The ClubDisplay source mark is white on transparent, so its display surface
+   must have fixed deep-navy contrast in light AND dark themes. */
+html[data-theme="dark"] .tn-product-club .tn-product-art{background:#183c53}
