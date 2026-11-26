@@ -1,0 +1,64 @@
+/* TENNILO homepage: focused introduction, prominent Founders, concise products. */
+.tn-home .tn-overview-hero{padding:76px 0 67px;border-bottom:1px solid var(--tn-border)}
+.tn-overview-hero-inner{display:grid;grid-template-columns:1.2fr .8fr;gap:clamp(30px,6vw,94px);align-items:center}
+.tn-overview-hero h1{font-size:clamp(39px,4.8vw,65px);line-height:1.13;letter-spacing:-.046em;margin:0 0 23px;max-width:790px}
+.tn-overview-hero .tn-lead{max-width:675px;margin:0 0 30px;font-size:17px;line-height:1.8;color:var(--tn-muted)}
+.tn-overview-hero-side{background:var(--tn-soft);border:1px solid var(--tn-border);border-radius:12px;min-height:256px;padding:42px;display:flex;flex-direction:column;justify-content:center;gap:22px}
+.tn-overview-hero-side img{display:block;max-width:315px;max-height:85px;object-fit:contain;object-position:left center}
+.tn-overview-hero-side p{font-size:15px;color:var(--tn-muted);line-height:1.65}
+.tn-founders-focus{padding:43px 0;background:linear-gradient(120deg,#f1ece0,#f7f4ed);border-bottom:1px solid #dfd6c3}
+.tn-founders-feature{display:grid;grid-template-columns:.58fr 1.42fr;gap:clamp(30px,5vw,70px);align-items:center}
+.tn-founders-image{min-height:195px;display:flex;align-items:center;justify-content:center;padding:25px;background:#efe4ce;border:1px solid #e2d4bb;border-radius:9px}
+.tn-founders-image img{width:100%;height:auto;max-height:150px;object-fit:contain}
+.tn-home .tn-founders-image .tf-teaser-dark{display:none}
+.tn-home .tn-founders-image .tf-teaser-light{display:block}
+.tn-founders-text h2{margin:0 0 12px;font-size:clamp(26px,2.9vw,39px)}
+.tn-founders-text>p:not(.tn-eyebrow){max-width:750px;margin:0 0 20px;font-size:15px;line-height:1.75;color:var(--tn-muted)}
+.tn-founders-text .tn-eyebrow{color:#926b36}
+.tn-founders-text .tn-actions{gap:14px}
+.tn-founders-note{color:#6e675b;font-size:12px}
+.tn-home .tn-products.tc-section{padding-top:71px;padding-bottom:79px}
+.tn-home .tn-product{min-height:358px}
+.tn-home .tn-product-text p{font-size:13px}
+.tn-home-bottom{padding:58px 0 73px;background:var(--tn-soft)}
+.tn-home-bottom-inner{display:grid;grid-template-columns:.82fr 1.18fr;gap:clamp(24px,5vw,70px);align-items:start}
+.tn-home-bottom h2{font-size:clamp(22px,2.4vw,30px);margin:0 0 10px}
+.tn-home-bottom p{font-size:14px;color:var(--tn-muted);line-height:1.65}
+.tn-home-bottom .tn-text-link{justify-content:flex-start;margin-top:13px;padding-top:0;font-size:13px}
+.tn-home-mini-newsletter{border-left:1px solid var(--tn-border);padding-left:clamp(20px,3vw,50px)}
+.tn-home-mini-newsletter>p{margin-bottom:17px}
+.tn-home .newsletter-form{padding:20px}
+.tn-home .newsletter-form small,.tn-home .newsletter-consent{font-size:11px}
+html[data-theme="dark"] .tn-home .tn-overview-hero{border-color:var(--tn-border)}
+html[data-theme="dark"] .tn-home .tn-overview-hero-side{background:var(--tn-surface)}
+html[data-theme="dark"] .tn-home .tn-overview-hero-side img{filter:brightness(0) invert(1)}
+html[data-theme="dark"] .tn-home .tn-founders-focus{background:#232b30;border-color:#4b4741}
+html[data-theme="dark"] .tn-home .tn-founders-image{background:#2b2926;border-color:#565046}
+html[data-theme="dark"] .tn-home .tn-founders-image .tf-teaser-light{display:none}
+html[data-theme="dark"] .tn-home .tn-founders-image .tf-teaser-dark{display:block}
+html[data-theme="dark"] .tn-founders-text .tn-eyebrow{color:#e8bf83}
+html[data-theme="dark"] .tn-founders-note{color:#c6bda9}
+html[data-theme="dark"] .tn-home-bottom{background:var(--tn-soft)}
+html[data-theme="dark"] .tn-home .newsletter-form{background:var(--tn-surface);border-color:var(--tn-border)}
+@media(max-width:950px){
+ .tn-overview-hero-inner{grid-template-columns:1fr .75fr;gap:25px}
+ .tn-overview-hero-side{padding:25px}
+ .tn-founders-feature{grid-template-columns:1fr 1.8fr;gap:24px}
+ .tn-home-bottom-inner{grid-template-columns:1fr}
+ .tn-home-mini-newsletter{padding-left:0;border-left:none;border-top:1px solid var(--tn-border);padding-top:25px}
+}
+@media(max-width:680px){
+ .tn-home .tn-overview-hero{padding:52px 0}
+ .tn-overview-hero-inner{grid-template-columns:1fr}
+ .tn-overview-hero h1{font-size:clamp(35px,9vw,50px)}
+ .tn-overview-hero .tn-lead{font-size:15px}
+ .tn-overview-hero-side{min-height:170px;padding:22px}
+ .tn-overview-hero-side img{max-width:230px}
+ .tn-founders-focus{padding:28px 0}
+ .tn-founders-feature{grid-template-columns:1fr;gap:20px}
+ .tn-founders-image{min-height:115px;padding:15px;max-width:none}
+ .tn-founders-image img{max-height:90px}
+ .tn-founders-text h2{font-size:29px}
+ .tn-home .tn-products.tc-section{padding:55px 0}
+ .tn-home-bottom{padding:48px 0 60px}
+}
