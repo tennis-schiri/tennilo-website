@@ -11,21 +11,19 @@ const en=read('public/en/index.html');
 const css=read('public/assets/court-edition.css');
 const source=read('public/assets/score-demo.js');
 
-test('New editorial design replaces the former dashboard and keeps original branding',()=>{
+test('Professional product-led homepage keeps interactive features and all original product brands',()=>{
  for(const html of [de,en]){
-  for(const token of ['tc-hero','tc-score-stage','tc-demo','tc-manifesto','tc-beta','tc-feature-line','tc-project-spread','tc-news-item','tc-signups','tc-founders-teaser','court-edition.css'])assert.ok(html.includes(token),token);
-  assert.ok(!html.includes('score-home.css'), 'Old homepage stylesheet should not load');
-  assert.ok(!html.includes('score-creative.css'), 'Old overlay stylesheet should not load');
-  assert.ok(html.includes('tennilo-logo.png'));
-  assert.ok(html.includes('tennilo-score-cutout.png'));
-  assert.ok(html.includes('tennilo-tournament-cutout.png'));
-  assert.ok(html.includes('tennilo-umpire-cutout.png'));
+  for(const token of ['tn-hero-grid','tn-product-grid','tn-product-score','tn-product-club','tn-product-tournament','tn-product-umpire','tn-club-grid','tn-score-grid','tn-milestone-grid','tc-news-list','tn-newsletter','tc-founders-teaser','professional-home.css'])assert.ok(html.includes(token),token);
+  for(const obsolete of ['court-edition.css?v=1','score-gallery.css?v=1','tc-hero-bottom','tc-ball','tc-outro','tc-beta-ticket'])assert.ok(!html.includes(obsolete),obsolete+' remains');
+  for(const asset of ['tennilo-logo.png','tennilo-score-cutout.png','tennilo-tournament-cutout.png','tennilo-umpire-cutout.png','clubdisplay.png'])assert.ok(html.includes(asset),asset);
+  assert.equal((html.match(/class="tn-product tn-product-/g)||[]).length,4,'Exactly four distinct product cards');
+  assert.equal((html.match(/data-add-point=/g)||[]).length,2,'Interactive scorer must remain usable');
  }
- assert.match(css,/--tc-paper:#f8f5ee/);
- assert.match(css,/--tc-royal:#2333c9/);
- assert.match(css,/--tc-signal:#ff6541/);
- assert.match(css,/\.tc-hero-grid\{display:grid/);
- assert.match(css,/\.tc-project-spread\{display:grid/);
+ const home=read('public/assets/professional-home.css');
+ for(const selector of ['.tn-hero-grid','.tn-product-grid','.tn-club-grid','.tn-score-grid','.tn-milestone-grid','.tc-gallery-grid','.tn-newsletter'])assert.ok(home.includes(selector),selector);
+ for(const breakpoint of ['@media(max-width:1180px)','@media(max-width:900px)','@media(max-width:680px)'])assert.ok(home.includes(breakpoint),breakpoint);
+ assert.ok(home.includes('html[data-theme="dark"]'));
+ assert.ok(home.includes('@media(prefers-reduced-motion:reduce)'));
 });
 
 test('Compact Founders teaser and separate campaign retain legibility and both themes',()=>{

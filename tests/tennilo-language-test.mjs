@@ -7,7 +7,7 @@ const root=path.resolve(import.meta.dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const german=read('public/index.html');
 const english=read('public/en/index.html');
-const css=read('public/assets/court-edition.css');
+const css=read('public/assets/professional-home.css');
 const js=read('public/assets/site-interactions.js');
 const manifest=new Set(read('deploy-files.txt').trim().split(/\r?\n/));
 const pages=[
@@ -34,10 +34,10 @@ test('DE/EN pages have correct canonical links and hreflang',()=>{
  assert.match(english,/href="\/en\/" lang="en" hreflang="en" aria-current="page"/);
 });
 
-test('English version fully represents the new editorial TENNILO homepage',()=>{
+test('English version fully represents the professional TENNILO homepage',()=>{
  const ids=page=>[...page.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
  assert.deepEqual(ids(german),ids(english),'German and English IDs must match');
- for(const value of ['GAME.','SET.','FUTURE.','Apple Watch','BAD SAAROW','TOURNAMENT','UMPIRE','SPRING 2027'])assert.ok(english.includes(value),value);
+ for(const value of ['Better tools. More time for tennis.','Apple Watch','Bad Saarow','TOURNAMENT','UMPIRE','Spring 2027'])assert.ok(english.includes(value),value);
  assert.match(english,/action="\/newsletter\.php"/);
  assert.ok(english.includes('href="/en/founders/"'));
  assert.equal((english.match(/<form\b/g)||[]).length,1);

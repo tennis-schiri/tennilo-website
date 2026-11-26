@@ -7,7 +7,7 @@ const root=path.resolve(import.meta.dirname,'..');
 const load=p=>fs.readFileSync(path.join(root,p),'utf8');
 const de=load('public/index.html');
 const en=load('public/en/index.html');
-const css=load('public/assets/court-edition.css');
+const css=load('public/assets/professional-home.css');
 const behavior=load('public/assets/site-interactions.js');
 const manifest=new Set(load('deploy-files.txt').trim().split(/\r?\n/));
 
@@ -55,7 +55,7 @@ test('All deployed local assets exist and all local links are valid',()=>{
   assert.equal(new Set(ids).size,ids.length,'Duplicate ids');
   for(const match of html.matchAll(/href="#([^"]+)"/g))assert.ok(ids.includes(match[1]),'Unresolved anchor #'+match[1]);
  }
- for(const file of ['public/index.html','public/en/index.html','public/assets/court-edition.css','public/assets/score-demo.js'])assert.ok(manifest.has(file));
+ for(const file of ['public/index.html','public/en/index.html','public/assets/professional-home.css','public/assets/score-demo.js'])assert.ok(manifest.has(file));
 });
 
 test('Sticky navigation, responsive menu and scroll-to-top remain functional',()=>{
@@ -99,8 +99,8 @@ test('Updates are sorted newest first on DE and EN pages',()=>{
 
 test('Real Score prototype screenshots are presented in both languages',()=>{
  for(const html of [de,en]){
-  assert.match(html,/class="tc-gallery tc-section"/);
-  assert.ok(html.includes('score-gallery.css?v=1'));
+  assert.match(html,/class="tc-gallery tn-gallery tc-section"/);
+  assert.ok(html.includes('professional-home.css?v=1'));
   for(const name of ['score-demo-watch.png','score-demo-phone.png','score-demo-scoreboard.png']){
    assert.ok(html.includes(name),name);
    assert.ok(manifest.has('public/assets/'+name),name+' not deployed');
@@ -120,11 +120,12 @@ test('Device gallery artwork has real transparent outer corners',()=>{
  }
 });
 
-test('Cut-out device screenshots have no CSS rectangle or background tiles',()=>{
- const style=fs.readFileSync(path.join(root,'public/assets/score-gallery.css'),'utf8');
- assert.match(style,/\.tc-gallery-visual img\{[^}]*background:transparent;border:0/);
- assert.match(style,/\.tc-gallery-watch \.tc-gallery-visual\{background:transparent\}/);
- assert.match(style,/\.tc-gallery-phone \.tc-gallery-visual\{background:transparent\}/);
+test('Real device cutouts have transparent surroundings in the new home layout',()=>{
+ const style=fs.readFileSync(path.join(root,'public/assets/professional-home.css'),'utf8');
+ assert.match(style,/\.tc-gallery-visual img\{[^}]*background:transparent;box-shadow:none;border:0/);
+ assert.match(style,/\.tn-device-composition\{/);
+ assert.match(style,/\.tc-home \.tn-device-watch\{/);
+ assert.match(style,/\.tc-home \.tn-device-phone\{/);
 });
 
 test('ClubDisplay availability announcement is published in DE and EN updates',()=>{

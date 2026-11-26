@@ -369,3 +369,11 @@ html[data-theme="dark"] .tc-footer-bottom{color:#c0d0dc}
   html{scroll-behavior:auto!important}
   .tc-home *, .tc-home *:before,.tc-home *:after{transition:none!important;animation:none!important}
 }
+
+/* The existing main logo has separate approved versions for each theme. */
+html[data-theme="dark"] .tc-home .tc-logo-light{display:none!important}
+html[data-theme="dark"] .tc-home .tc-logo-dark{display:block!important}
+html[data-theme="dark"] .tn-product-score .tn-product-art img,
+html[data-theme="dark"] .tn-product-tournament .tn-product-art img,
+html[data-theme="dark"] .tn-product-umpire .tn-product-art img{filter:brightness(0) invert(.92)}
+/* Keep the existing Founders campaign page unaffected. */
