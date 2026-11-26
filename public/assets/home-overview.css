@@ -99,3 +99,14 @@ html[data-theme="dark"] .tn-home .newsletter-form{background:var(--tn-surface);b
 
 /* Founders remains a primary navigation destination. */
 .tn-home .tc-nav a[href$="/founders/"],.tn-detail-page .tc-nav a[href$="/founders/"]{font-weight:780;color:var(--tn-accent)}
+
+
+/* Visible BASIC/PLUS distinctions in the ClubDisplay card on the TENNILO homepage. */
+.tn-home .tn-product-clubdisplay .tn-club-tiers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:12px 0 0}
+.tn-home .tn-product-clubdisplay .tn-club-tiers>span{display:flex;flex-direction:column;gap:3px;min-width:0;background:var(--tn-soft);border:1px solid var(--tn-border);border-radius:7px;padding:8px 9px}
+.tn-home .tn-product-clubdisplay .tn-club-tiers>span:last-child{border-color:var(--tn-accent)}
+.tn-home .tn-product-clubdisplay .tn-club-tiers strong{font-size:11px;color:var(--tn-navy);letter-spacing:.04em}
+.tn-home .tn-product-clubdisplay .tn-club-tiers small{font-size:10px;line-height:1.35;color:var(--tn-muted)}
+.tn-home .tn-product-clubdisplay .tn-club-tiers-links{display:flex;flex-wrap:wrap;gap:5px 13px;margin-top:12px}
+.tn-home .tn-product-clubdisplay .tn-club-tiers-links a{font-size:11px;font-weight:730;text-decoration:none;color:var(--tn-accent)}
+.tn-home .tn-product-clubdisplay .tn-club-tiers-links a:hover{text-decoration:underline}

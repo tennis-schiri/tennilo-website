@@ -1,3 +1,5 @@
+public/assets/tennilo-clubdisplay-produktdatenblatt-basic-plus.pdf
+public/assets/tennilo-clubdisplay-funktionsuebersicht.pdf
 public/assets/tn-overview-score.png
 public/assets/tn-overview-clubdisplay.png
 public/assets/tn-overview-tournament.png

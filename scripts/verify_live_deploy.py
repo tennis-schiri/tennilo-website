@@ -52,10 +52,25 @@ def verify_site():
             if '<details class="tc-nav-products' not in details:
                 raise RuntimeError(f"{lang}: detail page navigation missing: {product}")
 
+        if 'class="tn-club-tiers"' not in homepage:
+            raise RuntimeError(f"{lang}: BASIC/PLUS teaser missing from homepage")
+        clubdisplay = retrieve(f"{prefix}/clubdisplay/").decode("utf-8")
+        if "cd-datasheet-grid" not in clubdisplay or "cd-compare-table" not in clubdisplay:
+            raise RuntimeError(f"{lang}: ClubDisplay comparison / PDF cards not live")
+        if "window.print()" in clubdisplay:
+            raise RuntimeError(f"{lang}: obsolete print-data-sheet button is still live")
         founders = retrieve(f"{prefix}/founders/").decode("utf-8")
         for product in ("Score", "Tournament", "Umpire", "ClubDisplay"):
             if f"<h3>TENNILO {product}</h3>" not in founders:
                 raise RuntimeError(f"{lang}: founders project missing: {product}")
+
+    for document in (
+        "tennilo-clubdisplay-produktdatenblatt-basic-plus.pdf",
+        "tennilo-clubdisplay-funktionsuebersicht.pdf",
+    ):
+        content = retrieve(f"/assets/{document}")
+        if not content.startswith(b"%PDF-") or len(content) < 25000:
+            raise RuntimeError(f"{document}: published PDF is missing or invalid")
 
     for product in PRODUCTS:
         badge = Image.open(io.BytesIO(retrieve(f"/assets/tn-overview-{product}.png")))

@@ -231,3 +231,41 @@ test('ClubDisplay BASIC/PLUS matrix is readable and retains agreed launch scope 
   for(const name of ['BASIC','PLUS','eBuSy','nuLiga'])assert.ok(section.includes(name),lang+' '+name);
  }
 });
+
+
+test('TENNILO homepage clearly links to BASIC/PLUS and the genuine original ClubDisplay PDFs',()=>{
+ const files=['public/index.html','public/en/index.html'];
+ for(const file of files){
+  const html=load(file);
+  const marker=html.indexOf('class="tn-product tn-product-clubdisplay"');
+  assert.ok(marker>0);
+  const card=html.slice(marker,html.indexOf('</article>',marker));
+  assert.match(card,/class="tn-club-tiers"/);
+  assert.match(card,/clubdisplay\/#pakete/);
+  assert.ok(card.includes('tennilo-clubdisplay-produktdatenblatt-basic-plus.pdf'));
+  assert.ok(html.includes('home-overview.css?v=5'));
+ }
+});
+
+test('ClubDisplay data sheets are actual standalone PDFs, not a printout of the web page',()=>{
+ const docs=[
+  'public/assets/tennilo-clubdisplay-produktdatenblatt-basic-plus.pdf',
+  'public/assets/tennilo-clubdisplay-funktionsuebersicht.pdf'
+ ];
+ for(const file of docs){
+  assert.ok(manifest.has(file),file+' missing in deploy manifest');
+  const bytes=fs.readFileSync(path.join(root,file));
+  assert.equal(bytes.subarray(0,5).toString('ascii'),'%PDF-',file+' must contain PDF bytes');
+  assert.ok(bytes.length>25000,file+' too small');
+ }
+ for(const lang of ['de','en']){
+  const html=source(lang,'clubdisplay');
+  assert.ok(html.indexOf('<section id="pakete"')<html.indexOf('<section id="funktionen"'),lang+' comparison should appear first');
+  assert.ok(html.includes('cd-datasheet-grid'),lang+' PDF cards missing');
+  assert.doesNotMatch(html,/window\.print\(\)/,lang+' browser print must not be used as PDF');
+  for(const file of docs){
+   assert.ok(html.includes('href="/'+file.slice('public/'.length)+'"'),lang+' missing PDF link '+file);
+  }
+  assert.ok(html.includes('product-pages.css?v=3'));
+ }
+});
