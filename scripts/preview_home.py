@@ -50,7 +50,7 @@ try:
             page.locator(".tn-product").first.wait_for()
             page.screenshot(path=str(OUT / f"{label}.jpg"), type="jpeg", quality=76)
             if language == "" and width == 1440:
-                for section in ["projekte", "clubdisplay", "funktionen", "einblicke"]:
+                for section in ["founders", "projekte"]:
                     item = page.locator("#" + section)
                     # Native lazy-loading is asynchronous; ensure images are
                     # decoded before evaluating screenshots of the whole section.
@@ -79,7 +79,7 @@ try:
         )
         dark_page = dark.new_page()
         dark_page.goto(f"{base_url}/", wait_until="load")
-        dark_page.locator(".tn-hero-visual").wait_for()
+        dark_page.locator(".tn-founders-feature").wait_for()
         assert dark_page.evaluate("document.documentElement.getAttribute('data-theme')") == "dark"
         dark_page.screenshot(path=str(OUT / "home-dark.jpg"), type="jpeg", quality=76)
         for img in dark_page.locator("#projekte img").all():
@@ -89,6 +89,17 @@ try:
         dark_page.locator("#projekte").screenshot(path=str(OUT / "products-dark.jpg"),
                                                   type="jpeg", quality=76, animations="disabled")
         dark.close()
+        for lang, prefix in [("de", ""), ("en", "en/")]:
+            for slug in ("score", "clubdisplay", "tournament", "umpire"):
+                detail = browser.new_context(viewport={"width": 1280, "height": 900},
+                                             reduced_motion="reduce", color_scheme="light")
+                page = detail.new_page()
+                response = page.goto(f"{base_url}/{prefix}{slug}/", wait_until="load")
+                assert response and response.status == 200, f"Missing {lang} {slug} detail page"
+                page.locator(".tn-page-hero").wait_for()
+                if lang == "de":
+                    page.screenshot(path=str(OUT / f"product-{slug}.jpg"), type="jpeg", quality=75)
+                detail.close()
         browser.close()
 finally:
     server.shutdown()

@@ -87,3 +87,13 @@ public/en/clubdisplay/index.html
 public/assets/clubdisplay-product.css
 public/assets/clubdisplay.png
 public/assets/professional-home.css
+public/assets/home-overview.css
+public/assets/product-pages.css
+public/score/index.html
+public/en/score/index.html
+public/tournament/index.html
+public/en/tournament/index.html
+public/umpire/index.html
+public/en/umpire/index.html
+public/updates/index.html
+public/en/updates/index.html

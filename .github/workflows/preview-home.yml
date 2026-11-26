@@ -9,6 +9,13 @@ on:
       - 'public/index.html'
       - 'public/en/index.html'
       - 'public/assets/professional-home.css'
+      - 'public/assets/home-overview.css'
+      - 'public/assets/product-pages.css'
+      - 'public/score/**'
+      - 'public/clubdisplay/**'
+      - 'public/tournament/**'
+      - 'public/umpire/**'
+      - 'public/updates/**'
 permissions:
   contents: write
 jobs:
