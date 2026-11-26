@@ -13,6 +13,7 @@ public/assets/tennilo-tournament-logo.png
 public/assets/tennilo-score-logo.png
 public/assets/score-home.css
 public/assets/site-interactions.js
+public/assets/product-navigation.css
 public/assets/score-creative.css
 public/assets/court-edition.css
 public/assets/score-demo.js

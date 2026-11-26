@@ -164,3 +164,36 @@ test('All four overview logos are approved, transparent and consistently sized',
   assert.doesNotMatch(html,/src="\/assets\/tennilo-(?:score|tournament|umpire)-cutout(?:-dark)?\.png"/);
  }
 });
+
+
+test('Clickable products dropdown lists all four localised product pages',()=>{
+ const css=load('public/assets/product-navigation.css');
+ const js=load('public/assets/site-interactions.js');
+ assert.ok(manifest.has('public/assets/product-navigation.css'));
+ assert.match(css,/\.tc-nav \.tc-nav-products\[open\]/);
+ assert.match(css,/@media\(max-width:1180px\)/);
+ assert.match(js,/closeProducts/);
+ for(const file of allPages){
+  const html=load(file);
+  const en=file.startsWith('public/en/');
+  const nav=html.match(/<nav class="nl-nav tc-nav"[\s\S]*?<\/nav>/)?.[0];
+  assert.ok(nav,'Navigation missing on '+file);
+  assert.match(nav,/<details class="tc-nav-products/);
+  assert.ok(nav.includes('<summary>'+(en?'Products':'Produkte')),'Summary missing on '+file);
+  assert.ok(html.includes('href="/assets/product-navigation.css?v=1"'),file);
+  for(const slug of products)
+   assert.ok(nav.includes('href="'+(en?'/en':'')+'/'+slug+'/"'),file+' dropdown missing '+slug);
+ }
+});
+
+test('Detail pages feature exactly the same approved product badges as homepage',()=>{
+ for(const lang of ['de','en']){
+  for(const slug of products){
+   const html=source(lang,slug);
+   assert.match(html,/class="tn-page-art tn-page-art-badge"/);
+   assert.ok(html.includes('src="/assets/tn-overview-'+slug+'.png"'),lang+' '+slug);
+   assert.ok(home[lang].includes('src="/assets/tn-overview-'+slug+'.png"'));
+   assert.ok(!html.includes('tn-page-logo-dark'),'Old theme-specific cutout on '+slug);
+  }
+ }
+});
