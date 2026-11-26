@@ -80,6 +80,9 @@ try:
         dark_page.locator(".tn-hero-visual").wait_for()
         assert dark_page.evaluate("document.documentElement.getAttribute('data-theme')") == "dark"
         dark_page.screenshot(path=str(OUT / "home-dark.jpg"), type="jpeg", quality=76)
+        for img in dark_page.locator("#projekte img").all():
+            img.scroll_into_view_if_needed()
+            img.evaluate("(el) => el.decode().catch(() => {})")
         dark_page.locator("#projekte").screenshot(path=str(OUT / "products-dark.jpg"),
                                                   type="jpeg", quality=76, animations="disabled")
         dark.close()
