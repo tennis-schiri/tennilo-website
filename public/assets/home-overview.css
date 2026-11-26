@@ -64,35 +64,38 @@ html[data-theme="dark"] .tn-home .newsletter-form{background:var(--tn-surface);b
  .tn-home-bottom{padding:48px 0 60px}
 }
 
-/* Original framed TENNILO product badges, normalized across product cards. */
+/* Identically sized transparent original plate logos – no rectangular image corners. */
 .tn-home .tn-product-art.tn-product-art-badge{
- display:flex;justify-content:center;align-items:center;width:100%;max-width:100%;
- height:118px;min-height:118px;padding:3px;overflow:hidden;background:transparent;
- border:0;border-radius:10px;margin:12px 0 14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  max-width:100%;
+  height:118px;
+  min-height:118px;
+  padding:0;
+  overflow:visible;
+  background:transparent;
+  border:0;
+  margin:12px 0 14px;
 }
 .tn-home .tn-product-art.tn-product-art-badge>img{
- display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center;
-}
-.tn-home .tn-product-art.tn-product-art-clubdisplay{
- gap:10px;background:linear-gradient(125deg,#031e2e,#102d42);
- border:2px solid #00d4dc;border-radius:12px;padding:12px;
- box-shadow:inset 0 0 0 3px rgba(255,255,255,.12);
-}
-.tn-home .tn-product-art.tn-product-art-clubdisplay>img{
- width:68px;height:68px;max-width:68px;max-height:68px;flex:0 0 68px;
-}
-.tn-home .tn-product-badge-label{
- display:flex;flex-direction:column;gap:2px;min-width:0;line-height:1.12;color:#fff;
-}
-.tn-home .tn-product-badge-label small{
- font-size:11px;letter-spacing:.12em;color:#d9edf8;font-weight:750;
-}
-.tn-home .tn-product-badge-label strong{
- font-size:clamp(15px,1.5vw,19px);letter-spacing:-.035em;color:#43e0e7;font-weight:750;
+  display:block;
+  width:100%;
+  height:auto;
+  max-width:100%;
+  max-height:105px;
+  object-fit:contain;
+  object-position:center;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  filter:none;
 }
 @media(max-width:680px){
- .tn-home .tn-product-art.tn-product-art-badge{height:124px;min-height:124px}
- .tn-home .tn-product-badge-label strong{font-size:22px}
+  .tn-home .tn-product-art.tn-product-art-badge{height:124px;min-height:124px}
+  .tn-home .tn-product-art.tn-product-art-badge>img{max-height:114px}
 }
+
 /* Founders remains a primary navigation destination. */
 .tn-home .tc-nav a[href$="/founders/"],.tn-detail-page .tc-nav a[href$="/founders/"]{font-weight:780;color:var(--tn-accent)}

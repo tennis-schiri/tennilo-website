@@ -1,3 +1,7 @@
+public/assets/tn-overview-score.png
+public/assets/tn-overview-clubdisplay.png
+public/assets/tn-overview-tournament.png
+public/assets/tn-overview-umpire.png
 public/assets/tennilo-score-badge.png
 public/assets/tennilo-clubdisplay-badge.png
 public/assets/styles.css

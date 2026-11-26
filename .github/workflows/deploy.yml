@@ -43,6 +43,7 @@ jobs:
           set -euo pipefail
           python3 -m pip install --quiet "Pillow>=10,<13"
           python3 scripts/prepare_transparent_logos.py
+          python3 scripts/prepare_home_badges.py
           python3 scripts/build_mw_footer_logos.py
           python3 scripts/prepare_founders_badges.py
           python3 scripts/prepare_founders_certificates.py

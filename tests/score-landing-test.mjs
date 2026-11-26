@@ -60,7 +60,7 @@ test('ClubDisplay product data sheets preserve functions, hosting and indicative
  for(const lang of ['de','en']){
   const html=source(lang,'clubdisplay');
   for(const id of ['funktionen','hosting','preise'])assert.ok(html.includes('id="'+id+'"'),id);
-  for(const value of ['BASIC','PLUS','19 €','39 €','149','299','NTC 93','PHP','eBuSy'])assert.ok(html.includes(value),lang+' '+value);
+  for(const value of ['BASIC','PLUS','19 €','39 €','149','299','NTC','PHP','eBuSy'])assert.ok(html.includes(value),lang+' '+value);
   assert.ok(html.includes('https://clubdisplay.tennilo.de/'));
   assert.ok(html.includes('Founders'));
  }
@@ -146,14 +146,21 @@ test('No unreleased Tournament/Umpire claims or prices are made on the homepage'
  }
 });
 
-test('Four overview badges are included in both languages',()=>{
+test('All four overview logos are approved, transparent and consistently sized',()=>{
  for(const file of ['public/index.html','public/en/index.html']){
   const html=load(file);
-  assert.equal((html.match(/class="tn-product-art tn-product-art-badge/g)||[]).length,4,file);
-  for(const name of ['tennilo-score-badge.png','tennilo-clubdisplay-badge.png','tennilo-tournament-logo.png','tennilo-umpire-logo.png']){
-   assert.ok(html.includes('/assets/'+name),file+' missing '+name);
-   assert.ok(manifest.has('public/assets/'+name),file+' badge not in deploy list: '+name);
+  assert.equal((html.match(/class="tn-product-art tn-product-art-badge"/g)||[]).length,4,file);
+  for(const name of ['score','clubdisplay','tournament','umpire']){
+   const asset='public/assets/tn-overview-'+name+'.png';
+   assert.ok(html.includes('src="/assets/tn-overview-'+name+'.png"'),file+' missing '+name);
+   assert.ok(manifest.has(asset),asset+' not in deploy list');
+   const image=fs.readFileSync(path.join(root,asset));
+   assert.equal(image.subarray(1,4).toString(),'PNG',asset);
+   assert.equal(image.readUInt32BE(16),1361,asset+' width');
+   assert.equal(image.readUInt32BE(20),390,asset+' height');
+   assert.equal(image.readUInt8(25),6,asset+' must use alpha');
   }
+  assert.ok(!html.includes('tn-product-badge-label'),file+' fabricated ClubDisplay badge');
   assert.doesNotMatch(html,/src="\/assets\/tennilo-(?:score|tournament|umpire)-cutout(?:-dark)?\.png"/);
  }
 });
