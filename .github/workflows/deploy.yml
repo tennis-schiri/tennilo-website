@@ -187,7 +187,7 @@ jobs:
           urls = {
               "de": f"{root}/?deploy_check={build}",
               "en": f"{root}/en/?deploy_check={build}",
-              "logo": f"{root}/assets/tennilo-tournament-cutout.png?deploy_check={build}",
+              "logo": f"{root}/assets/tn-overview-tournament.png?deploy_check={build}",
               "founders_de": f"{root}/founders/?deploy_check={build}",
               "founders_en": f"{root}/en/founders/?deploy_check={build}",
           }
@@ -209,9 +209,16 @@ jobs:
                   for lang, content in (("DE", german), ("EN", english)):
                       if "TENNILO®" in content or "TENNILO (R)" in content:
                           raise RuntimeError(f"{lang}: Unerwünschtes Markenzeichen noch live")
-                      if "tennilo-tournament-cutout.png" not in content:
-                          raise RuntimeError(f"{lang}: Freigestelltes Logo nicht im Live-HTML")
-                      if "transparent-logos.css" not in content:
+                      if "tn-overview-tournament.png" not in content:
+                          raise RuntimeError(f"{lang}: Produkt-Badge fehlt im Live-HTML")
+                      if '<details class="tc-nav-products' not in content:
+                  raise RuntimeError(f"{lang}: Aufklappbares Produktmenü fehlt")
+              for product in ("score", "clubdisplay", "tournament", "umpire"):
+                  if f'tn-overview-{product}.png' not in content:
+                      raise RuntimeError(f"{lang}: Produktlogo fehlt: {product}")
+              if "product-navigation.css" not in content:
+                  raise RuntimeError(f"{lang}: Navigations-Stylesheet fehlt")
+              if "transparent-logos.css" not in content:
                           raise RuntimeError(f"{lang}: Transparenz-Stylesheet fehlt")
                   for lang, key in (("DE", "founders_de"), ("EN", "founders_en")):
                       founders = retrieve(urls[key]).decode("utf-8")
@@ -221,10 +228,10 @@ jobs:
                   logo = Image.open(io.BytesIO(retrieve(urls["logo"]))).convert("RGBA")
                   alpha = logo.getchannel("A")
                   if logo.size != (1361, 390) or alpha.getextrema()[0] != 0:
-                      raise RuntimeError("Live-Tournament-Logo hat keine echte Transparenz")
+                      raise RuntimeError("Live-Tournament-Badge hat keine echte Transparenz")
                   if logo.getpixel((0, 0))[3] != 0:
-                      raise RuntimeError("Live-Tournament-Logo hat eine deckende Ecke")
-                  print("Live-Prüfung erfolgreich: DE/EN ohne ®, transparentes TT04-PNG ist erreichbar.")
+                      raise RuntimeError("Live-Tournament-Badge hat eine deckende Ecke")
+                  print("Live-Prüfung erfolgreich: DE/EN ohne ®, Produktmenü und transparente Badges sind erreichbar.")
                   break
               except Exception as exc:
                   error = exc
