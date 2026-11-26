@@ -16,7 +16,17 @@ const pages=[
  ['public/impressum.html','de','https://tennilo.de/impressum.html'],
  ['public/en/imprint.html','en','https://tennilo.de/en/imprint.html'],
  ['public/datenschutz.html','de','https://tennilo.de/datenschutz.html'],
- ['public/en/privacy.html','en','https://tennilo.de/en/privacy.html']
+ ['public/en/privacy.html','en','https://tennilo.de/en/privacy.html'],
+ ['public/score/index.html','de','https://tennilo.de/score/'],
+ ['public/en/score/index.html','en','https://tennilo.de/en/score/'],
+ ['public/clubdisplay/index.html','de','https://tennilo.de/clubdisplay/'],
+ ['public/en/clubdisplay/index.html','en','https://tennilo.de/en/clubdisplay/'],
+ ['public/tournament/index.html','de','https://tennilo.de/tournament/'],
+ ['public/en/tournament/index.html','en','https://tennilo.de/en/tournament/'],
+ ['public/umpire/index.html','de','https://tennilo.de/umpire/'],
+ ['public/en/umpire/index.html','en','https://tennilo.de/en/umpire/'],
+ ['public/updates/index.html','de','https://tennilo.de/updates/'],
+ ['public/en/updates/index.html','en','https://tennilo.de/en/updates/']
 ];
 
 test('DE/EN pages have correct canonical links and hreflang',()=>{
@@ -37,7 +47,7 @@ test('DE/EN pages have correct canonical links and hreflang',()=>{
 test('English version fully represents the professional TENNILO homepage',()=>{
  const ids=page=>[...page.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
  assert.deepEqual(ids(german),ids(english),'German and English IDs must match');
- for(const value of ['Better tools. More time for tennis.','Apple Watch','Bad Saarow','Tournament','Umpire','Spring 2027'])assert.ok(english.includes(value),value);
+ for(const value of ['Digital tools for better tennis.','Four products.','Tournament','Umpire','Founders'])assert.ok(english.includes(value),value);
  assert.match(english,/action="\/newsletter\.php"/);
  assert.ok(english.includes('href="/en/founders/"'));
  assert.equal((english.match(/<form\b/g)||[]).length,1);
@@ -105,6 +115,10 @@ test('MW design credit is included on both landing pages and all legal pages',()
 test('Professional product links stay within their correct language',()=>{
  assert.match(german,/href="\/clubdisplay\/"/);
  assert.match(english,/href="\/en\/clubdisplay\/"/);
- assert.equal((german.match(/href="#newsletter">Updates abonnieren/g)||[]).length,2);
- assert.equal((english.match(/href="#newsletter">Get product updates/g)||[]).length,2);
+ for(const slug of ['score','clubdisplay','tournament','umpire']){
+  assert.ok(german.includes('href="/'+slug+'/"'));
+  assert.ok(english.includes('href="/en/'+slug+'/"'));
+ }
+ assert.ok(german.includes('href="/updates/"'));
+ assert.ok(english.includes('href="/en/updates/"'));
 });

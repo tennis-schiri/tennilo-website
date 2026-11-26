@@ -3,39 +3,31 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
-
 const root=path.resolve(import.meta.dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const de=read('public/index.html');
 const en=read('public/en/index.html');
-const css=read('public/assets/court-edition.css');
 const source=read('public/assets/score-demo.js');
-
-test('Professional product-led homepage keeps interactive features and all original product brands',()=>{
- for(const html of [de,en]){
-  for(const token of ['tn-hero-grid','tn-product-grid','tn-product-score','tn-product-club','tn-product-tournament','tn-product-umpire','tn-club-grid','tn-score-grid','tn-milestone-grid','tc-news-list','tn-newsletter','tc-founders-teaser','professional-home.css'])assert.ok(html.includes(token),token);
-  for(const obsolete of ['court-edition.css?v=1','score-gallery.css?v=1','tc-hero-bottom','tc-ball','tc-outro','tc-beta-ticket'])assert.ok(!html.includes(obsolete),obsolete+' remains');
-  for(const asset of ['tennilo-logo.png','tennilo-score-cutout.png','tennilo-tournament-cutout.png','tennilo-umpire-cutout.png','clubdisplay.png'])assert.ok(html.includes(asset),asset);
-  assert.equal((html.match(/class="tn-product tn-product-/g)||[]).length,4,'Exactly four distinct product cards');
-  assert.equal((html.match(/data-add-point=/g)||[]).length,2,'Interactive scorer must remain usable');
+test('Founders is prominent and all four products are linked to dedicated pages',()=>{
+ const css=read('public/assets/home-overview.css');
+ for(const [lang,html] of [['de',de],['en',en]]){
+  const prefix=lang==='de'?'':'/en';
+  assert.match(html,/class="tn-founders-focus"/);
+  assert.ok(html.indexOf('id="founders"')<html.indexOf('id="projekte"'));
+  assert.match(html,/tennilo-founders-tf12-light.png/);
+  assert.match(html,/tennilo-founders-tf12-dark.png/);
+  for(const slug of ['score','clubdisplay','tournament','umpire'])assert.ok(html.includes('href="'+prefix+'/'+slug+'/"'),slug);
  }
- const home=read('public/assets/professional-home.css');
- for(const selector of ['.tn-hero-grid','.tn-product-grid','.tn-club-grid','.tn-score-grid','.tn-milestone-grid','.tc-gallery-grid','.tn-newsletter'])assert.ok(home.includes(selector),selector);
- for(const breakpoint of ['@media(max-width:1180px)','@media(max-width:900px)','@media(max-width:680px)'])assert.ok(home.includes(breakpoint),breakpoint);
- assert.ok(home.includes('html[data-theme="dark"]'));
- assert.ok(home.includes('@media(prefers-reduced-motion:reduce)'));
-});
-
-test('Compact Founders teaser and separate campaign retain legibility and both themes',()=>{
- const campaign=read('public/assets/founders-campaign.css');
- assert.match(campaign,/\.tc-home \.tc-founders-teaser\{background:#f0e6d2;color:#071f32/);
- assert.match(campaign,/html\[data-theme="dark"\] \.tc-home \.tc-founders-teaser\{background:#25262b;color:#eff8ff/);
- assert.match(campaign,/\.tf-page \.founders-form label\{[^}]*color:var\(--tf-ink\)/);
- assert.match(campaign,/\.tf-page \.founders-form input\[type=email\],/);
- assert.match(css,/@media\(max-width:680px\)/);
- assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
+ assert.match(css,/\.tn-founders-feature\{display:grid/);
+ assert.match(css,/html\[data-theme="dark"\] \.tn-home \.tn-founders-focus/);
  assert.ok(read('public/founders/index.html').includes('Gemeinsam mehr'));
  assert.ok(read('public/en/founders/index.html').includes('Make more'));
+});
+test('The score counting logic remains available only on the separate product page',()=>{
+ assert.doesNotMatch(de,/data-add-point/);
+ assert.doesNotMatch(en,/data-add-point/);
+ assert.match(read('public/score/index.html'),/data-add-point="0"/);
+ assert.match(read('public/en/score/index.html'),/data-add-point="1"/);
 });
 
 function setup(lang='de'){

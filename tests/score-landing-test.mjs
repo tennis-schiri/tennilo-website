@@ -2,137 +2,146 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-
 const root=path.resolve(import.meta.dirname,'..');
 const load=p=>fs.readFileSync(path.join(root,p),'utf8');
-const de=load('public/index.html');
-const en=load('public/en/index.html');
-const css=load('public/assets/professional-home.css');
-const behavior=load('public/assets/site-interactions.js');
 const manifest=new Set(load('deploy-files.txt').trim().split(/\r?\n/));
+const home={de:load('public/index.html'),en:load('public/en/index.html')};
+const source=(lang,slug)=>load('public/'+(lang==='en'?'en/':'')+slug+'/index.html');
+const products=['score','clubdisplay','tournament','umpire'];
+const allPages=['public/index.html','public/en/index.html','public/score/index.html','public/en/score/index.html',
+'public/clubdisplay/index.html','public/en/clubdisplay/index.html',
+'public/tournament/index.html','public/en/tournament/index.html',
+'public/umpire/index.html','public/en/umpire/index.html',
+'public/updates/index.html','public/en/updates/index.html'];
 
-test('Score is the lead product under the TENNILO umbrella; milestones are accurate',()=>{
- for(const [html,language] of [[de,'de'],[en,'en']]){
-  assert.ok(html.indexOf('id="score"')<html.indexOf('id="projekte"'));
-  for(const name of ['TENNILO Score','TENNILO Tournament','TENNILO Umpire','Apple Watch','Bad Saarow'])assert.ok(html.includes(name),name+' '+language);
-  assert.match(html,/tennilo-score-cutout\.png/);
-  assert.match(html,/tennilo-tournament-cutout\.png/);
-  assert.match(html,/tennilo-umpire-cutout\.png/);
-  assert.ok(!/app\.tennis-schiri\.de|score\.tennilo\.de|testseite|test-site/i.test(html));
- }
- assert.match(de,/27\.12\.2026/);
- assert.match(en,/DEC 27, 2026/);
- assert.match(de,/Keine festgelegte Höchstzahl an Testern/);
- assert.match(en,/No fixed tester limit/);
- assert.match(de,/kostenlos/);
- assert.match(en,/free of charge/);
-});
-
-test('Homepage retains newsletter; Founders registration lives on the campaign page',()=>{
- for(const [html,language,url] of [[de,'de','/founders/'],[en,'en','/en/founders/']]){
-  assert.match(html,/<form method="post" action="\/newsletter\.php" class="newsletter-form">/);
-  assert.doesNotMatch(html,/action="\/founders\.php"/);
-  assert.equal((html.match(/<form\b/g)||[]).length,1,language);
-  assert.ok(html.includes('id="newsletter-email"'));
+test('Homepage is a concise overview with four independently linked products',()=>{
+ for(const [lang,html] of Object.entries(home)){
+  const prefix=lang==='en'?'/en':'';
+  assert.match(html,/class="tn-overview-hero"/);
+  assert.match(html,/class="tn-founders-focus"/);
+  assert.match(html,/class="tn-product-grid"/);
+  assert.equal((html.match(/<article class="tn-product tn-product-/g)||[]).length,4);
+  assert.ok(html.indexOf('id="founders"')<html.indexOf('id="projekte"'));
+  assert.ok(html.includes('href="'+prefix+'/founders/"'));
+  for(const slug of products)assert.ok(html.includes('href="'+prefix+'/'+slug+'/"'),slug+' detail link');
+  assert.ok(html.includes('href="'+prefix+'/updates/"'));
+  assert.ok(!html.includes('id="funktionen"'),'Detailed features must not occupy homepage');
+  assert.ok(!html.includes('id="einblicke"'),'Score screenshots belong to score page');
+  assert.ok(!html.includes('id="meilensteine"'),'Roadmap belongs to score page');
+  assert.ok(!html.includes('data-demo'),'Interactive demo belongs to score page');
+  assert.equal((html.match(/<form\b/g)||[]).length,1);
+  assert.match(html,/action="\/newsletter\.php"/);
   assert.match(html,/name="consent" value="yes" required/);
-  const link=language==='en'?'/en/privacy.html':'/datenschutz.html';
-  assert.ok(html.includes(link+'#newsletter-datenschutz'));
-  assert.ok(html.includes('href="'+url+'"'));
-  assert.ok(html.indexOf('id="founders"')<html.indexOf('id="score"'));
-  assert.doesNotMatch(html,/Founding Premium Partner|Founding Partner|Club Plus|founder-email/);
+  assert.ok(html.includes(lang==='de'?'/datenschutz.html#newsletter-datenschutz':'/en/privacy.html#newsletter-datenschutz'));
  }
- assert.equal((en.match(/name="lang" value="en"/g)||[]).length,1);
 });
 
-test('All deployed local assets exist and all local links are valid',()=>{
- for(const html of [de,en]){
+test('Score detail preserves beta facts, interactive demo, authentic screenshots and roadmap',()=>{
+ for(const lang of ['de','en']){
+  const html=source(lang,'score');
+  assert.ok(html.includes('data-demo'));
+  for(const value of ['data-add-point="0"','data-add-point="1"','data-demo-reset','id="funktionen"','id="einblicke"','id="meilensteine"','Apple Watch','Bad Saarow'])assert.ok(html.includes(value),value+' '+lang);
+  for(const name of ['score-demo-watch.png','score-demo-phone.png','score-demo-scoreboard.png']){
+    assert.ok(html.includes(name),name);
+    assert.ok(manifest.has('public/assets/'+name));
+  }
+  assert.match(html,/27\.12\.2026|DEC 27, 2026/);
+  assert.ok(html.includes(lang==='de'?'kostenlos':'free of charge'));
+  assert.ok(html.includes('score-demo.js?v=1'));
+ }
+ for(const name of ['watch','phone','scoreboard']){
+  const img=fs.readFileSync(path.join(root,'public/assets','score-demo-'+name+'.png'));
+  assert.equal(img.subarray(1,4).toString(),'PNG');
+  assert.equal(img.readUInt8(25),6,'Screenshot must have alpha channel');
+ }
+});
+
+test('ClubDisplay product data sheets preserve functions, hosting and indicative pricing',()=>{
+ for(const lang of ['de','en']){
+  const html=source(lang,'clubdisplay');
+  for(const id of ['funktionen','hosting','preise'])assert.ok(html.includes('id="'+id+'"'),id);
+  for(const value of ['BASIC','PLUS','19 €','39 €','149','299','NTC 93','PHP','eBuSy'])assert.ok(html.includes(value),lang+' '+value);
+  assert.ok(html.includes('https://clubdisplay.tennilo.de/'));
+  assert.ok(html.includes('Founders'));
+ }
+});
+
+test('Tournament and Umpire have distinct detailed product concepts in both languages',()=>{
+ for(const lang of ['de','en']){
+  for(const slug of ['tournament','umpire']){
+   const html=source(lang,slug);
+   assert.match(html,/class="tn-page-hero"/);
+   assert.ok(html.includes('id="funktionen"'));
+   assert.ok(html.includes('id="stand"'));
+   assert.equal((html.match(/class="tn-detail-card"/g)||[]).length,9,slug+' must include six feature and three audience cards');
+   assert.equal((html.match(/class="tn-detail-step"/g)||[]).length,3);
+   assert.ok(html.includes('href="'+(lang==='en'?'/en':'')+'/founders/"'));
+   assert.match(html,/Concept|Konzeption|Entwicklung|development/);
+  }
+ }
+ assert.match(source('de','tournament'),/Schleifchenformate/);
+ assert.match(source('de','umpire'),/Scoreboards/);
+ assert.match(source('en','tournament'),/doubles/);
+ assert.match(source('en','umpire'),/scoreboards/);
+});
+
+test('Latest updates are moved to standalone bilingual pages, newest first',()=>{
+ for(const lang of ['de','en']){
+  const html=source(lang,'updates');
+  const news=html.split('<div class="tc-news-list">')[1];
+  assert.ok(news,'News list missing');
+  assert.deepEqual([...news.matchAll(/<time datetime="([^"]+)">/g)].map(m=>m[1]),
+    ['2026-11-25','2026-11-09','2026-11-09','2026-11-07']);
+  assert.ok(news.includes('TENNILO ClubDisplay BASIC'));
+  assert.ok(news.includes('href="'+(lang==='en'?'/en':'')+'/clubdisplay/"'));
+ }
+});
+
+test('All overview and product links resolve, assets are deployable, ids are unique',()=>{
+ for(const file of allPages){
+  const html=load(file);assert.ok(manifest.has(file),file+' missing from deploy manifest');
   for(const m of html.matchAll(/(?:href|src)="(\/assets\/[^"?#]+|\/favicon\.png)/g)){
-   const relative='public'+m[1];
-   assert.ok(fs.existsSync(path.join(root,relative)),relative);
-   assert.ok(manifest.has(relative),relative+' not in FTP manifest');
+   const asset='public'+m[1];
+   assert.ok(fs.existsSync(path.join(root,asset)),file+' missing asset '+asset);
+   assert.ok(manifest.has(asset),file+' asset not deployed: '+asset);
   }
   const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
-  assert.equal(new Set(ids).size,ids.length,'Duplicate ids');
-  for(const match of html.matchAll(/href="#([^"]+)"/g))assert.ok(ids.includes(match[1]),'Unresolved anchor #'+match[1]);
+  assert.equal(new Set(ids).size,ids.length,'Duplicate ids on '+file);
+  for(const match of html.matchAll(/href="#([^"]+)"/g))
+    assert.ok(ids.includes(match[1]),'Broken #'+match[1]+' on '+file);
+  assert.match(html,/href="\/assets\/professional-home\.css\?v=1"/,file);
+  assert.match(html,/href="\/assets\/(?:home-overview|product-pages)\.css\?v=1"/,file);
  }
- for(const file of ['public/index.html','public/en/index.html','public/assets/professional-home.css','public/assets/score-demo.js'])assert.ok(manifest.has(file));
+ const sitemap=load('public/sitemap.xml');
+ for(const slug of ['score','clubdisplay','tournament','umpire','updates']){
+  for(const prefix of ['','en/'])assert.ok(sitemap.includes('<loc>https://tennilo.de/'+prefix+slug+'/</loc>'),slug+' sitemap');
+ }
 });
 
-test('Sticky navigation, responsive menu and scroll-to-top remain functional',()=>{
+test('Responsive navigation, progress-to-top and theme toggle remain functional',()=>{
+ const css=load('public/assets/professional-home.css');
+ const overview=load('public/assets/home-overview.css');
+ const productCSS=load('public/assets/product-pages.css');
+ const js=load('public/assets/site-interactions.js');
+ const progress=load('public/assets/back-to-top.css');
  assert.match(css,/\.tc-header\{position:sticky;top:0/);
- assert.match(css,/@media\(max-width:1180px\)/);
  assert.match(css,/\.tc-nav\.nl-nav-open\{display:flex/);
- assert.match(css,/\.tc-backtop\.nl-back-to-top\.nl-visible\{/);
- assert.match(behavior,/classList\.toggle\('nl-visible',y>500\)/);
- assert.match(behavior,/scrollTo\(\{top:0,behavior:/);
- assert.match(behavior,/document\.documentElement\.lang/);
+ assert.match(css,/@media\(max-width:680px\)/);
+ assert.match(overview,/\.tn-founders-feature\{display:grid/);
+ assert.match(overview,/@media\(max-width:680px\)/);
+ assert.match(productCSS,/\.tn-detail-page \.tn-page-hero/);
+ assert.match(productCSS,/@media\(max-width:680px\)/);
+ assert.match(js,/classList\.toggle\('nl-visible',y>500\)/);
+ assert.match(js,/scrollTo\(\{top:0,behavior:/);
+ assert.match(progress,/conic-gradient\(from -90deg/);
+ for(const f of [...allPages,'public/impressum.html','public/datenschutz.html','public/en/imprint.html','public/en/privacy.html'])
+   assert.match(load(f),/class="[^"]*tc-progress-button/,'Scroll-to-top missing on '+f);
 });
 
-test('Animated scroll progress ring is present on DE/EN and legal pages',()=>{
- const animation=load('public/assets/back-to-top.css');
- for(const file of ['public/index.html','public/en/index.html','public/impressum.html','public/datenschutz.html','public/en/imprint.html','public/en/privacy.html']){
-  const html=load(file);
-  assert.match(html,/class="[^"]*tc-progress-button/,'Missing circular button in '+file);
-  assert.match(html,/back-to-top\.css\?v=1/,'Missing progress styles in '+file);
-  assert.match(html,/aria-label="(?:Nach oben|Zurück nach oben|Back to top)"/,file);
+test('No unreleased Tournament/Umpire claims or prices are made on the homepage',()=>{
+ for(const html of Object.values(home)){
+  assert.ok(html.includes('In Konzeption')||html.includes('Concept stage'));
+  assert.ok(!html.includes('19 €'),'Price detail belongs to ClubDisplay sheet');
+  assert.ok(!html.includes('STARTNEXT checkout'));
  }
- assert.match(animation,/conic-gradient\(from -90deg,var\(--tc-progress-fill\) var\(--nl-scroll-progress,0%\)/);
- assert.match(animation,/html\[data-theme="dark"\] body \.nl-back-to-top\.tc-progress-button/);
- assert.match(animation,/@media\(prefers-reduced-motion:reduce\)/);
- assert.match(behavior,/--nl-scroll-progress/);
- assert.match(behavior,/scrollTo\(\{top:0,behavior:/);
- assert.ok(manifest.has('public/assets/back-to-top.css'));
-});
-
-
-test('Updates are sorted newest first on DE and EN pages',()=>{
- for(const html of [de,en]){
-  const block=html.split('<div class="tc-news-list">')[1]?.split('</section>')[0];
-  assert.ok(block,'Updates section missing');
-  const dates=[...block.matchAll(/<time datetime="([^"]+)">/g)].map(m=>m[1]);
-  assert.deepEqual(dates,['2026-11-25','2026-11-09','2026-11-09','2026-11-07']);
-  const labels=[...block.matchAll(/<b aria-hidden="true">(\d+)<\/b>/g)].map(m=>m[1]);
-  assert.deepEqual(labels,['01','02','03','04']);
- }
-});
-
-
-test('Real Score prototype screenshots are presented in both languages',()=>{
- for(const html of [de,en]){
-  assert.match(html,/class="tc-gallery tn-gallery tc-section"/);
-  assert.ok(html.includes('professional-home.css?v=1'));
-  for(const name of ['score-demo-watch.png','score-demo-phone.png','score-demo-scoreboard.png']){
-   assert.ok(html.includes(name),name);
-   assert.ok(manifest.has('public/assets/'+name),name+' not deployed');
-   assert.ok(fs.statSync(path.join(root,'public/assets',name)).size>15000,name+' has no screenshot data');
-  }
-  assert.ok(html.includes('TENNILO Score'));
- }
-});
-
-test('Device gallery artwork has real transparent outer corners',()=>{
- const names=['watch','phone','scoreboard'];
- for(const name of names){
-  const file=fs.readFileSync(path.join(root,'public/assets','score-demo-'+name+'.png'));
-  assert.equal(file.subarray(1,4).toString(),'PNG');
-  assert.equal(file.readUInt8(25),6,name+' must be RGBA PNG');
-  assert.ok(file.length>25000,name+' must retain real detailed screen contents');
- }
-});
-
-test('Real device cutouts have transparent surroundings in the new home layout',()=>{
- const style=fs.readFileSync(path.join(root,'public/assets/professional-home.css'),'utf8');
- assert.match(style,/\.tc-gallery-visual img\{[^}]*background:transparent;box-shadow:none;border:0/);
- assert.match(style,/\.tn-device-composition\{/);
- assert.match(style,/\.tc-home \.tn-device-watch\{/);
- assert.match(style,/\.tc-home \.tn-device-phone\{/);
-});
-
-test('ClubDisplay availability announcement is published in DE and EN updates',()=>{
- const deUpdates=de.split('<div class="tc-news-list">')[1].split('</section>')[0];
- const enUpdates=en.split('<div class="tc-news-list">')[1].split('</section>')[0];
- assert.match(deUpdates,/TENNILO ClubDisplay BASIC – für 2026 geplant/);
- assert.match(deUpdates,/Marktstart ist noch für 2026 geplant/);
- assert.match(enUpdates,/TENNILO ClubDisplay BASIC – planned for 2026/);
- assert.match(enUpdates,/Launch is planned before the end of 2026/);
 });
