@@ -225,7 +225,7 @@ test('ClubDisplay BASIC/PLUS matrix is readable and retains agreed launch scope 
   assert.match(section,/class="cd-compare-table"/);
   assert.equal((section.match(/<tbody class="cd-compare-group">/g)||[]).length,6,lang+' group count');
   assert.equal((section.match(/<tr><th scope="row">/g)||[]).length,21,lang+' feature count');
-  assert.equal((section.match(/class="cd-compare-excluded"/g)||[]).length,12,lang+' PLUS-only features');
+  assert.equal((section.match(/class="cd-compare-excluded"/g)||[]).length,11,lang+' PLUS-only features');
   assert.ok(html.includes('href="/assets/clubdisplay-comparison.css?v=1"'));
   assert.ok(html.includes('href="#pakete"'));
   for(const name of ['BASIC','PLUS','eBuSy','nuLiga'])assert.ok(section.includes(name),lang+' '+name);
