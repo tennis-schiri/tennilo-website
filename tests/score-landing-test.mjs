@@ -211,3 +211,23 @@ test('Score concept demo uses the original Apple Watch controls, not the former 
   assert.ok(!html.includes('class="tc-demo-head"'),lang+' old rectangular score table');
  }
 });
+
+test('ClubDisplay BASIC/PLUS matrix is readable and retains agreed launch scope in both languages',()=>{
+ const css=load('public/assets/clubdisplay-comparison.css');
+ assert.ok(manifest.has('public/assets/clubdisplay-comparison.css'));
+ assert.match(css,/\.cd-compare-table/);
+ assert.match(css,/\.cd-compare-scroll/);
+ for(const lang of ['de','en']){
+  const html=source(lang,'clubdisplay');
+  const section=html.split('<section id="pakete"')[1]?.split('<section id="screenshots"')[0]||'';
+  assert.ok(section,lang+' missing feature matrix');
+  assert.match(section,/class="cd-compare-section"/);
+  assert.match(section,/class="cd-compare-table"/);
+  assert.equal((section.match(/<tbody class="cd-compare-group">/g)||[]).length,6,lang+' group count');
+  assert.equal((section.match(/<tr><th scope="row">/g)||[]).length,21,lang+' feature count');
+  assert.equal((section.match(/class="cd-compare-excluded"/g)||[]).length,12,lang+' PLUS-only features');
+  assert.ok(html.includes('href="/assets/clubdisplay-comparison.css?v=1"'));
+  assert.ok(html.includes('href="#pakete"'));
+  for(const name of ['BASIC','PLUS','eBuSy','nuLiga'])assert.ok(section.includes(name),lang+' '+name);
+ }
+});

@@ -1,0 +1,59 @@
+/* TENNILO ClubDisplay – BASIC / PLUS comparison. All existing feature mappings are retained. */
+.tn-detail-page .tn-club-sheet .cd-compare-section{padding:64px 0 70px}
+.tn-club-sheet .cd-compare-header{display:flex;justify-content:space-between;align-items:end;gap:25px;margin-bottom:26px}
+.tn-club-sheet .cd-compare-eyebrow{font-size:11px;letter-spacing:.13em;font-weight:800;color:var(--tn-accent);margin:0 0 10px}
+.tn-club-sheet .cd-compare-header h2{margin:0 0 13px;font-size:clamp(27px,3vw,39px);line-height:1.15}
+.tn-club-sheet .cd-compare-lead{max-width:740px;font-size:14px;line-height:1.7;color:var(--tn-muted);margin:0}
+.tn-club-sheet .cd-compare-price-link{display:inline-flex;align-items:center;gap:9px;white-space:nowrap;flex:0 0 auto;padding:10px 0;color:var(--tn-accent);text-decoration:none;font-size:13px;font-weight:740}
+.tn-club-sheet .cd-compare-price-link:hover{text-decoration:underline}
+.tn-club-sheet .cd-compare-plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:0 0 18px}
+.tn-club-sheet .cd-compare-plan{border:1px solid var(--tn-border);border-radius:9px;background:var(--tn-soft);padding:19px 22px;min-width:0}
+.tn-club-sheet .cd-compare-plan-plus{border-color:color-mix(in srgb,var(--tn-accent),var(--tn-border) 52%);background:var(--tn-surface);border-top:3px solid var(--tn-accent);padding-top:17px}
+.tn-club-sheet .cd-compare-plan-kicker{display:block;color:var(--tn-muted);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.tn-club-sheet .cd-compare-plan h3{margin:5px 0 7px;font-size:21px;color:var(--tn-navy);font-weight:780;letter-spacing:-.03em}
+.tn-club-sheet .cd-compare-plan-plus h3{color:var(--tn-accent)}
+.tn-club-sheet .cd-compare-plan p{margin:0;color:var(--tn-muted);font-size:13px;line-height:1.6}
+.tn-club-sheet .cd-compare-legend{display:flex;justify-content:flex-end;align-items:center;gap:18px;color:var(--tn-muted);font-size:12px;margin:2px 0 10px}
+.tn-club-sheet .cd-compare-legend>span{display:inline-flex;align-items:center;gap:7px}
+.tn-club-sheet .cd-compare-yes{display:inline-flex;align-items:center;justify-content:center;min-width:25px;min-height:25px;border-radius:6px;background:#d9f3eb;color:#12654f;font-size:17px;font-weight:850;line-height:1}
+.tn-club-sheet .cd-compare-no{display:inline-flex;align-items:center;justify-content:center;min-width:25px;min-height:25px;color:var(--tn-muted);font-size:20px;line-height:1}
+.tn-club-sheet .cd-compare-scroll{overflow-x:auto;border:1px solid var(--tn-border);border-radius:10px;background:var(--tn-surface);scrollbar-width:thin}
+.tn-club-sheet .cd-compare-scroll:focus-visible{outline:2px solid var(--tn-accent);outline-offset:3px}
+.tn-club-sheet .cd-compare-table{width:100%;min-width:565px;border-collapse:separate;border-spacing:0;text-align:left;table-layout:fixed;font-size:13px;color:var(--tn-navy);font-variant-numeric:tabular-nums}
+.tn-club-sheet .cd-feature-col{width:70%}
+.tn-club-sheet .cd-basic-col,.tn-club-sheet .cd-plus-col{width:15%}
+.tn-club-sheet .cd-compare-table thead th{padding:17px 19px;background:var(--tn-navy);color:#fff;font-size:12px;letter-spacing:.05em;font-weight:800}
+.tn-club-sheet .cd-compare-table thead th:not(:first-child){text-align:center}
+.tn-club-sheet .cd-compare-table thead .cd-compare-plus-head{background:#17617f}
+.tn-club-sheet .cd-compare-table tbody .cd-compare-category th{padding:13px 19px;background:var(--tn-soft);color:var(--tn-navy);font-weight:850;font-size:12px;letter-spacing:.03em;border-top:1px solid var(--tn-border);border-bottom:1px solid var(--tn-border)}
+.tn-club-sheet .cd-compare-table tbody:first-of-type .cd-compare-category th{border-top:0}
+.tn-club-sheet .cd-compare-table tbody tr:not(.cd-compare-category) th{padding:12px 19px;font-weight:550;line-height:1.45;border-bottom:1px solid var(--tn-border);color:var(--tn-navy);overflow-wrap:anywhere}
+.tn-club-sheet .cd-compare-table tbody tr:not(.cd-compare-category) td{padding:9px 14px;text-align:center;border-bottom:1px solid var(--tn-border);vertical-align:middle}
+.tn-club-sheet .cd-compare-table tbody tr:last-child th,.tn-club-sheet .cd-compare-table tbody tr:last-child td{border-bottom:0}
+.tn-club-sheet .cd-compare-table tbody td.cd-compare-plus-cell{background:color-mix(in srgb,var(--tn-accent) 4%,transparent)}
+.tn-club-sheet .cd-compare-table tbody tr:not(.cd-compare-category):hover th,
+.tn-club-sheet .cd-compare-table tbody tr:not(.cd-compare-category):hover td{background:var(--tn-soft)}
+.tn-club-sheet .cd-compare-table .cd-compare-yes{min-width:24px;min-height:24px}
+.tn-club-sheet .cd-compare-note{font-size:12px;line-height:1.75;color:var(--tn-muted);background:var(--tn-soft);border-left:3px solid var(--tn-accent);padding:14px 18px;margin:18px 0 0}
+.tn-club-sheet .cd-compare-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+html[data-theme="dark"] .tn-club-sheet .cd-compare-yes{background:#1b544a;color:#c0f7df}
+html[data-theme="dark"] .tn-club-sheet .cd-compare-table thead th{background:#112e41;color:#f5fbff}
+html[data-theme="dark"] .tn-club-sheet .cd-compare-table thead .cd-compare-plus-head{background:#1c5d76}
+@media(max-width:750px){
+ .tn-club-sheet .cd-compare-header{display:block}
+ .tn-club-sheet .cd-compare-price-link{margin-top:8px}
+ .tn-club-sheet .cd-compare-plans{grid-template-columns:1fr}
+ .tn-club-sheet .cd-compare-table{min-width:520px;font-size:12px}
+ .tn-club-sheet .cd-compare-table thead th{padding:13px 12px}
+ .tn-club-sheet .cd-compare-table tbody tr:not(.cd-compare-category) th{padding:11px 12px}
+ .tn-club-sheet .cd-compare-table tbody .cd-compare-category th{padding:11px 12px}
+ .tn-club-sheet .cd-compare-table tbody tr:not(.cd-compare-category) td{padding:8px}
+}
+@media print{
+ .tn-club-sheet .cd-compare-scroll{overflow:visible;border:1px solid #cbd6dd}
+ .tn-club-sheet .cd-compare-table{min-width:0;font-size:9pt}
+ .tn-club-sheet .cd-compare-table thead th{background:#dce7ed!important;color:#163244!important}
+ .tn-club-sheet .cd-compare-plan,.tn-club-sheet .cd-compare-note{background:#fff!important}
+ .tn-club-sheet .cd-compare-table tbody{break-inside:avoid}
+ .tn-club-sheet .cd-compare-price-link{display:none}
+}

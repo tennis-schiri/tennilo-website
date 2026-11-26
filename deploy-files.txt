@@ -71,6 +71,7 @@ public/assets/clubdisplay.png
 public/assets/professional-home.css
 public/assets/home-overview.css
 public/assets/product-pages.css
+public/assets/clubdisplay-comparison.css
 public/founders-check.php
 public/founders-setup.php
 public/admin/index.php
