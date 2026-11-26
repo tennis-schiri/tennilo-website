@@ -99,3 +99,8 @@ public/umpire/index.html
 public/en/umpire/index.html
 public/updates/index.html
 public/en/updates/index.html
+public/assets/clubdisplay-demo-start.jpg
+public/assets/clubdisplay-demo-partners.jpg
+public/assets/clubdisplay-demo-teams.jpg
+public/assets/clubdisplay-demo-news.jpg
+public/assets/clubdisplay-demo-courts.jpg

@@ -30,7 +30,7 @@ jobs:
     name: Website und Founders-PHP per FTPS hochladen
     if: (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[deploy-live]'))) && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 18
     steps:
       - name: Quellcode abrufen
         uses: actions/checkout@v7
@@ -51,6 +51,13 @@ jobs:
             cp "brand-assets/founders/TENNILO-Founders-${upper^^}-$mode.png" "public/assets/tennilo-founders-$variant.png"
           done
 
+      - name: Originale ClubDisplay-Demo-Screenshots aufnehmen
+        run: |
+          python3 -m pip install --quiet playwright
+          if ! command -v google-chrome >/dev/null 2>&1 && ! command -v chromium >/dev/null 2>&1; then
+            python3 -m playwright install --with-deps chromium
+          fi
+          python3 scripts/capture_clubdisplay_screenshots.py
       - name: Datei-Freigabeliste prüfen
         shell: bash
         run: |
