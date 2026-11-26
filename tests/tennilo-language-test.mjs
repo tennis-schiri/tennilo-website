@@ -37,7 +37,7 @@ test('DE/EN pages have correct canonical links and hreflang',()=>{
 test('English version fully represents the professional TENNILO homepage',()=>{
  const ids=page=>[...page.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
  assert.deepEqual(ids(german),ids(english),'German and English IDs must match');
- for(const value of ['Better tools. More time for tennis.','Apple Watch','Bad Saarow','TOURNAMENT','UMPIRE','Spring 2027'])assert.ok(english.includes(value),value);
+ for(const value of ['Better tools. More time for tennis.','Apple Watch','Bad Saarow','Tournament','Umpire','Spring 2027'])assert.ok(english.includes(value),value);
  assert.match(english,/action="\/newsletter\.php"/);
  assert.ok(english.includes('href="/en/founders/"'));
  assert.equal((english.match(/<form\b/g)||[]).length,1);
