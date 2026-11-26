@@ -86,3 +86,4 @@ public/clubdisplay/index.html
 public/en/clubdisplay/index.html
 public/assets/clubdisplay-product.css
 public/assets/clubdisplay.png
+public/assets/professional-home.css
