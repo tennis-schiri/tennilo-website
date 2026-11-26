@@ -59,7 +59,7 @@ test('Score detail preserves beta facts, interactive demo, authentic screenshots
 test('ClubDisplay product data sheets preserve functions, hosting and indicative pricing',()=>{
  for(const lang of ['de','en']){
   const html=source(lang,'clubdisplay');
-  for(const id of ['funktionen','hosting','preise'])assert.ok(html.includes('id="'+id+'"'),id);
+  for(const id of ['funktionen','pakete','hosting','preise'])assert.ok(html.includes('id="'+id+'"'),id);
   for(const value of ['BASIC','PLUS','19 €','39 €','149','299','NTC','PHP','eBuSy'])assert.ok(html.includes(value),lang+' '+value);
   assert.ok(html.includes('https://clubdisplay.tennilo.de/'));
   assert.ok(html.includes('Founders'));

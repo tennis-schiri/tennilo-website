@@ -71,6 +71,7 @@ jobs:
           set -euo pipefail
           python3 -m pip install --quiet "Pillow>=10,<13"
           python3 scripts/prepare_transparent_logos.py
+          python3 scripts/prepare_home_badges.py
           python3 scripts/build_mw_footer_logos.py
           python3 scripts/prepare_founders_badges.py
           python3 scripts/prepare_founders_certificates.py
@@ -79,6 +80,13 @@ jobs:
             cp "brand-assets/founders/TENNILO-Founders-${upper^^}-$mode.png" "public/assets/tennilo-founders-$variant.png"
           done
 
+      - name: ClubDisplay-Demo-Screenshots für Assetprüfung erzeugen
+        run: |
+          python3 -m pip install --quiet playwright
+          if ! command -v google-chrome >/dev/null 2>&1 && ! command -v chromium >/dev/null 2>&1; then
+            python3 -m playwright install --with-deps chromium
+          fi
+          python3 scripts/capture_clubdisplay_screenshots.py
       - name: PHP-Syntax prüfen
         shell: bash
         run: |
