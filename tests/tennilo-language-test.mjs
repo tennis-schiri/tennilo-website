@@ -100,3 +100,11 @@ test('MW design credit is included on both landing pages and all legal pages',()
   assert.equal(image.readUInt8(25),6,'MW PNG must include alpha');
  }
 });
+
+
+test('Professional product links stay within their correct language',()=>{
+ assert.match(german,/href="\/clubdisplay\/"/);
+ assert.match(english,/href="\/en\/clubdisplay\/"/);
+ assert.equal((german.match(/href="#newsletter">Updates abonnieren/g)||[]).length,2);
+ assert.equal((english.match(/href="#newsletter">Get product updates/g)||[]).length,2);
+});

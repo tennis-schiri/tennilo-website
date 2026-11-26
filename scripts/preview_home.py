@@ -55,15 +55,17 @@ try:
                     # Native lazy-loading is asynchronous; ensure images are
                     # decoded before evaluating screenshots of the whole section.
                     for img in item.locator('img').all():
-                        img.scroll_into_view_if_needed()
-                        img.evaluate("(el) => el.decode().catch(() => {})")
+                        if img.is_visible():
+                            img.scroll_into_view_if_needed()
+                            img.evaluate("(el) => el.decode().catch(() => {})")
                     item.screenshot(path=str(OUT / f"section-{section}.jpg"),
                                     type="jpeg", quality=76, animations="disabled")
             if width == 390:
                 assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth + 2"), "Mobile layout has horizontal overflow"
                 for img in page.locator("#projekte img").all():
-                    img.scroll_into_view_if_needed()
-                    img.evaluate("(el) => el.decode().catch(() => {})")
+                    if img.is_visible():
+                        img.scroll_into_view_if_needed()
+                        img.evaluate("(el) => el.decode().catch(() => {})")
                 page.locator("#projekte").screenshot(path=str(OUT / "products-mobile.jpg"),
                                                     type="jpeg", quality=75, animations="disabled")
             print(f"Rendered {label}: {width}x{height}", flush=True)
@@ -81,8 +83,9 @@ try:
         assert dark_page.evaluate("document.documentElement.getAttribute('data-theme')") == "dark"
         dark_page.screenshot(path=str(OUT / "home-dark.jpg"), type="jpeg", quality=76)
         for img in dark_page.locator("#projekte img").all():
-            img.scroll_into_view_if_needed()
-            img.evaluate("(el) => el.decode().catch(() => {})")
+            if img.is_visible():
+                img.scroll_into_view_if_needed()
+                img.evaluate("(el) => el.decode().catch(() => {})")
         dark_page.locator("#projekte").screenshot(path=str(OUT / "products-dark.jpg"),
                                                   type="jpeg", quality=76, animations="disabled")
         dark.close()
