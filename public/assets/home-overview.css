@@ -62,3 +62,10 @@ html[data-theme="dark"] .tn-home .newsletter-form{background:var(--tn-surface);b
  .tn-home .tn-products.tc-section{padding:55px 0}
  .tn-home-bottom{padding:48px 0 60px}
 }
+
+/* Original ClubDisplay mark uses white lettering: retain contrast in each theme. */
+.tn-home .tn-product-clubdisplay .tn-product-art{background:#183c53;border-radius:6px;padding:12px;justify-content:center}
+.tn-home .tn-product-clubdisplay .tn-product-art img{max-height:74px;width:100%;object-fit:contain;object-position:center}
+html[data-theme="dark"] .tn-home .tn-product-clubdisplay .tn-product-art{background:#183c53}
+/* Founders remains a primary navigation destination. */
+.tn-home .tc-nav a[href$="/founders/"],.tn-detail-page .tc-nav a[href$="/founders/"]{font-weight:780;color:var(--tn-accent)}
