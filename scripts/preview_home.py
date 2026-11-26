@@ -68,6 +68,21 @@ try:
                                                     type="jpeg", quality=75, animations="disabled")
             print(f"Rendered {label}: {width}x{height}", flush=True)
             context.close()
+        # Also verify real dark-mode rendering of the redesigned page.
+        dark = browser.new_context(
+            viewport={"width": 1440, "height": 980},
+            device_scale_factor=1,
+            color_scheme="dark",
+            reduced_motion="reduce",
+        )
+        dark_page = dark.new_page()
+        dark_page.goto(f"{base_url}/", wait_until="load")
+        dark_page.locator(".tn-hero-visual").wait_for()
+        assert dark_page.evaluate("document.documentElement.getAttribute('data-theme')") == "dark"
+        dark_page.screenshot(path=str(OUT / "home-dark.jpg"), type="jpeg", quality=76)
+        dark_page.locator("#projekte").screenshot(path=str(OUT / "products-dark.jpg"),
+                                                  type="jpeg", quality=76, animations="disabled")
+        dark.close()
         browser.close()
 finally:
     server.shutdown()
