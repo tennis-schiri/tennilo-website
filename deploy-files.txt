@@ -1,3 +1,5 @@
+public/assets/tennilo-score-badge.png
+public/assets/tennilo-clubdisplay-badge.png
 public/assets/styles.css
 public/assets/tennilo-logo.png
 public/assets/tennilo-umpire-logo.png

@@ -110,7 +110,7 @@ test('All overview and product links resolve, assets are deployable, ids are uni
   for(const match of html.matchAll(/href="#([^"]+)"/g))
     assert.ok(ids.includes(match[1]),'Broken #'+match[1]+' on '+file);
   assert.match(html,/href="\/assets\/professional-home\.css\?v=1"/,file);
-  assert.match(html,/href="\/assets\/(?:home-overview|product-pages)\.css\?v=1"/,file);
+  assert.match(html,/href="\/assets\/(?:home-overview|product-pages)\.css\?v=\d+"/,file);
  }
  const sitemap=load('public/sitemap.xml');
  for(const slug of ['score','clubdisplay','tournament','umpire','updates']){
@@ -143,5 +143,17 @@ test('No unreleased Tournament/Umpire claims or prices are made on the homepage'
   assert.ok(html.includes('In Konzeption')||html.includes('Concept stage'));
   assert.ok(!html.includes('19 €'),'Price detail belongs to ClubDisplay sheet');
   assert.ok(!html.includes('STARTNEXT checkout'));
+ }
+});
+
+test('Four overview badges are included in both languages',()=>{
+ for(const file of ['public/index.html','public/en/index.html']){
+  const html=load(file);
+  assert.equal((html.match(/class="tn-product-art tn-product-art-badge/g)||[]).length,4,file);
+  for(const name of ['tennilo-score-badge.png','tennilo-clubdisplay-badge.png','tennilo-tournament-logo.png','tennilo-umpire-logo.png']){
+   assert.ok(html.includes('/assets/'+name),file+' missing '+name);
+   assert.ok(manifest.has('public/assets/'+name),file+' badge not in deploy list: '+name);
+  }
+  assert.doesNotMatch(html,/src="\/assets\/tennilo-(?:score|tournament|umpire)-cutout(?:-dark)?\.png"/);
  }
 });
