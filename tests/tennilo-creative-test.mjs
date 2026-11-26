@@ -35,7 +35,8 @@ function setup(lang='de'){
   const callbacks={};
   return {textContent:'',callbacks,addEventListener(type,callback){callbacks[type]=callback;},click(){callbacks.click?.();}};
  }
- const point=[node(),node()],games=[node(),node()],announcement=node(),reset=node();
+ const point=[node(),node()],games=[node(),node()],announcement=node(),reset=node(),undo=node(),clock=node(),gameNumber=node();
+ const serves=[node(),node()];
  const add=[node(),node()];add.forEach((button,i)=>button.getAttribute=name=>name==='data-add-point'?String(i):null);
  const rootElement={
   querySelector(selector){
@@ -43,13 +44,20 @@ function setup(lang='de'){
    if(m)return (m[1]==='score'?point:games)[Number(m[2])];
    if(selector==='[data-demo-announcement]')return announcement;
    if(selector==='[data-demo-reset]')return reset;
+   if(selector==='[data-demo-undo]')return undo;
+   if(selector==='[data-demo-clock]')return clock;
+   if(selector==='[data-demo-game-number]')return gameNumber;
    throw Error('Unknown selector '+selector);
   },
-  querySelectorAll(selector){if(selector==='[data-add-point]')return add;throw Error('Unknown list '+selector);}
+  querySelectorAll(selector){
+   if(selector==='[data-add-point]')return add;
+   if(selector==='[data-demo-serve]')return serves;
+   throw Error('Unknown list '+selector);
+  }
  };
  const document={documentElement:{lang},querySelector(selector){return selector==='[data-demo]'?rootElement:null;}};
  vm.runInNewContext(source,{document},{timeout:1000});
- return {point,games,add,reset,announcement};
+ return {point,games,add,reset,undo,clock,gameNumber,serves,announcement};
 }
 
 test('Demo applies tennis point, deuce, advantage, game and reset rules',()=>{
@@ -78,4 +86,24 @@ test('English demo respects English language labels',()=>{
  assert.equal(demo.games[1].textContent,'1');
  assert.match(demo.announcement.textContent,/Game for opponent/);
  demo.reset.click();assert.equal(demo.point[0].textContent,'0');
+});
+
+test('Watch-style demo can undo a point and displays game and service position',()=>{
+ const demo=setup('de');
+ assert.equal(demo.undo.disabled,true);
+ assert.equal(demo.gameNumber.textContent,'1');
+ assert.equal(demo.serves[0].hidden,false);
+ demo.add[0].click();
+ assert.equal(demo.point[0].textContent,'15');
+ assert.equal(demo.undo.disabled,false);
+ demo.undo.click();
+ assert.equal(demo.point[0].textContent,'0');
+ assert.equal(demo.undo.disabled,true);
+ for(let i=0;i<4;i++)demo.add[1].click();
+ assert.equal(demo.games[1].textContent,'1');
+ assert.equal(demo.gameNumber.textContent,'2');
+ assert.equal(demo.serves[1].hidden,false);
+ demo.reset.click();
+ assert.equal(demo.gameNumber.textContent,'1');
+ assert.equal(demo.clock.textContent,'00:00');
 });

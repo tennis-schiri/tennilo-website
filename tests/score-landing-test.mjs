@@ -47,7 +47,7 @@ test('Score detail preserves beta facts, interactive demo, authentic screenshots
   }
   assert.match(html,/27\.12\.2026|DEC 27, 2026/);
   assert.ok(html.includes(lang==='de'?'kostenlos':'free of charge'));
-  assert.ok(html.includes('score-demo.js?v=1'));
+  assert.ok(html.includes('score-demo.js?v=2'));
  }
  for(const name of ['watch','phone','scoreboard']){
   const img=fs.readFileSync(path.join(root,'public/assets','score-demo-'+name+'.png'));
@@ -195,5 +195,19 @@ test('Detail pages feature exactly the same approved product badges as homepage'
    assert.ok(home[lang].includes('src="/assets/tn-overview-'+slug+'.png"'));
    assert.ok(!html.includes('tn-page-logo-dark'),'Old theme-specific cutout on '+slug);
   }
+ }
+});
+
+test('Score concept demo uses the original Apple Watch controls, not the former table',()=>{
+ const css=load('public/assets/score-watch-demo.css');
+ assert.ok(manifest.has('public/assets/score-watch-demo.css'));
+ assert.match(css,/\.ts-watch-case/);
+ assert.match(css,/\.ts-watch-points/);
+ assert.match(css,/\.ts-watch-undo/);
+ for(const lang of ['de','en']){
+  const html=source(lang,'score');
+  for(const key of ['class="ts-watch-case"','class="ts-watch-screen"','data-demo-undo','data-demo-clock','data-demo-serve="0"','data-demo-game-number','/assets/score-watch-demo.css?v=1'])
+   assert.ok(html.includes(key),lang+' missing '+key);
+  assert.ok(!html.includes('class="tc-demo-head"'),lang+' old rectangular score table');
  }
 });

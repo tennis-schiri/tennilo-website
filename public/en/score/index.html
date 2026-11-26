@@ -31,8 +31,9 @@
 <link rel="stylesheet" href="/assets/founders-campaign.css?v=2">
 <link rel="stylesheet" href="/assets/professional-home.css?v=1">
 <link rel="stylesheet" href="/assets/product-pages.css?v=1">
-<script src="/assets/score-demo.js?v=1" defer></script>
+<script src="/assets/score-demo.js?v=2" defer></script>
 <link rel="stylesheet" href="/assets/product-navigation.css?v=1">
+<link rel="stylesheet" href="/assets/score-watch-demo.css?v=1">
 </head>
 <body class="tc-home tn-detail-page" id="oben"><div class="tc-shell">
 <header class="site-header tc-header">
@@ -50,16 +51,38 @@
 <div class="tc-container">
 <div class="tn-section-head"><div><p class="tn-eyebrow">For tennis players</p><h2 id="tc-features-title">Score. Focus on the match.</h2></div><p>TENNILO Score is being developed for intuitive point tracking on Apple Watch, supported by the iPhone. The interactive scorer illustrates the concept – it is not the finished app.</p></div>
 <div class="tn-score-grid"><div class="tn-feature-grid"><article class="tn-feature"><span class="tn-feature-no">01</span><div><h3>Direct input</h3><p>Add points on Apple Watch with as few steps as possible.</p></div></article><article class="tn-feature"><span class="tn-feature-no">02</span><div><h3>Clear match overview</h3><p>Keep points, games, sets and tiebreaks easy to follow.</p></div></article><article class="tn-feature"><span class="tn-feature-no">03</span><div><h3>Tennis rules</h3><p>Take service order, changeovers and different scoring systems into account.</p></div></article><article class="tn-feature"><span class="tn-feature-no">04</span><div><h3>Doubles and mixed</h3><p>Support the particular demands of doubles and mixed tennis in development.</p></div></article></div>
-<div class="tn-demo-shell"><div class="tn-demo-heading"><span>Interactive concept demo</span><small>Try scoring a few points. This is not a released app.</small></div><div class="tc-demo" data-demo data-announce-reset="Demo reset" data-announce-game="Game for" data-announce-score="Score">
-    <div class="tc-demo-top"><span>TENNILO SCORE</span><span class="tc-demo-signal"><i></i> SCORING DEMO</span></div>
-    <div class="tc-demo-label">Try the concept. Not a screenshot of the finished app.</div>
-    <div class="tc-demo-head"><span>PLAYER</span><span>GAMES</span><span>POINTS</span></div>
-    <div class="tc-demo-player"><span>YOU</span><b data-demo-games="0">0</b><strong data-demo-score="0">0</strong></div>
-    <div class="tc-demo-player tc-demo-player-other"><span>OPPONENT</span><b data-demo-games="1">0</b><strong data-demo-score="1">0</strong></div>
-    <div class="tc-demo-actions"><button type="button" data-add-point="0" aria-label="Point for YOU"><span aria-hidden="true">+</span> Point for YOU</button><button type="button" data-add-point="1" aria-label="Point for OPPONENT"><span aria-hidden="true">+</span> Point for OPPONENT</button></div>
-    <div class="tc-demo-base"><span>Concept demonstration – not a released app.</span><button type="button" data-demo-reset>Reset ↺</button></div>
-    <p class="tc-sr-only" data-demo-announcement aria-live="polite"></p>
-   </div></div></div>
+<div class="tn-demo-shell ts-watch-stage">
+<div class="tn-demo-heading"><span>Interactive watch concept demo</span><small>Tap either score field to add a point. This is a concept, not a released app.</small></div>
+<div class="ts-watch-case" data-demo aria-label="Interactive Apple Watch score demonstration" role="group">
+ <div class="ts-watch-screen">
+  <div class="ts-watch-header">
+   <div class="ts-watch-title">SET 1 · GAME <span data-demo-game-number>1</span></div>
+   <div class="ts-watch-sets" role="table" aria-label="Set and game scores">
+    <span aria-hidden="true"></span><span class="ts-watch-col">1</span><span class="ts-watch-col">2</span><span class="ts-watch-col">3</span>
+    <span class="ts-watch-set-name">You</span><strong class="ts-watch-set-score" data-demo-games="0">0</strong><span class="ts-watch-future">–</span><span class="ts-watch-future">–</span>
+    <span class="ts-watch-set-name">Opponent</span><strong class="ts-watch-set-score" data-demo-games="1">0</strong><span class="ts-watch-future">–</span><span class="ts-watch-future">–</span>
+   </div>
+  </div>
+  <div class="ts-watch-points">
+   <button class="ts-watch-point ts-watch-point-self" type="button" data-add-point="0" aria-label="Point for you">
+    <span class="ts-watch-player"><span class="ts-watch-serve" data-demo-serve="0" aria-hidden="true">🎾</span>You</span>
+    <strong data-demo-score="0">0</strong>
+   </button>
+   <button class="ts-watch-point ts-watch-point-opponent" type="button" data-add-point="1" aria-label="Point for opponent">
+    <span class="ts-watch-player"><span class="ts-watch-serve" data-demo-serve="1" aria-hidden="true" hidden>🎾</span>Opponent</span>
+    <strong data-demo-score="1">0</strong>
+   </button>
+  </div>
+  <div class="ts-watch-controls">
+   <button type="button" class="ts-watch-undo" data-demo-undo aria-label="Undo last point"><span aria-hidden="true">↶</span> UNDO</button>
+   <span class="ts-watch-clock" data-demo-clock>00:00</span>
+   <button type="button" class="ts-watch-settings" data-demo-reset aria-label="Reset concept demo" title="Reset demo" aria-keyshortcuts="Escape"><span aria-hidden="true">⚙</span></button>
+  </div>
+ </div>
+ <p class="tc-sr-only" data-demo-announcement aria-live="polite"></p>
+</div>
+<p class="ts-watch-caption">Illustrative Apple Watch interface. Not a finished application.</p>
+</div></div>
 </div></section><section class="tc-gallery tn-gallery tc-section tn-detail-gallery" id="einblicke" aria-labelledby="tc-gallery-title"><div class="tc-container">
 <div class="tn-section-head"><div><p class="tn-eyebrow">Development preview</p><h2 id="tc-gallery-title">Current Score prototype screens</h2></div><p>Real screenshots captured from our interactive prototype. The interface is still evolving.</p></div>
 <div class="tc-gallery-grid"><figure class="tc-gallery-card tc-gallery-watch">
