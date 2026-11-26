@@ -1,0 +1,50 @@
+name: TENNILO Designvorschau (kein Live-Upload)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/preview-home.yml'
+      - 'scripts/preview_home.py'
+      - 'public/index.html'
+      - 'public/en/index.html'
+      - 'public/assets/professional-home.css'
+permissions:
+  contents: write
+jobs:
+  screenshot:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    steps:
+      - name: TENNILO-Quellcode abrufen
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Renderwerkzeuge vorbereiten
+        run: |
+          python3 -m pip install --quiet "Pillow>=10,<13" playwright
+          if ! command -v google-chrome >/dev/null 2>&1 && ! command -v chromium >/dev/null 2>&1; then
+            python3 -m playwright install chromium
+          fi
+          python3 scripts/prepare_transparent_logos.py
+          python3 scripts/build_mw_footer_logos.py
+          python3 scripts/prepare_founders_badges.py
+          python3 scripts/prepare_founders_certificates.py
+          for variant in tf09-light tf09-dark tf12-light tf12-dark; do
+            upper="${variant%%-*}"; mode="${variant#*-}"
+            cp "brand-assets/founders/TENNILO-Founders-${upper^^}-$mode.png" "public/assets/tennilo-founders-$variant.png"
+          done
+      - name: Desktop- und Smartphone-Vorschau rendern
+        run: python3 scripts/preview_home.py
+      - name: GitHub-Designvorschau speichern
+        run: |
+          git config user.name "TENNILO Preview Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add design-preview/*.jpg
+          if git diff --cached --quiet; then
+            echo 'Preview unchanged'
+          else
+            git commit -m "Update TENNILO design preview screenshots [skip ci]"
+            git push origin HEAD:main
+          fi
