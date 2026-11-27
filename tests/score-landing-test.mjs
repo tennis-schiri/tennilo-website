@@ -60,7 +60,11 @@ test('ClubDisplay product data sheets preserve functions, hosting and indicative
  for(const lang of ['de','en']){
   const html=source(lang,'clubdisplay');
   for(const id of ['funktionen','pakete','hosting','preise'])assert.ok(html.includes('id="'+id+'"'),id);
-  for(const value of ['BASIC','PLUS','19 €','39 €','149','299','NTC','PHP','eBuSy'])assert.ok(html.includes(value),lang+' '+value);
+  for(const value of ['BASIC','PLUS','NTC','PHP','eBuSy'])assert.ok(html.includes(value),lang+' '+value);
+  const pricing=html.split('<section id="preise">')[1].split('</section>')[0];
+  const prices=lang==='en'?['€19','€39','€190','€390','€149','€299','€699','€1,399','€99','€199','€179','€359','€9','€90','€249','24 months']:['19 €','39 €','190 €','390 €','149 €','299 €','699 €','1.399 €','99 €','199 €','179 €','359 €','9 €','90 €','249 €','24 Monate'];
+  for(const value of prices)assert.ok(pricing.includes(value),lang+' missing '+value);
+  assert.match(pricing,/cd-pricing-table/);
   assert.ok(html.includes('https://clubdisplay.tennilo.de/'));
   assert.ok(html.includes('Founders'));
  }
@@ -141,7 +145,14 @@ test('Responsive navigation, progress-to-top and theme toggle remain functional'
 test('No unreleased Tournament/Umpire claims or prices are made on the homepage',()=>{
  for(const html of Object.values(home)){
   assert.ok(html.includes('In Konzeption')||html.includes('Concept stage'));
-  assert.ok(!html.includes('19 €'),'Price detail belongs to ClubDisplay sheet');
+  const priceSummary=html.match(/<p class="tn-club-pricing-summary">[^]*?<\/p>/g)||[];
+  assert.equal(priceSummary.length,1,'Only ClubDisplay gets a pricing teaser');
+  assert.match(priceSummary[0],/19 €|€19/);
+  assert.match(priceSummary[0],/699 €|€699/);
+  assert.match(priceSummary[0],/24 Monate|24 months/);
+  assert.match(priceSummary[0],/clubdisplay\/#preise/);
+  const rest=html.replace(priceSummary[0],'');
+  assert.doesNotMatch(rest,/19 €|€19\b|699 €|€699\b/,'Price teaser belongs only to ClubDisplay');
   assert.ok(!html.includes('STARTNEXT checkout'));
  }
 });
