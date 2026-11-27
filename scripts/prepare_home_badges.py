@@ -2,6 +2,7 @@
 """Build matching alpha-framed badges from approved TENNILO source logos."""
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter
+from prepare_transparent_logos import tournament_cutout
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSETS = ROOT / "public" / "assets"
@@ -33,7 +34,7 @@ def framed_cutout(source,target):
 
 def clubdisplay_badge():
     """Preserve the real original ClubDisplay lettering inside the approved badge frame."""
-    source = Image.open(ASSETS/"tennilo-tournament-logo.png").convert("RGB")
+    source = Image.open(ASSETS/"tennilo-tournament-cutout.png").convert("RGB")
     w,h = source.size
     if (w,h) != (1361,390): raise ValueError("Unexpected frame dimensions")
     blank = Image.new("RGB",(w,h))
@@ -68,7 +69,9 @@ def umpire_badge():
 
 def main():
     framed_cutout(ASSETS/"tennilo-score-badge.png",ASSETS/"tn-overview-score.png")
-    framed_cutout(ASSETS/"tennilo-tournament-logo.png",ASSETS/"tn-overview-tournament.png")
+    # Both badges share the repaired TT04 plate, never the uncorrected original.
+    tournament_cutout(ASSETS/"tennilo-tournament-logo.png",ASSETS/"tennilo-tournament-cutout.png")
+    framed_cutout(ASSETS/"tennilo-tournament-cutout.png",ASSETS/"tn-overview-tournament.png")
     clubdisplay_badge()
     umpire_badge()
     for label in ("score","clubdisplay","tournament","umpire"):
