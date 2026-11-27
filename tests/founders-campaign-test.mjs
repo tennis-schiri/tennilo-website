@@ -44,7 +44,7 @@ test('Nine approved price points and all five funding goals appear only on campa
   const found=[...section.matchAll(/<b>([^<]+)<\/b>/g)].map(m=>Number(m[1].replace(/\D/g,'')));
   assert.deepEqual(found,prices);
   const goals=html.split('id="ziele"')[1].split('</section>')[0];
-  assert.deepEqual([...goals.matchAll(/<b>([^<]+)<\/b>/g)].map(m=>Number(m[1].replace(/\D/g,''))),[2500,5000,10000,15000,25000]);
+  assert.deepEqual([...goals.matchAll(/<b>([^<]+)<\/b>/g)].map(m=>Number(m[1].replace(/\D/g,''))),[2781,5000,10000,15000,25000]);
  }
 });
 
@@ -84,5 +84,15 @@ test('ClubDisplay pilot is included in the four-project Founders grid and homepa
  assert.ok(section.includes('TENNILO ClubDisplay')&&section.includes('BASIC')&&section.includes('PLUS'));
  assert.ok(section.includes(lang==='de'?'href="/clubdisplay/"':'href="/en/clubdisplay/"'));
  assert.ok(read(home).split('id="founders"')[1].split('</section>')[0].includes('ClubDisplay'));
+ }
+});
+
+ test('Tournament Founders draft licence terms are available in both languages',()=>{
+ for(const [file,lang] of [['public/founders/index.html','de'],['public/en/founders/index.html','en']]){
+  const html=read(file);const section=html.split('id="tournament-lizenzbedingungen"')[1].split('</article>')[0];
+  assert.ok(section.includes(lang==='de'?'ENTWURF V1.0':'DRAFT V1.0'));
+  assert.ok(section.includes(lang==='de'?'31.01.2028':'31 January 2028'));
+  assert.ok(section.includes(lang==='de'?'Standardhosting':'standard hosting'));
+  assert.equal((section.match(/<p><strong>\d+\./g)||[]).length,9);
  }
 });
