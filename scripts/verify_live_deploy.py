@@ -64,13 +64,13 @@ def verify_site():
             if f"<h3>TENNILO {product}</h3>" not in founders:
                 raise RuntimeError(f"{lang}: founders project missing: {product}")
 
-    for document in (
-        "tennilo-clubdisplay-produktdatenblatt-basic-plus.pdf",
-        "tennilo-clubdisplay-funktionsuebersicht.pdf",
+    for document, min_bytes in (
+        ("tennilo-clubdisplay-produktdatenblatt-basic-plus.pdf", 1000000),
+        ("tennilo-clubdisplay-funktionsuebersicht.pdf", 500000),
     ):
         content = retrieve(f"/assets/{document}")
-        if not content.startswith(b"%PDF-") or len(content) < 25000:
-            raise RuntimeError(f"{document}: published PDF is missing or invalid")
+        if not content.startswith(b"%PDF-") or len(content) < min_bytes:
+            raise RuntimeError(f"{document}: current published PDF is missing or outdated")
 
     for product in PRODUCTS:
         badge = Image.open(io.BytesIO(retrieve(f"/assets/tn-overview-{product}.png")))

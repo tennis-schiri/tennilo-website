@@ -269,3 +269,23 @@ test('ClubDisplay data sheets are actual standalone PDFs, not a printout of the 
   assert.ok(html.includes('product-pages.css?v=3'));
  }
 });
+
+
+test('ClubDisplay datasheets on website are the reconciled 27 Nov 2026 documents',()=>{
+ const docs=[
+  ['public/assets/tennilo-clubdisplay-produktdatenblatt-basic-plus.pdf',1000000],
+  ['public/assets/tennilo-clubdisplay-funktionsuebersicht.pdf',500000]
+ ];
+ for(const [file,minBytes] of docs){
+  const pdf=fs.readFileSync(path.join(root,file));
+  assert.equal(pdf.subarray(0,5).toString('ascii'),'%PDF-',file);
+  assert.ok(pdf.length>=minBytes,file+' is an older small document, not the current revision');
+ }
+ for(const lang of ['de','en']){
+  const html=source(lang,'clubdisplay');
+  assert.ok(html.includes('v0.5.7'),lang+' version label missing');
+  assert.ok(html.includes('6 pages')||html.includes('6 Seiten'),lang+' six-page sheet missing');
+  assert.ok(!html.includes('PDF · 3 Seiten · 26.11.2026'),lang+' outdated sheet label');
+  assert.ok(!html.includes('PDF · 3 pages · DE · 26 Nov 2026'),lang+' outdated English sheet label');
+ }
+});
