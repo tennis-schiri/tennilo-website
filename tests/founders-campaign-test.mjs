@@ -96,3 +96,10 @@ test('ClubDisplay pilot is included in the four-project Founders grid and homepa
   assert.equal((section.match(/<p><strong>\d+\./g)||[]).length,9);
  }
 });
+
+
+test("Public Startnext project is linked from both homepages and Founders pages",()=>{
+ for(const p of ["public/index.html","public/en/index.html","public/founders/index.html","public/en/founders/index.html"]){
+  const html=read(p);assert.ok(html.includes('href="https://www.startnext.com/tennilo-founders" target="_blank" rel="noopener noreferrer"'),p);
+ }
+});
