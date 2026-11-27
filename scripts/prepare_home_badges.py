@@ -33,31 +33,12 @@ def framed_cutout(source,target):
     image.save(target,optimize=True)
 
 def clubdisplay_badge():
-    """Preserve the real original ClubDisplay lettering inside the approved badge frame."""
-    source = Image.open(ASSETS/"tennilo-tournament-cutout.png").convert("RGB")
-    w,h = source.size
-    if (w,h) != (1361,390): raise ValueError("Unexpected frame dimensions")
-    blank = Image.new("RGB",(w,h))
-    pixels = blank.load()
-    for y in range(h):
-        f = min(1.,max(0.,(y-64)/268))
-        for x in range(w):
-            pixels[x,y] = (1,round(28-5*f),round(48-5*f))
-    interior = Image.new("L",(w,h),0)
-    ImageDraw.Draw(interior).polygon([(166,71),(1240,71),(1172,331),(100,331)],fill=255)
-    interior = interior.filter(ImageFilter.GaussianBlur(1.35))
-    composed = Image.composite(blank,source,interior).convert("RGBA")
-    composed.putalpha(plate_mask((w,h)))
-    approved = Image.open(BRANDS/"TENNILO_ClubDisplay_Hauptlogo_Dark.png").convert("RGBA")
-    if approved.size != (4000,1381): raise ValueError("Unexpected ClubDisplay source dimensions")
-    upper = approved.crop((0,0,4000,675))
-    lower = approved.crop((0,675,4000,1381))
-    for part,width,top in [(upper,900,77),(lower,715,227)]:
-        part = part.crop(part.getchannel("A").getbbox())
-        height = round(part.height*width/part.width)
-        part = part.resize((width,height),Image.Resampling.LANCZOS)
-        composed.alpha_composite(part,((w-width)//2,top))
-    composed.save(ASSETS/"tn-overview-clubdisplay.png",optimize=True)
+    """Use the verified framed ClubDisplay web master from the official brand assets."""
+    source = BRANDS/"TENNILO_ClubDisplay_Rahmenlogo_Web_Transparent.png"
+    image = Image.open(source).convert("RGBA")
+    if image.size != (1361,390): raise ValueError("Unexpected ClubDisplay frame dimensions")
+    image.save(ASSETS/"tn-overview-clubdisplay.png",optimize=True)
+
 
 def umpire_badge():
     original = Image.open(ASSETS/"tennilo-umpire-logo.png").convert("RGBA")
