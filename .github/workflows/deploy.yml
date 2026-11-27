@@ -59,6 +59,10 @@ jobs:
             python3 -m playwright install --with-deps chromium
           fi
           python3 scripts/capture_clubdisplay_screenshots.py
+      - name: ClubDisplay-Preisblatt zum Originaldatenblatt ergänzen
+        run: |
+          python3 -m pip install --quiet 'reportlab>=4,<5' 'PyMuPDF>=1.24,<2'
+          python3 scripts/append_clubdisplay_prices.py
       - name: Datei-Freigabeliste prüfen
         shell: bash
         run: |

@@ -57,3 +57,6 @@ html[data-theme="dark"] .tn-club-sheet .cd-compare-table thead .cd-compare-plus-
  .tn-club-sheet .cd-compare-table tbody{break-inside:avoid}
  .tn-club-sheet .cd-compare-price-link{display:none}
 }
+
+/* Payment options – reuse the existing theme-aware comparison table. */
+.cd-pricing-table td{font-weight:650;text-align:center;white-space:nowrap}.cd-pricing-table .cd-price-purchase th,.cd-pricing-table .cd-price-purchase td{font-weight:800}.cd-price-options{margin-top:18px}.tn-club-pricing-summary{font-size:.875rem;line-height:1.55;margin:.65rem 0}.tn-club-pricing-summary a{font-weight:700}

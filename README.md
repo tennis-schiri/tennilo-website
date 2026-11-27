@@ -76,3 +76,7 @@ CI/Deploy prüfen Theme-Verhalten mit `tests/tennilo-theme-test.mjs`. Bei Änder
 TENNILO verwendet die integrierten Serverstatistiken von **ALL-INKL**. Es wird kein eigener Analytics-Zähler mehr eingesetzt. Die Tracking-Bildaufrufe wurden aus allen sechs deutschen und englischen Seiten entfernt; die früheren Endpunkte `public/visit.php` und `public/admin/analytics.php` bleiben als **inaktive Kompatibilitätsdateien**, damit der manuelle FTP-Upload möglicherweise bereits veröffentlichte Versionen sicher überschreibt. Das Backoffice verlinkt nicht mehr auf die alte Statistik. Datenschutztexte DE/EN verweisen auf die hosterseitigen Serverstatistiken. Eine eventuell früher angelegte private Datei `tennilo-analytics.sqlite` bleibt durch den Upload unberührt und wird nicht mehr verwendet; sie kann nach gesonderter Prüfung serverseitig gelöscht werden.
 
 Manuelle Veröffentlichung: https://github.com/tennis-schiri/tennilo-website/actions/workflows/deploy.yml
+
+
+### ClubDisplay Preisstruktur · 27.11.2026
+BASIC/PLUS: 19/39 € monatlich, 190/390 € jährlich, Abo-Einrichtung 149/299 €; Kauflizenz 699/1.399 € inklusive Einrichtung und 24 Monate Support/Updates, unbefristete Nutzung des erworbenen Stands. Optionale Verlängerung 12 Monate 99/199 €, 24 Monate 179/359 €. Zusatzdisplay 9 €/Monat, 90 €/Jahr oder 249 € einmalig. Betreutes Hosting, Hardware und Fremdlizenzen separat. Preise unverbindlich bis Pilotabnahme; kein Checkout. PDF-Preisblatt wird bei Veröffentlichung an das bestehende Originaldatenblatt angefügt.
