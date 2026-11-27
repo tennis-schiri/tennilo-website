@@ -40,17 +40,17 @@
 .tn-overview-hero-side strong{display:block;font-size:clamp(23px,2.2vw,31px);line-height:1.3;color:#102d42}
 .tn-overview-side-label{display:block;margin-bottom:15px;font-size:11px;font-weight:750;letter-spacing:.08em;color:#175f85}
 .tn-founders-focus{padding:43px 0}
-.tn-founders-feature{display:grid;grid-template-columns:minmax(0,.58fr) minmax(0,1.42fr);gap:clamp(30px,5vw,70px);align-items:center}
-.tn-founders-image{min-width:0;padding:25px}
-.tn-founders-image img{display:block;width:100%;max-height:150px;object-fit:contain}
+.tn-founders-feature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(24px,4vw,56px);align-items:center}
+.tn-founders-image{min-width:0;padding:0}
+.tn-founders-image img{display:block;width:min(100%,290px);height:auto;max-height:90px;object-fit:contain;margin:0 auto 18px}.tn-founders-video{margin:0;min-width:0}.tn-founders-video video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#071e2a;border-radius:12px;box-shadow:0 6px 22px rgba(0,0,0,.13)}.tn-founders-video figcaption{font-size:.8rem;margin-top:8px;text-align:center;opacity:.8}
 .tn-home .tn-founders-image .tf-teaser-dark,.tn-home .tn-product-art .tn-score-logo-dark{display:none}
 html[data-theme="dark"] .tn-home .tn-founders-image .tf-teaser-light,html[data-theme="dark"] .tn-home .tn-product-art .tn-score-logo-light{display:none}
 html[data-theme="dark"] .tn-home .tn-founders-image .tf-teaser-dark,html[data-theme="dark"] .tn-home .tn-product-art .tn-score-logo-dark{display:block}
 .tn-product-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
 .tn-home .tn-product-art img{max-width:100%;max-height:86px;object-fit:contain}
 .tn-home-bottom-inner{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:40px}
-@media(max-width:950px){.tn-overview-hero-inner{grid-template-columns:1fr .75fr;gap:25px}.tn-founders-feature{grid-template-columns:1fr 1.8fr}.tn-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tn-home-bottom-inner{grid-template-columns:1fr}}
-@media(max-width:680px){.tn-overview-hero-inner,.tn-founders-feature{grid-template-columns:1fr}.tn-overview-hero-side{padding:22px}.tn-founders-image{padding:15px}.tn-founders-image img{max-height:90px}.tn-product-grid{grid-template-columns:1fr}}
+@media(max-width:950px){.tn-overview-hero-inner{grid-template-columns:1fr .75fr;gap:25px}.tn-founders-feature{grid-template-columns:1fr 1fr}.tn-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tn-home-bottom-inner{grid-template-columns:1fr}}
+@media(max-width:680px){.tn-overview-hero-inner,.tn-founders-feature{grid-template-columns:1fr}.tn-overview-hero-side{padding:22px}.tn-founders-image{padding:0}.tn-founders-image img{max-height:90px}.tn-product-grid{grid-template-columns:1fr}}
 </style>
 <link rel="stylesheet" href="/assets/professional-home.css?v=1">
 <link rel="stylesheet" href="/assets/home-overview.css?v=5">
@@ -72,7 +72,7 @@ html[data-theme="dark"] .tn-home .tn-founders-image .tf-teaser-dark,html[data-th
 <div class="tn-overview-hero-side"><span class="tn-overview-side-label">FÜR DEN TENNISSPORT</span><strong>Auf dem Platz. Im Verein. Beim Turnier.</strong><p>Digitale Werkzeuge, entwickelt für den tatsächlichen Bedarf im Tennissport.</p></div>
 </div></section>
 <section class="tn-founders-focus" id="founders" aria-labelledby="founders-title"><div class="tc-container tn-founders-feature">
-<div class="tn-founders-image"><img class="tf-teaser-light" src="/assets/tennilo-founders-tf12-light.png" alt="TENNILO Founders" width="480" height="79"><img class="tf-teaser-dark" src="/assets/tennilo-founders-tf12-dark.png" alt="" aria-hidden="true" width="480" height="79"></div>
+<div class="tn-founders-image"><img class="tf-teaser-light" src="/assets/tennilo-founders-tf12-light.png" alt="TENNILO Founders" width="480" height="79"><img class="tf-teaser-dark" src="/assets/tennilo-founders-tf12-dark.png" alt="" aria-hidden="true" width="480" height="79"><figure class="tn-founders-video"><video controls playsinline preload="none" width="1280" height="720" poster="/assets/tennilo-founders-video-poster.jpg" aria-label="TENNILO Founders Kampagnenvideo"><source src="/assets/tennilo-founders-video.mp4" type="video/mp4">Dein Browser unterstützt keine Videowiedergabe. <a href="/assets/tennilo-founders-video.mp4">Video öffnen</a></video><figcaption>TENNILO Founders · Kampagnenvideo · 36 Sek.</figcaption></figure></div>
 <div class="tn-founders-text"><p class="tn-eyebrow">ALLE VIER PRODUKTE UNTERSTÜTZEN</p><h2 id="founders-title">Gemeinsam TENNILO weiterentwickeln.</h2><p>Mit Founders können Spieler, Vereine und Unterstützer die Entwicklung von Score, ClubDisplay, Tournament und Umpire begleiten. Entdecke das Projekt jetzt auf Startnext oder melde unverbindlich dein Interesse an – ohne Zahlung auf dieser Website.</p><div class="tn-actions"><a class="tn-button tn-button-primary" href="/founders/">Founders entdecken und Interesse anmelden <span aria-hidden="true">→</span></a><a class="tn-button tn-button-secondary" href="https://www.startnext.com/tennilo-founders" target="_blank" rel="noopener noreferrer">Projekt auf Startnext ansehen <span aria-hidden="true">↗</span></a><span class="tn-founders-note">Startphase aktiv · Finanzierungsstart geplant: 14.12.2026, 10 Uhr</span></div></div>
 </div></section>
 <section class="tn-products tc-section" id="projekte" aria-labelledby="tc-projects-title"><div class="tc-container">

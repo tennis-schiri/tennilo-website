@@ -113,3 +113,5 @@ public/assets/clubdisplay-demo-partners.jpg
 public/assets/clubdisplay-demo-teams.jpg
 public/assets/clubdisplay-demo-news.jpg
 public/assets/clubdisplay-demo-courts.jpg
+public/assets/tennilo-founders-video.mp4
+public/assets/tennilo-founders-video-poster.jpg
